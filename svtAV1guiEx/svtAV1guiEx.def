@@ -1,0 +1,4 @@
+﻿LIBRARY "svtAV1guiEx.auo"
+
+EXPORTS
+    GetOutputPluginTable
