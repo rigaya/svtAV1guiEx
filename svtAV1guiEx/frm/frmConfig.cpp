@@ -1013,6 +1013,7 @@ System::Void frmConfig::InitForm() {
     //スレッド数上限
     int max_threads_set = (int)(cpu_core_count() * 1.5 + 0.51);
     fcgNUThreads->Maximum = max_threads_set;
+    fcgtabControlMux->SelectedTab = fcgtabPageMKV;
     //ツールチップ
     SetHelpToolTips();
     SetX264VersionToolTip(LocalStg.x264Path);
