@@ -5,7 +5,7 @@ by rigaya
 拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) は、[SVT-AV1](https://github.com/OpenVisualCloud/SVT-AV1)を使用してエンコードを行うAviutlの出力プラグインです。
 
 ## ダウンロード & 更新履歴
-[rigayaの日記兼メモ帳＞＞](http://rigaya34589.blog135.fc2.com/blog-category-5.html)
+[rigayaの日記兼メモ帳＞＞](http://rigaya34589.blog135.fc2.com/blog-category-28.html)
 
 ## 基本動作環境
 Windows 10 (x64)  
