@@ -148,22 +148,30 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
             a++;
         while (*a == ' ')
             a++;
-        mes = a + 1;
+        mes = a;
+    }
+    if (mes >= fin) {
+        *log_len = 0;
+        return;
     }
     while ((a = strchr(mes, '\n')) != NULL) {
         if ((b = strrchr(mes, '\r', a - mes - 2)) != NULL)
             mes = b + 1;
         *a = '\0';
         write_log_enc_mes_line(mes, NULL);
-        mes = a + 1;
+        mes = a+1;
     }
     int value = 0;
-    while (1 == sscanf_s(mes, "%d\b", &value) && (a = strrchr(mes, '\b')) != nullptr) {
+    while (1 == sscanf_s(mes, "%d\b", &value) && (a = strrchr(mes, '\b')) != nullptr && mes < fin) {
         while (*a == '\b')
             a++;
         while (*a == ' ')
             a++;
-        mes = a+1;
+        mes = a;
+    }
+    if (mes >= fin) {
+        *log_len = 0;
+        return;
     }
     static auto last_update = std::chrono::system_clock::now();
     auto now = std::chrono::system_clock::now();
@@ -171,8 +179,8 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         set_reconstructed_title_mes(a, total_drop, current_frames);
         last_update = now;
     }
-    if (mes == msg && *log_len)
-        mes += write_log_enc_mes_line(mes, NULL);
+    //if (mes == msg && *log_len)
+    //    mes += write_log_enc_mes_line(mes, NULL);
     memmove(msg, mes, ((*log_len = fin - mes) + 1) * sizeof(msg[0]));
 }
 

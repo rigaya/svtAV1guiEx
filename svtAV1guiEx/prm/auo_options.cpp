@@ -151,6 +151,10 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
         i++;
         return to_int(&cx->qp, argv[i]);
     }
+    if (IS_OPTION("tbr")) {
+        i++;
+        return to_int(&cx->bitrate, argv[i]);
+    }
     if (IS_OPTION("rc")) {
         i++;
         return to_int(&cx->rc, argv[i]);
@@ -223,6 +227,102 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
         i++;
         return to_int(&cx->tile_columns, argv[i]);
     }
+    if (IS_OPTION("rdoq")) {
+        i++;
+        return to_int(&cx->rdoq, argv[i]);
+    }
+    if (IS_OPTION("pred-me")) {
+        i++;
+        return to_int(&cx->pred_me, argv[i]);
+    }
+    if (IS_OPTION("restoration-filtering")) {
+        i++;
+        return to_int(&cx->restoration_filtering, argv[i]);
+    }
+    if (IS_OPTION("framend-cdf-upd-mode")) {
+        i++;
+        return to_int(&cx->framend_cdf_upd_mode, argv[i]);
+    }
+    if (IS_OPTION("class-12")) {
+        i++;
+        return to_int(&cx->class_12, argv[i]);
+    }
+    if (IS_OPTION("intra-edge-skp")) {
+        i++;
+        return to_int(&cx->intra_edge_skp, argv[i]);
+    }
+    if (IS_OPTION("interintra-comp")) {
+        i++;
+        return to_int(&cx->interintra_comp, argv[i]);
+    }
+    if (IS_OPTION("frac-search-64")) {
+        i++;
+        return to_int(&cx->frac_search_64, argv[i]);
+    }
+    if (IS_OPTION("mfmv")) {
+        i++;
+        return to_int(&cx->mfmv, argv[i]);
+    }
+    if (IS_OPTION("trellis")) {
+        i++;
+        return to_int(&cx->trellis, argv[i]);
+    }
+    if (IS_OPTION("redundant-blk")) {
+        i++;
+        return to_int(&cx->redundant_blk, argv[i]);
+    }
+    if (IS_OPTION("spatial-sse-fl")) {
+        i++;
+        return to_int(&cx->spatial_sse_fl, argv[i]);
+    }
+    if (IS_OPTION("subpel")) {
+        i++;
+        return to_int(&cx->subpel, argv[i]);
+    }
+    if (IS_OPTION("over-bndry-blk")) {
+        i++;
+        return to_int(&cx->over_bndry_blk, argv[i]);
+    }
+    if (IS_OPTION("-new-nrst-near-comb")) {
+        i++;
+        return to_int(&cx->new_nrst_near_comb, argv[i]);
+    }
+    if (IS_OPTION("nx4-4xn-mv-inject")) {
+        i++;
+        return to_int(&cx->nx4_4xn_mv_inject, argv[i]);
+    }
+    if (IS_OPTION("prune-unipred-me")) {
+        i++;
+        return to_int(&cx->prune_unipred_me, argv[i]);
+    }
+    if (IS_OPTION("prune-ref-rec-part")) {
+        i++;
+        return to_int(&cx->prune_ref_rec_part, argv[i]);
+    }
+    if (IS_OPTION("bipred-3x3")) {
+        i++;
+        return to_int(&cx->bipred_3x3, argv[i]);
+    }
+    if (IS_OPTION("compound")) {
+        i++;
+        return to_int(&cx->compound, argv[i]);
+    }
+    if (IS_OPTION("palette")) {
+        i++;
+        return to_int(&cx->palette, argv[i]);
+    }
+    if (IS_OPTION("olpd-refinement")) {
+        i++;
+        return to_int(&cx->olpd_refinement, argv[i]);
+    }
+    if (IS_OPTION("umv")) {
+        i++;
+        return to_int(&cx->umv, argv[i]);
+    }
+    if (IS_OPTION("sqw")) {
+        i++;
+        return to_int(&cx->sqw, argv[i]);
+    }
     return 1;
 #undef IS_OPTION
 }
@@ -270,6 +370,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("-bit-depth", bit_depth);
     OPT_NUM("-rc", rc);
     OPT_NUM("-q", qp);
+    OPT_NUM("-tbr", bitrate);
     OPT_NUM("-hierarchical-levels", hierarchical_levels);
     OPT_NUM("-intra-period", intra_period);
     OPT_NUM("-irefresh-type", intra_refresh_type);
@@ -287,6 +388,30 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("-sharp", sharp);
     OPT_NUM("-tile-rows", tile_rows);
     OPT_NUM("-tile-columns", tile_columns);
+
+    OPT_NUM("-pred-me", pred_me);
+    OPT_NUM("-rdoq", rdoq);
+    OPT_NUM("-restoration-filtering", restoration_filtering);
+    OPT_NUM("-framend-cdf-upd-mode", framend_cdf_upd_mode);
+    OPT_NUM("-class-12", class_12);
+    OPT_NUM("-intra-edge-skp", intra_edge_skp);
+    OPT_NUM("-interintra-comp", interintra_comp);
+    OPT_NUM("-frac-search-64", frac_search_64);
+    OPT_NUM("-mfmv", mfmv);
+    OPT_NUM("-redundant-blk", redundant_blk);
+    OPT_NUM("-spatial-sse-fl", spatial_sse_fl);
+    OPT_NUM("-subpel", subpel);
+    OPT_NUM("-over-bndry-blk", over_bndry_blk);
+    OPT_NUM("-new-nrst-near-comb", new_nrst_near_comb);
+    OPT_NUM("-nx4-4xn-mv-inject", nx4_4xn_mv_inject);
+    OPT_NUM("-prune-unipred-me", prune_unipred_me);
+    OPT_NUM("-prune-ref-rec-part", prune_ref_rec_part);
+    OPT_NUM("-bipred_3x3", bipred_3x3);
+    OPT_NUM("-compound", compound);
+    OPT_NUM("-palette", palette);
+    OPT_NUM("-olpd-refinement", olpd_refinement);
+    OPT_NUM("-umv", umv);
+    OPT_NUM("-sqw", sqw);
 
     return cmd.str();
 }

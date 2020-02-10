@@ -842,6 +842,20 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXEncMode,        list_enc_mode);
     setComboBox(fcgCXSCM,            list_scm);
     setComboBox(fcgCXAQ,             list_aq);
+    setComboBox(fcgCXPredMe,         list_pred_me);
+    setComboBox(fcgCXTrellis,        list_on_off_default);
+    setComboBox(fcgCXRDOQ,           list_on_off_default);
+    setComboBox(fcgCXRestortionFiltering, list_on_off_default);
+    setComboBox(fcgCXCompund,        list_compound);
+    setComboBox(fcgCXInterIntraComp, list_on_off_default);
+    setComboBox(fcgCXFracSearch64,   list_on_off_default);
+    setComboBox(fcgCXMfmv,           list_on_off_default);
+    setComboBox(fcgCXRedunduntBLK,   list_on_off_default);
+    setComboBox(fcgCXSubpel,         list_on_off_default);
+    setComboBox(fcgCXBipred3x3,      list_bipred_3x3);
+    setComboBox(fcgCXPalette,        list_palette);
+    setComboBox(fcgCXUMV,            list_on_off_default);
+    setComboBox(fcgCXOlpdRefine,     list_on_off_default);
 
     setComboBox(fcgCXAudioEncTiming, audio_enc_timing_desc);
     setComboBox(fcgCXAudioDelayCut,  AUDIO_DELAY_CUT_MODE);
@@ -964,6 +978,13 @@ System::Void frmConfig::AdjustLocation() {
     }
 }
 
+System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, System::EventArgs ^e) {
+    const bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == X264_RC_BITRATE);
+    fcgNUBitrate->Visible = videoBitrateMode;
+    fcgLBKbps->Visible = videoBitrateMode;
+    fcgNUQP->Visible = !videoBitrateMode;
+}
+
 System::Void frmConfig::initUpdater() {
 #if ENABLE_AUOSETUP
     frmExeUpdate = gcnew frmUpdate();
@@ -1049,6 +1070,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXRC, enc.rc);
     SetCXIndex(fcgCXEncMode, enc.enc_mode);
     SetNUValue(fcgNUQP, enc.qp);
+    SetNUValue(fcgNUBitrate, enc.bitrate);
     SetNUValue(fcgNUHierarchicalLevels, enc.hierarchical_levels); //hierarchical-levels
     SetNUValue(fcgNUIntraPeriod, enc.intra_period);        //intra-period
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
@@ -1059,8 +1081,22 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBExtBlock->Checked = enc.ext_block != 0;  //ext-block
     fcgCBSceneChange->Checked = enc.scd != 0;        //scd (scene change detection)
     fcgCBSharp->Checked = enc.sharp != 0;      //improve sharpness
-    SetCXIndex(fcgCXSCM, enc.scm);        //scm
-    SetCXIndex(fcgCXAQ,  enc.aq);        //aq
+    SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
+    SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
+    SetCXIndex(fcgCXPredMe, get_cx_index(list_pred_me, enc.pred_me));        //scm
+    SetCXIndex(fcgCXTrellis, get_cx_index(list_on_off_default, enc.trellis));
+    SetCXIndex(fcgCXRDOQ, get_cx_index(list_on_off_default, enc.rdoq));
+    SetCXIndex(fcgCXRestortionFiltering, get_cx_index(list_on_off_default, enc.restoration_filtering));
+    SetCXIndex(fcgCXCompund, get_cx_index(list_compound, enc.compound));
+    SetCXIndex(fcgCXInterIntraComp, get_cx_index(list_on_off_default, enc.interintra_comp));
+    SetCXIndex(fcgCXFracSearch64, get_cx_index(list_on_off_default, enc.frac_search_64));
+    SetCXIndex(fcgCXMfmv, get_cx_index(list_on_off_default, enc.mfmv));
+    SetCXIndex(fcgCXRedunduntBLK, get_cx_index(list_on_off_default, enc.redundant_blk));
+    SetCXIndex(fcgCXSubpel, get_cx_index(list_on_off_default, enc.subpel));
+    SetCXIndex(fcgCXBipred3x3, get_cx_index(list_bipred_3x3, enc.bipred_3x3));
+    SetCXIndex(fcgCXPalette, get_cx_index(list_palette, enc.palette));
+    SetCXIndex(fcgCXUMV, get_cx_index(list_on_off_default, enc.umv));
+    SetCXIndex(fcgCXOlpdRefine, get_cx_index(list_on_off_default, enc.olpd_refinement));
     SetNUValue(fcgNUSearchW, enc.search_w);   //search_w
     SetNUValue(fcgNUSearchH, enc.search_h);   //search_h
     SetNUValue(fcgNULookaheadDistance, enc.lad);        //lad (lookahead distance)
@@ -1129,15 +1165,32 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
     enc.rc                   = fcgCXRC->SelectedIndex;
     enc.enc_mode             = fcgCXEncMode->SelectedIndex;
-    //enc.bitrate              = cnf_fcgTemp->bitrate;
+    enc.bitrate              = (int)fcgNUBitrate->Value;
     enc.qp                   = (int)fcgNUQP->Value;
 
     enc.hierarchical_levels = (int)fcgNUHierarchicalLevels->Value;
     enc.intra_period = (int)fcgNUIntraPeriod->Value;
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
 
-    enc.scm = fcgCXSCM->SelectedIndex;
-    enc.aq = fcgCXAQ->SelectedIndex;
+    enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;
+    enc.scm = list_scm[fcgCXSCM->SelectedIndex].value;
+    enc.pred_me = list_pred_me[fcgCXPredMe->SelectedIndex].value;
+    enc.trellis = list_on_off_default[fcgCXTrellis->SelectedIndex].value;
+
+    enc.trellis = list_on_off_default[fcgCXTrellis->SelectedIndex].value;
+    enc.rdoq = list_on_off_default[fcgCXRDOQ->SelectedIndex].value;
+    enc.restoration_filtering = list_on_off_default[fcgCXRestortionFiltering->SelectedIndex].value;
+    enc.compound = list_on_off_default[fcgCXCompund->SelectedIndex].value;
+    enc.interintra_comp = list_on_off_default[fcgCXInterIntraComp->SelectedIndex].value;
+    enc.frac_search_64 = list_on_off_default[fcgCXFracSearch64->SelectedIndex].value;
+    enc.mfmv = list_on_off_default[fcgCXMfmv->SelectedIndex].value;
+    enc.redundant_blk = list_on_off_default[fcgCXRedunduntBLK->SelectedIndex].value;
+    enc.subpel = list_on_off_default[fcgCXSubpel->SelectedIndex].value;
+    enc.bipred_3x3 = list_bipred_3x3[fcgCXBipred3x3->SelectedIndex].value;
+    enc.palette = list_on_off_default[fcgCXPalette->SelectedIndex].value;
+    enc.umv = list_on_off_default[fcgCXUMV->SelectedIndex].value;
+    enc.olpd_refinement = list_on_off_default[fcgCXOlpdRefine->SelectedIndex].value;
+
     enc.search_w = (int)fcgNUSearchW->Value;
     enc.search_h = (int)fcgNUSearchH->Value;
     enc.lad = (int)fcgNULookaheadDistance->Value;
@@ -1598,7 +1651,7 @@ System::Void frmConfig::SetX264VersionToolTip(String^ x264Path) {
         else
             mes = L"バージョン情報の取得に失敗しました。";
     } else {
-        mes = L"指定されたx264が存在しません。";
+        mes = L"指定された実行ファイルが存在しません。";
     }
     fcgTTX264Version->SetToolTip(fcgTXX264Path, mes);
     fcgTTX264Version->SetToolTip(fcgTXX264PathSub, mes);

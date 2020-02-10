@@ -31,6 +31,7 @@
 #include <Windows.h>
 #include <vector>
 #include <string>
+#include <limits>
 
 #include "auo.h"
 #include "auo_settings.h"
@@ -82,33 +83,8 @@ enum {
 
 const ENC_OPTION_STR list_rc[] = {
     { "CQP",  L"CQP" },
-    { "ABR",  L"ABR" },
-    { "ABR",  L"ABR" },
+    { "VBR",  L"VBR" },
     { "CVBR", L"CVBR"  },
-    { NULL, NULL }
-};
-const ENC_OPTION_STR list_enc_mode[] = {
-    { "0 - best quality",  L"0 - best quality" },
-    { "1",  L"1" },
-    { "2",  L"2" },
-    { "3",  L"3" },
-    { "4",  L"4" },
-    { "5",  L"5" },
-    { "6",  L"6" },
-    { "7",  L"7" },
-    { "8 - fast",  L"8 - fast" },
-    { NULL, NULL }
-};
-const ENC_OPTION_STR list_aq[] = {
-    { "off",  L"off" },
-    { "variance base",  L"variance base" },
-    { "Deltaq pred efficiency",  L"Deltaq pred efficiency " },
-    { NULL, NULL }
-};
-const ENC_OPTION_STR list_scm[] = {
-    { "off",  L"off" },
-    { "on",   L"on" },
-    { "Content Based",  L"Content Based" },
     { NULL, NULL }
 };
 
@@ -239,6 +215,7 @@ typedef struct {
     int     bit_depth;           //bit-depth
     int     output_csp;          //output-csp
     int     qp;                  //q
+    int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
     int     hierarchical_levels; //hierarchical-levels
     int     intra_period;        //intra-period
@@ -248,7 +225,7 @@ typedef struct {
     BOOL    in_loop_me; //in-loop-me
     BOOL    local_warp; //local-warp
     BOOL    ext_block;  //ext-block
-    int     scm;        //scm
+    int     scm;        //scm (list_scm)
     int     search_w;   //search_w
     int     search_h;   //search_h
     int     lad;        //lad (lookahead distance)
@@ -257,9 +234,146 @@ typedef struct {
     BOOL    sharp;      //improve sharpness
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
+    int     pred_me;      //pred-me (list_pred_me)
+    int     rdoq;         // (on,off,default)
+    int     restoration_filtering; //restoration-filtering (on,off,default)
+    int     framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
+    int     class_12;  //-class-12 (on,off,default)
+    int     intra_edge_skp;  //-intra-edge-skp (on,off,default)
+    int     interintra_comp;  //-interintra-comp (on,off,default)
+    int     frac_search_64;  //-frac-search-64 (on,off,default)
+    int     mfmv;  //-mfmv (on,off,default)
+    int     trellis;  //-trellis (on,off,default)
+    int     redundant_blk;  //-redundant-blk (on,off,default)
+    int     spatial_sse_fl;  //-spatial-sse-fl (on,off,default)
+    int     subpel;  //-subpel (on,off,default)
+    int     over_bndry_blk;  //-over-bndry-blk (on,off,default)
+    int     new_nrst_near_comb;  //-new-nrst-near-comb (on,off,default)
+    int     nx4_4xn_mv_inject;  //-nx4-4xn-mv-inject (on,off,default)
+    int     prune_unipred_me;  //-prune-unipred-me (on,off,default)
+    int     prune_ref_rec_part;  //-prune-ref-rec-part (on,off,default)
+    int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
+    int     compound;  //-compound  (list_compound)
+    int     palette;   //-palette
+    int     olpd_refinement;   //-olpd-refinement
+    int     umv; //-umv
+    int     sqw; //-sqw
 } CONF_ENCODER;
 #pragma pack(pop)
 
+typedef struct CX_DESC {
+    const TCHAR *desc;
+    int value;
+} CX_DESC;
+
+static const TCHAR *get_chr_from_value(const CX_DESC *list, int v) {
+    for (int i = 0; list[i].desc; i++)
+        if (list[i].value == v)
+            return list[i].desc;
+    return "unknown";
+}
+
+static int get_cx_index(const CX_DESC *list, int v) {
+    for (int i = 0; list[i].desc; i++)
+        if (list[i].value == v)
+            return i;
+    return 0;
+}
+
+static int get_cx_index(const CX_DESC *list, const TCHAR *chr) {
+    for (int i = 0; list[i].desc; i++)
+        if (0 == stricmp(list[i].desc, chr))
+            return i;
+    return 0;
+}
+
+static int get_cx_value(const CX_DESC *list, const TCHAR *chr) {
+    for (int i = 0; list[i].desc; i++)
+        if (0 == stricmp(list[i].desc, chr))
+            return list[i].value;
+    return 0;
+}
+
+static int get_value_from_chr(const CX_DESC *list, const TCHAR *chr) {
+    for (int i = 0; list[i].desc; i++)
+        if (stricmp(list[i].desc, chr) == 0)
+            return list[i].value;
+    return -1;
+}
+
+static const TCHAR *get_cx_desc(const CX_DESC *list, int v) {
+    for (int i = 0; list[i].desc; i++)
+        if (list[i].value == v)
+            return list[i].desc;
+    return nullptr;
+}
+
+const CX_DESC list_on_off_default[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: on", 1 },
+    { nullptr, 0 }
+};
+const CX_DESC list_compound[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: on (AVG/DIST/DIFF)", 1 },
+    { "2: on (AVG/DIST/DIFF/WEDGE)", 2 },
+    { nullptr, 0 }
+};
+const CX_DESC list_bipred_3x3[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: full", 1 },
+    { "2: reduced", 2 },
+    { nullptr, 0 }
+};
+const CX_DESC list_pred_me[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: faster", 1 },
+    { "2: ", 2 },
+    { "3: ", 3 },
+    { "4: ", 4 },
+    { "5: slower", 5 },
+    { nullptr, 0 }
+};
+const CX_DESC list_scm[] = {
+    { "0: off", 0 },
+    { "1: on", 1 },
+    { "2: Content Based Detection", 2 },
+    { nullptr, 0 }
+};
+const CX_DESC list_enc_mode[] = {
+    { "0 - best quality",  0 },
+    { "1",  1 },
+    { "2",  2 },
+    { "3",  3 },
+    { "4",  4 },
+    { "5",  5 },
+    { "6",  6 },
+    { "7",  7 },
+    { "8 - fast",  8 },
+    { NULL, NULL }
+};
+const CX_DESC list_aq[] = {
+    { "off",  0 },
+    { "variance base",  1 },
+    { "Deltaq pred efficiency",  4 },
+    { NULL, NULL }
+};
+
+const CX_DESC list_palette[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1 ", 1 },
+    { "2 ", 2 },
+    { "3 ", 3 },
+    { "4 ", 4 },
+    { "5 ", 5 },
+    { "6 ", 6 },
+    { NULL, NULL }
+};
 typedef struct {
     char *long_name;
     char *short_name;

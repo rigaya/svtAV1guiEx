@@ -133,9 +133,6 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="SvtAv1GuiEx.ini" />
-    <None Include="prm\cpu_info_x86.asm">
-      <Filter>ソース ファイル\prm</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auo.h">
@@ -304,5 +301,10 @@
     <EmbeddedResource Include="frm\frmUpdate.resx">
       <Filter>リソース ファイル</Filter>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="prm\cpu_info_x86.asm">
+      <Filter>ソース ファイル</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

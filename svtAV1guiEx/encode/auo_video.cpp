@@ -399,10 +399,10 @@ static AUO_RESULT set_keyframe(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, c
 //auo_pipe.cppのread_from_pipeの特別版
 static int ReadLogEnc(PIPE_SET *pipes, int total_drop, int current_frames) {
     DWORD pipe_read = 0;
-    if (!PeekNamedPipe(pipes->stdOut.h_read, NULL, 0, NULL, &pipe_read, NULL))
+    if (!PeekNamedPipe(pipes->stdErr.h_read, NULL, 0, NULL, &pipe_read, NULL))
         return -1;
     if (pipe_read) {
-        ReadFile(pipes->stdOut.h_read, pipes->read_buf + pipes->buf_len, sizeof(pipes->read_buf) - pipes->buf_len - 1, &pipe_read, NULL);
+        ReadFile(pipes->stdErr.h_read, pipes->read_buf + pipes->buf_len, sizeof(pipes->read_buf) - pipes->buf_len - 1, &pipe_read, NULL);
         pipes->buf_len += pipe_read;
         write_log_enc_mes(pipes->read_buf, &pipes->buf_len, total_drop, current_frames);
     } else {
@@ -745,7 +745,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     }
 
     //パイプの設定
-    pipes.stdOut.mode = AUO_PIPE_ENABLE;
+    pipes.stdErr.mode = AUO_PIPE_ENABLE;
     pipes.stdIn.mode = AUO_PIPE_ENABLE;
     pipes.stdIn.bufferSize = pixel_data.total_size * 2;
 
@@ -921,8 +921,8 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     }
 
     //解放処理
-    if (pipes.stdOut.mode)
-        CloseHandle(pipes.stdOut.h_read);
+    if (pipes.stdErr.mode)
+        CloseHandle(pipes.stdErr.h_read);
     CloseHandle(pi_enc.hProcess);
     CloseHandle(pi_enc.hThread);
 
