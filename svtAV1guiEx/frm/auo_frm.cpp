@@ -142,7 +142,7 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
     char *a, *b, *mes = msg;
     char * const fin = mes + *log_len; //null文字の位置
     *fin = '\0';
-    a = strrchr(mes, '\b');
+    a = strrchr(mes, '\b', fin - mes);
     if (a != nullptr) {
         while (*a == '\b')
             a++;
@@ -160,18 +160,6 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         *a = '\0';
         write_log_enc_mes_line(mes, NULL);
         mes = a+1;
-    }
-    int value = 0;
-    while (1 == sscanf_s(mes, "%d\b", &value) && (a = strrchr(mes, '\b')) != nullptr && mes < fin) {
-        while (*a == '\b')
-            a++;
-        while (*a == ' ')
-            a++;
-        mes = a;
-    }
-    if (mes >= fin) {
-        *log_len = 0;
-        return;
     }
     static auto last_update = std::chrono::system_clock::now();
     auto now = std::chrono::system_clock::now();
