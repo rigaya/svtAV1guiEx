@@ -1080,7 +1080,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBLocalWarp->Checked = enc.local_warp != 0; //local-warp
     fcgCBExtBlock->Checked = enc.ext_block != 0;  //ext-block
     fcgCBSceneChange->Checked = enc.scd != 0;        //scd (scene change detection)
-    fcgCBSharp->Checked = enc.sharp != 0;      //improve sharpness
     SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
     SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
     SetCXIndex(fcgCXPredMe, get_cx_index(list_pred_me, enc.pred_me));        //scm
@@ -1203,7 +1202,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.local_warp = fcgCBLocalWarp->Checked; //local-warp
     enc.ext_block = fcgCBExtBlock->Checked;  //ext-block
     enc.scd = fcgCBSceneChange->Checked;        //scd (scene change detection)
-    enc.sharp = fcgCBSharp->Checked;      //improve sharpness
 
     //拡張部
     cnf->vid.afs                    = fcgCBAFS->Checked;

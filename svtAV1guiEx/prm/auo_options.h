@@ -231,7 +231,6 @@ typedef struct {
     int     lad;        //lad (lookahead distance)
     BOOL    scd;        //scd (scene change detection)
     int     lp;         //lp (LogicalProcessorNumber)
-    BOOL    sharp;      //improve sharpness
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     pred_me;      //pred-me (list_pred_me)

@@ -215,10 +215,6 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
         i++;
         return to_int(&cx->lp, argv[i]);
     }
-    if (IS_OPTION("sharp")) {
-        i++;
-        return to_int(&cx->sharp, argv[i]);
-    }
     if (IS_OPTION("tile-rows")) {
         i++;
         return to_int(&cx->tile_rows, argv[i]);
@@ -385,7 +381,6 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("-lad", lad);
     OPT_NUM("-scd", scd);
     OPT_NUM("-lp", lp);
-    OPT_NUM("-sharp", sharp);
     OPT_NUM("-tile-rows", tile_rows);
     OPT_NUM("-tile-columns", tile_columns);
 
