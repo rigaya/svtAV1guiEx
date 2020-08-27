@@ -211,52 +211,67 @@ typedef struct {
 //並び順に意味はない
 #pragma pack(push,1)
 typedef struct {
-    int     enc_mode;            //enc-mode
+    int     preset;            //enc-mode
     int     bit_depth;           //bit-depth
     int     output_csp;          //output-csp
     int     qp;                  //q
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
-    int     hierarchical_levels; //hierarchical-levels
-    int     intra_period;        //intra-period
-    int     intra_refresh_type;  //irefresh-type
     int     aq;
-    BOOL    use_default_me_hme;  //use-default-me-hme
-    BOOL    in_loop_me; //in-loop-me
-    BOOL    local_warp; //local-warp
-    BOOL    ext_block;  //ext-block
+    int     altref_strength;
+    int     altref_nframe;
+    int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
+    int     cdef_level; //--cdef-level
+    int     chroma_mode; //--chroma-mode
+    int     compound;  //-compound  (list_compound)
+    int     disable_cfl; //--disable-cfl
+    int     enable_class_12;  //-class-12 (on,off,default)
+    int     enable_framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
+    int     enable_filter_intra; //--enable-filter-intra
+    int     enable_global_motion; //--enable-global-motion
+    int     enable_intra_angle_delta; //--enable-intra-angle-delta
+    int     enable_intra_edge_filter; //--enable-intra-edge-filter
+    int     enable_intra_edge_skp;  //--enable-intra-edge-skp (on,off,default)
+    int     enable_interintra_comp;  //-interintra-comp (on,off,default)
+    BOOL    enable_local_warp; //local-warp
+    int     enable_mfmv;  //-mfmv (on,off,default)
+    int     enable_new_nrst_near_comb;  //-new-nrst-near-comb (on,off,default)
+    int     enable_obmc;
+    int     enable_over_bndry_blk;  //-over-bndry-blk (on,off,default)
+    int     enable_paeth;
+    int     enable_prune_unipred_me;  //-prune-unipred-me (on,off,default)
+    int     enable_prune_ref_rec_part;  //-prune-ref-rec-part (on,off,default)
+    int     enable_redundant_blk;  //-redundant-blk (on,off,default)
+    int     enable_restoration_filtering; //restoration-filtering (on,off,default)
+    int     enable_smooth;
+    int     enable_spatial_sse_fl;  //-spatial-sse-fl (on,off,default)
+    int     enable_stat_report;
+    int     ext_block;  //ext-block
+    int     hbd_md; // 	--hbd-md
+    int     hierarchical_levels; //hierarchical-levels
+    int     intra_bc_mode;       //intrabc-mode
+    int     intra_refresh_type;  //irefresh-type
+    int     keyint;        //keyint
+    int     lookahead;        //lookahead (lookahead distance)
+    int     lp;         //lp (LogicalProcessorNumber)
+    int     max_qp;
+    int     min_qp;
+    int     palette;   //-palette
+    int     pred_me;      //pred-me (list_pred_me)
+    int     rdoq;         // (on,off,default)
     int     scm;        //scm (list_scm)
     int     search_w;   //search_w
     int     search_h;   //search_h
-    int     lad;        //lad (lookahead distance)
-    BOOL    scd;        //scd (scene change detection)
-    int     lp;         //lp (LogicalProcessorNumber)
+    int     sg_filter_mode;
+    int     sqw; //-sqw
+    int     subpel;  //-subpel (on,off,default)
+    BOOL    tf_level;
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
-    int     pred_me;      //pred-me (list_pred_me)
-    int     rdoq;         // (on,off,default)
-    int     restoration_filtering; //restoration-filtering (on,off,default)
-    int     framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
-    int     class_12;  //-class-12 (on,off,default)
-    int     intra_edge_skp;  //-intra-edge-skp (on,off,default)
-    int     interintra_comp;  //-interintra-comp (on,off,default)
-    int     frac_search_64;  //-frac-search-64 (on,off,default)
-    int     mfmv;  //-mfmv (on,off,default)
-    int     trellis;  //-trellis (on,off,default)
-    int     redundant_blk;  //-redundant-blk (on,off,default)
-    int     spatial_sse_fl;  //-spatial-sse-fl (on,off,default)
-    int     subpel;  //-subpel (on,off,default)
-    int     over_bndry_blk;  //-over-bndry-blk (on,off,default)
-    int     new_nrst_near_comb;  //-new-nrst-near-comb (on,off,default)
-    int     nx4_4xn_mv_inject;  //-nx4-4xn-mv-inject (on,off,default)
-    int     prune_unipred_me;  //-prune-unipred-me (on,off,default)
-    int     prune_ref_rec_part;  //-prune-ref-rec-part (on,off,default)
-    int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
-    int     compound;  //-compound  (list_compound)
-    int     palette;   //-palette
-    int     olpd_refinement;   //-olpd-refinement
     int     umv; //-umv
-    int     sqw; //-sqw
+    BOOL    use_default_me_hme;  //use-default-me-hme
+    int     vbv_bufsize;  //vbv-bufsize
+    int     wn_filter_mode; //wn-filter-mode
 } CONF_ENCODER;
 #pragma pack(pop)
 
@@ -318,6 +333,43 @@ const CX_DESC list_compound[] = {
     { "0: off", 0 },
     { "1: on (AVG/DIST/DIFF)", 1 },
     { "2: on (AVG/DIST/DIFF/WEDGE)", 2 },
+    { nullptr, 0 }
+};
+const CX_DESC list_chroma_mode[] = {
+    { "-1: default", -1 },
+    { "0: Full chroma search", 0 },
+    { "1: Fast chroma search ", 1 },
+    { "2: Chroma blind @ MD + CFL", 2 },
+    { "3: Chroma blind @ MD + no CFL", 3 },
+    { nullptr, 0 }
+};
+const CX_DESC list_hbd_md[] = {
+    { "0: off", 0 },
+    { "1: partial", 1 },
+    { "2: full", 2 },
+};
+const CX_DESC list_intra_bcmode[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: slow", 1 },
+    { "2: fast", 2 },
+    { "3: fastest", 3 },
+};
+const CX_DESC list_sg_filter_mode[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: step 0", 1 },
+    { "2: step 1", 2 },
+    { "3: step 4", 3 },
+    { "4: step 16", 4 },
+    { nullptr, 0 }
+};
+const CX_DESC list_wn_filter_mode[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: 3-Tap", 1 },
+    { "2: 5-Tap", 2 },
+    { "3: 7-Tap", 3 },
     { nullptr, 0 }
 };
 const CX_DESC list_bipred_3x3[] = {

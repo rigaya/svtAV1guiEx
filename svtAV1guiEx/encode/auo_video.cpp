@@ -485,7 +485,7 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
     }
 #else
     int gcd = get_gcd(oip->rate, oip->scale);
-    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -fps-num %d -fps-denom %d", oip->rate / gcd, oip->scale / gcd);
+    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --fps-num %d --fps-denom %d", oip->rate / gcd, oip->scale / gcd);
 #endif
     //出力ファイル
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -b \"%s\"", pe->temp_filename);

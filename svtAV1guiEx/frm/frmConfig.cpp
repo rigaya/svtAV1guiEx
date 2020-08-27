@@ -434,7 +434,8 @@ System::Void frmConfig::fcgTSBCMDOnly_CheckedChanged(System::Object^  sender, Sy
         fcgtabPageExSettings->Text = L"映像";
         fcggroupBoxCmdEx->Text = L"コマンドライン";
     } else {
-        fcgtabControlVideo->TabPages->Insert(0, fcgtabPageX264Main);
+        fcgtabControlVideo->TabPages->Insert(0, fcgtabPageSVTAV1_1);
+        fcgtabControlVideo->TabPages->Insert(1, fcgtabPageSVTAV1_2);
         fcgtabPageExSettings->Text = L"拡張";
         fcggroupBoxCmdEx->Text = L"追加コマンド";
     }
@@ -841,21 +842,42 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXRC,             x264_encodemode_desc);
     setComboBox(fcgCXEncMode,        list_enc_mode);
     setComboBox(fcgCXSCM,            list_scm);
+
     setComboBox(fcgCXAQ,             list_aq);
-    setComboBox(fcgCXPredMe,         list_pred_me);
-    setComboBox(fcgCXTrellis,        list_on_off_default);
-    setComboBox(fcgCXRDOQ,           list_on_off_default);
-    setComboBox(fcgCXRestortionFiltering, list_on_off_default);
     setComboBox(fcgCXCompund,        list_compound);
-    setComboBox(fcgCXInterIntraComp, list_on_off_default);
-    setComboBox(fcgCXFracSearch64,   list_on_off_default);
-    setComboBox(fcgCXMfmv,           list_on_off_default);
-    setComboBox(fcgCXRedunduntBLK,   list_on_off_default);
+    setComboBox(fcgCXChromaMode,     list_chroma_mode);
+    setComboBox(fcgCXDisableCfl,     list_on_off_default);
+    setComboBox(fcgCXEnableClass12, list_on_off_default);
+    setComboBox(fcgCXEnableFrameEndCdfUpdate, list_on_off_default);
+    setComboBox(fcgCXEnableFilterIntra, list_on_off_default);
+    setComboBox(fcgCXEnableIntraAngleDelta, list_on_off_default);
+    setComboBox(fcgCXEnableIntraEdgeFilter, list_on_off_default);
+    setComboBox(fcgCXEnableIntraEdgeSkp, list_on_off_default);
+    setComboBox(fcgCXEnableInterIntraComp, list_on_off_default);
+    setComboBox(fcgCXEnableMfmv, list_on_off_default);
+    setComboBox(fcgCXEnableNewNearestCombInjection, list_on_off_default);
+    setComboBox(fcgCXEnableSmooth, list_on_off_default);
+    setComboBox(fcgCXEnableOverBoundryBlock, list_on_off_default);
+    setComboBox(fcgCXEnablePaeth, list_on_off_default);
+    setComboBox(fcgCXEnablePruneUnipredMe, list_on_off_default);
+    setComboBox(fcgCXEnablePruneRefRecPart, list_on_off_default);
+    setComboBox(fcgCXEnableRedunduntBLK, list_on_off_default);
+    setComboBox(fcgCXEnableRestortionFiltering, list_on_off_default);
+    setComboBox(fcgCXEnableSpatialSSEfl, list_on_off_default);
+
+    setComboBox(fcgCXExtBlock, list_on_off_default);
+    setComboBox(fcgCXHighBitDepthModeDecision, list_hbd_md);
+    setComboBox(fcgCXIntraBCMode, list_intra_bcmode);
+
+    setComboBox(fcgCXSgFilterMode, list_sg_filter_mode);
+    setComboBox(fcgCXWnFilterMode, list_wn_filter_mode);
+
+    setComboBox(fcgCXPredMe,         list_pred_me);
+    setComboBox(fcgCXRDOQ,           list_on_off_default);
     setComboBox(fcgCXSubpel,         list_on_off_default);
     setComboBox(fcgCXBipred3x3,      list_bipred_3x3);
     setComboBox(fcgCXPalette,        list_palette);
     setComboBox(fcgCXUMV,            list_on_off_default);
-    setComboBox(fcgCXOlpdRefine,     list_on_off_default);
 
     setComboBox(fcgCXAudioEncTiming, audio_enc_timing_desc);
     setComboBox(fcgCXAudioDelayCut,  AUDIO_DELAY_CUT_MODE);
@@ -1068,40 +1090,68 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     this->SuspendLayout();
     fcgCBUsehighbit->Checked = enc.bit_depth > 8;
     SetCXIndex(fcgCXRC, enc.rc);
-    SetCXIndex(fcgCXEncMode, enc.enc_mode);
+    SetCXIndex(fcgCXEncMode, enc.preset);
     SetNUValue(fcgNUQP, enc.qp);
     SetNUValue(fcgNUBitrate, enc.bitrate);
-    SetNUValue(fcgNUHierarchicalLevels, enc.hierarchical_levels); //hierarchical-levels
-    SetNUValue(fcgNUIntraPeriod, enc.intra_period);        //intra-period
-    SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
 
-    fcgCBUseDefaultMeHme->Checked = enc.use_default_me_hme != 0;  //use-default-me-hme
-    fcgCBInLoopMe->Checked = enc.in_loop_me != 0; //in-loop-me
-    fcgCBLocalWarp->Checked = enc.local_warp != 0; //local-warp
-    fcgCBExtBlock->Checked = enc.ext_block != 0;  //ext-block
-    fcgCBSceneChange->Checked = enc.scd != 0;        //scd (scene change detection)
-    SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
     SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
-    SetCXIndex(fcgCXPredMe, get_cx_index(list_pred_me, enc.pred_me));        //scm
-    SetCXIndex(fcgCXTrellis, get_cx_index(list_on_off_default, enc.trellis));
-    SetCXIndex(fcgCXRDOQ, get_cx_index(list_on_off_default, enc.rdoq));
-    SetCXIndex(fcgCXRestortionFiltering, get_cx_index(list_on_off_default, enc.restoration_filtering));
-    SetCXIndex(fcgCXCompund, get_cx_index(list_compound, enc.compound));
-    SetCXIndex(fcgCXInterIntraComp, get_cx_index(list_on_off_default, enc.interintra_comp));
-    SetCXIndex(fcgCXFracSearch64, get_cx_index(list_on_off_default, enc.frac_search_64));
-    SetCXIndex(fcgCXMfmv, get_cx_index(list_on_off_default, enc.mfmv));
-    SetCXIndex(fcgCXRedunduntBLK, get_cx_index(list_on_off_default, enc.redundant_blk));
-    SetCXIndex(fcgCXSubpel, get_cx_index(list_on_off_default, enc.subpel));
+    SetNUValue(fcgNUAltRefStrength, enc.altref_strength);
+    SetNUValue(fcgNUAltRefNframes, enc.altref_nframe);
     SetCXIndex(fcgCXBipred3x3, get_cx_index(list_bipred_3x3, enc.bipred_3x3));
+    SetNUValue(fcgNUCDEFLevel, enc.cdef_level);
+    SetCXIndex(fcgCXChromaMode, get_cx_index(list_chroma_mode, enc.chroma_mode));
+    SetCXIndex(fcgCXCompund, get_cx_index(list_compound, enc.compound));
+    SetCXIndex(fcgCXDisableCfl, get_cx_index(list_on_off_default, enc.disable_cfl));
+    SetCXIndex(fcgCXEnableClass12, get_cx_index(list_on_off_default, enc.enable_class_12));
+    SetCXIndex(fcgCXEnableFrameEndCdfUpdate, get_cx_index(list_on_off_default, enc.enable_framend_cdf_upd_mode));
+    SetCXIndex(fcgCXEnableFilterIntra, get_cx_index(list_on_off_default, enc.enable_filter_intra));
+    fcgCBEnableGlobalMotion->Checked = enc.enable_global_motion != 0;  //ext-block
+    SetCXIndex(fcgCXEnableIntraEdgeFilter, get_cx_index(list_on_off_default, enc.enable_intra_edge_filter));
+    SetCXIndex(fcgCXEnableIntraEdgeSkp, get_cx_index(list_on_off_default, enc.enable_intra_edge_skp));
+    SetCXIndex(fcgCXEnableIntraAngleDelta, get_cx_index(list_on_off_default, enc.enable_intra_angle_delta));
+    SetCXIndex(fcgCXEnableInterIntraComp, get_cx_index(list_on_off_default, enc.enable_interintra_comp));
+    fcgCBEnableLocalWarp->Checked = enc.enable_local_warp != 0; //local-warp
+    SetCXIndex(fcgCXEnableMfmv, get_cx_index(list_on_off_default, enc.enable_mfmv));
+    SetCXIndex(fcgCXEnableNewNearestCombInjection, get_cx_index(list_on_off_default, enc.enable_new_nrst_near_comb));
+    fcgCBEnableObmc->Checked = enc.enable_obmc != 0;
+    SetCXIndex(fcgCXEnableOverBoundryBlock, get_cx_index(list_on_off_default, enc.enable_over_bndry_blk));
+    SetCXIndex(fcgCXEnablePaeth, get_cx_index(list_on_off_default, enc.enable_paeth));
+    SetCXIndex(fcgCXEnablePruneRefRecPart, get_cx_index(list_on_off_default, enc.enable_prune_ref_rec_part));
+    SetCXIndex(fcgCXEnablePruneUnipredMe, get_cx_index(list_on_off_default, enc.enable_prune_unipred_me));
+    SetCXIndex(fcgCXEnableRedunduntBLK, get_cx_index(list_on_off_default, enc.enable_redundant_blk));
+    SetCXIndex(fcgCXEnableRestortionFiltering, get_cx_index(list_on_off_default, enc.enable_restoration_filtering));
+    SetCXIndex(fcgCXEnableSmooth, get_cx_index(list_on_off_default, enc.enable_smooth));
+    SetCXIndex(fcgCXEnableSpatialSSEfl, get_cx_index(list_on_off_default, enc.enable_spatial_sse_fl));
+    fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
+    SetCXIndex(fcgCXExtBlock, get_cx_index(list_on_off_default, enc.ext_block));
+
+    SetCXIndex(fcgCXHighBitDepthModeDecision, get_cx_index(list_hbd_md, enc.hbd_md));
+    SetNUValue(fcgNUHierarchicalLevels, enc.hierarchical_levels); //hierarchical-levels
+    SetCXIndex(fcgCXIntraBCMode, get_cx_index(list_intra_bcmode, enc.intra_bc_mode));
+    SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
+    SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
+    SetNUValue(fcgNULookaheadDistance, enc.lookahead);        //lad (lookahead distance)
+    SetNUValue(fcgNUThreads, enc.lp);         //lp (LogicalProcessorNumber)
+    SetNUValue(fcgNUMinQP, enc.min_qp);
+    SetNUValue(fcgNUMaxQP, enc.max_qp);
     SetCXIndex(fcgCXPalette, get_cx_index(list_palette, enc.palette));
-    SetCXIndex(fcgCXUMV, get_cx_index(list_on_off_default, enc.umv));
-    SetCXIndex(fcgCXOlpdRefine, get_cx_index(list_on_off_default, enc.olpd_refinement));
+    SetCXIndex(fcgCXPredMe, get_cx_index(list_pred_me, enc.pred_me));
+    SetCXIndex(fcgCXRDOQ, get_cx_index(list_on_off_default, enc.rdoq));
+    SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
     SetNUValue(fcgNUSearchW, enc.search_w);   //search_w
     SetNUValue(fcgNUSearchH, enc.search_h);   //search_h
-    SetNUValue(fcgNULookaheadDistance, enc.lad);        //lad (lookahead distance)
-    SetNUValue(fcgNUThreads ,enc.lp);         //lp (LogicalProcessorNumber)
+    SetCXIndex(fcgCXSgFilterMode, get_cx_index(list_sg_filter_mode, enc.sg_filter_mode));
+    SetNUValue(fcgNUSQW, enc.sqw);
+    SetCXIndex(fcgCXSubpel, get_cx_index(list_on_off_default, enc.subpel));
+
+    SetNUValue(fcgNUTFLevel, enc.tf_level);
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
+    SetCXIndex(fcgCXUMV, get_cx_index(list_on_off_default, enc.umv));
+    fcgCBUseDefaultMeHme->Checked = enc.use_default_me_hme != 0;  //use-default-me-hme
+    SetNUValue(fcgNUVBVBufSize, enc.vbv_bufsize);
+    SetCXIndex(fcgCXWnFilterMode, get_cx_index(list_wn_filter_mode, enc.wn_filter_mode));
+
 
     if (all) {
 
@@ -1163,45 +1213,67 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     //x264部
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
     enc.rc                   = fcgCXRC->SelectedIndex;
-    enc.enc_mode             = fcgCXEncMode->SelectedIndex;
+    enc.preset               = fcgCXEncMode->SelectedIndex;
     enc.bitrate              = (int)fcgNUBitrate->Value;
     enc.qp                   = (int)fcgNUQP->Value;
 
-    enc.hierarchical_levels = (int)fcgNUHierarchicalLevels->Value;
-    enc.intra_period = (int)fcgNUIntraPeriod->Value;
-    enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
-
     enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;
-    enc.scm = list_scm[fcgCXSCM->SelectedIndex].value;
-    enc.pred_me = list_pred_me[fcgCXPredMe->SelectedIndex].value;
-    enc.trellis = list_on_off_default[fcgCXTrellis->SelectedIndex].value;
-
-    enc.trellis = list_on_off_default[fcgCXTrellis->SelectedIndex].value;
-    enc.rdoq = list_on_off_default[fcgCXRDOQ->SelectedIndex].value;
-    enc.restoration_filtering = list_on_off_default[fcgCXRestortionFiltering->SelectedIndex].value;
-    enc.compound = list_on_off_default[fcgCXCompund->SelectedIndex].value;
-    enc.interintra_comp = list_on_off_default[fcgCXInterIntraComp->SelectedIndex].value;
-    enc.frac_search_64 = list_on_off_default[fcgCXFracSearch64->SelectedIndex].value;
-    enc.mfmv = list_on_off_default[fcgCXMfmv->SelectedIndex].value;
-    enc.redundant_blk = list_on_off_default[fcgCXRedunduntBLK->SelectedIndex].value;
-    enc.subpel = list_on_off_default[fcgCXSubpel->SelectedIndex].value;
+    enc.altref_strength = (int)fcgNUAltRefStrength->Value;
+    enc.altref_nframe = (int)fcgNUAltRefNframes->Value;
     enc.bipred_3x3 = list_bipred_3x3[fcgCXBipred3x3->SelectedIndex].value;
-    enc.palette = list_on_off_default[fcgCXPalette->SelectedIndex].value;
-    enc.umv = list_on_off_default[fcgCXUMV->SelectedIndex].value;
-    enc.olpd_refinement = list_on_off_default[fcgCXOlpdRefine->SelectedIndex].value;
+    enc.cdef_level = (int)fcgNUCDEFLevel->Value;
+    enc.chroma_mode = list_chroma_mode[fcgCXChromaMode->SelectedIndex].value;
+    enc.compound = list_on_off_default[fcgCXCompund->SelectedIndex].value;
+    enc.disable_cfl = list_on_off_default[fcgCXDisableCfl->SelectedIndex].value;
+    enc.enable_class_12 = list_on_off_default[fcgCXEnableClass12->SelectedIndex].value;
+    enc.enable_framend_cdf_upd_mode = list_on_off_default[fcgCXEnableFrameEndCdfUpdate->SelectedIndex].value;
+    enc.enable_filter_intra = list_on_off_default[fcgCXEnableFilterIntra->SelectedIndex].value;
+    enc.enable_global_motion = fcgCBEnableGlobalMotion->Checked;
+    enc.enable_intra_edge_filter = list_on_off_default[fcgCXEnableIntraEdgeFilter->SelectedIndex].value;
+    enc.enable_intra_edge_skp = list_on_off_default[fcgCXEnableIntraEdgeSkp->SelectedIndex].value;
+    enc.enable_intra_angle_delta = list_on_off_default[fcgCXEnableIntraAngleDelta->SelectedIndex].value;
+    enc.enable_interintra_comp = list_on_off_default[fcgCXEnableInterIntraComp->SelectedIndex].value;
+    enc.enable_local_warp = fcgCBEnableLocalWarp->Checked; //local-warp
+    enc.enable_mfmv = list_on_off_default[fcgCXEnableMfmv->SelectedIndex].value;
+    enc.enable_new_nrst_near_comb = list_on_off_default[fcgCXEnableNewNearestCombInjection->SelectedIndex].value;
+    enc.enable_obmc = fcgCBEnableObmc->Checked;
+    enc.enable_paeth = list_on_off_default[fcgCXEnablePaeth->SelectedIndex].value;
+    enc.enable_prune_ref_rec_part = list_on_off_default[fcgCXEnablePruneRefRecPart->SelectedIndex].value;
+    enc.enable_prune_unipred_me = list_on_off_default[fcgCXEnablePruneUnipredMe->SelectedIndex].value;
+    enc.enable_redundant_blk = list_on_off_default[fcgCXEnableRedunduntBLK->SelectedIndex].value;
+    enc.enable_restoration_filtering = list_on_off_default[fcgCXEnableRestortionFiltering->SelectedIndex].value;
+    enc.enable_smooth = list_on_off_default[fcgCXEnableSmooth->SelectedIndex].value;
+    enc.enable_spatial_sse_fl = list_on_off_default[fcgCXEnableSpatialSSEfl->SelectedIndex].value;
+    enc.enable_stat_report = fcgCBEnableStatReport->Checked;
+    enc.ext_block = list_on_off_default[fcgCXExtBlock->SelectedIndex].value;  //ext-block
 
+    enc.hbd_md = list_hbd_md[fcgCXHighBitDepthModeDecision->SelectedIndex].value;
+    enc.hierarchical_levels = (int)fcgNUHierarchicalLevels->Value;
+    enc.intra_bc_mode = list_intra_bcmode[fcgCXIntraBCMode->SelectedIndex].value;
+    enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
+    enc.keyint = (int)fcgNUKeyint->Value;
+    enc.lookahead = (int)fcgNULookaheadDistance->Value;
+    enc.lp = (int)fcgNUThreads->Value;
+    enc.min_qp = (int)fcgNUMinQP->Value;
+    enc.max_qp = (int)fcgNUMaxQP->Value;
+
+    enc.palette = list_on_off_default[fcgCXPalette->SelectedIndex].value;
+    enc.pred_me = list_pred_me[fcgCXPredMe->SelectedIndex].value;
+    enc.rdoq = list_on_off_default[fcgCXRDOQ->SelectedIndex].value;
+    enc.scm = list_scm[fcgCXSCM->SelectedIndex].value;
     enc.search_w = (int)fcgNUSearchW->Value;
     enc.search_h = (int)fcgNUSearchH->Value;
-    enc.lad = (int)fcgNULookaheadDistance->Value;
-    enc.lp = (int)fcgNUThreads->Value;
+    enc.sg_filter_mode = list_sg_filter_mode[fcgCXSgFilterMode->SelectedIndex].value;
+    enc.sqw = (int)fcgNUSQW->Value;
+    enc.subpel = list_on_off_default[fcgCXSubpel->SelectedIndex].value;
+
+    enc.tf_level = (int)fcgNUTFLevel->Value;
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
-
+    enc.umv = list_on_off_default[fcgCXUMV->SelectedIndex].value;
     enc.use_default_me_hme = fcgCBUseDefaultMeHme->Checked;  //use-default-me-hme
-    enc.in_loop_me = fcgCBInLoopMe->Checked; //in-loop-me
-    enc.local_warp = fcgCBLocalWarp->Checked; //local-warp
-    enc.ext_block = fcgCBExtBlock->Checked;  //ext-block
-    enc.scd = fcgCBSceneChange->Checked;        //scd (scene change detection)
+    enc.vbv_bufsize = (int)fcgNUVBVBufSize->Value;
+    enc.wn_filter_mode  = list_wn_filter_mode[fcgCXWnFilterMode->SelectedIndex].value;
 
     //拡張部
     cnf->vid.afs                    = fcgCBAFS->Checked;
