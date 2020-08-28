@@ -347,6 +347,7 @@ const CX_DESC list_hbd_md[] = {
     { "0: off", 0 },
     { "1: partial", 1 },
     { "2: full", 2 },
+    { nullptr, 0 }
 };
 const CX_DESC list_intra_bcmode[] = {
     { "-1: default", -1 },
@@ -354,6 +355,7 @@ const CX_DESC list_intra_bcmode[] = {
     { "1: slow", 1 },
     { "2: fast", 2 },
     { "3: fastest", 3 },
+    { nullptr, 0 }
 };
 const CX_DESC list_sg_filter_mode[] = {
     { "-1: default", -1 },
