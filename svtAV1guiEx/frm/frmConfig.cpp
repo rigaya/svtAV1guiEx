@@ -1237,6 +1237,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_mfmv = list_on_off_default[fcgCXEnableMfmv->SelectedIndex].value;
     enc.enable_new_nrst_near_comb = list_on_off_default[fcgCXEnableNewNearestCombInjection->SelectedIndex].value;
     enc.enable_obmc = fcgCBEnableObmc->Checked;
+    enc.enable_over_bndry_blk = list_on_off_default[fcgCXEnableOverBoundryBlock->SelectedIndex].value;
     enc.enable_paeth = list_on_off_default[fcgCXEnablePaeth->SelectedIndex].value;
     enc.enable_prune_ref_rec_part = list_on_off_default[fcgCXEnablePruneRefRecPart->SelectedIndex].value;
     enc.enable_prune_unipred_me = list_on_off_default[fcgCXEnablePruneUnipredMe->SelectedIndex].value;
