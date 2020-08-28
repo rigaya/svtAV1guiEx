@@ -286,7 +286,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("enable-redundant-blk", enable_redundant_blk);
     OPT_NUM("enable-restoration-filtering", enable_restoration_filtering);
     OPT_NUM("enable-smooth", enable_smooth);
-    OPT_NUM("enable-spatial-sse-fl", enable_spatial_sse_fl);
+    OPT_NUM("enable-spatial-sse-full-loop-level", enable_spatial_sse_fl);
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("ext-block", ext_block);
     OPT_NUM("hbd-md", hbd_md);
