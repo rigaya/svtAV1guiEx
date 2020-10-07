@@ -430,6 +430,7 @@ System::Void frmConfig::fcgTSBCMDOnly_CheckedChanged(System::Object^  sender, Sy
     //なぜか知らんが、Visibleプロパティをfalseにするだけでは非表示にできない
     //しょうがないので参照の削除と挿入を行う
     if (fcgTSBCMDOnly->Checked) {
+        fcgtabControlVideo->TabPages->RemoveAt(1);
         fcgtabControlVideo->TabPages->RemoveAt(0);
         fcgtabPageExSettings->Text = L"映像";
         fcggroupBoxCmdEx->Text = L"コマンドライン";
