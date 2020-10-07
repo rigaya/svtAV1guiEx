@@ -92,8 +92,9 @@ int get_aviutl_color_format(int use_highbit, int output_csp, int input_as_lw48) 
             return CF_RGB;
         case OUT_CSP_YV12:
         case OUT_CSP_NV12:
-        case OUT_CSP_NV16:
+        case OUT_CSP_YUV422:
         case OUT_CSP_YUY2:
+        case OUT_CSP_YUV400:
         default:
             return (use_highbit) ? cf_aviutl_pixel48 : CF_YUY2;
     }
@@ -459,6 +460,9 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
         sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " %s", gen_cmd(&enc, false).c_str());
     }
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " %s", prm.vid.cmdex);
+    if (enc.pass > 0) {
+        sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --stats \"%s\"", prm.vid.stats);
+    }
 
 #if 0
     //キーフレーム検出を行い、そのQPファイルが存在し、かつ--qpfileの指定がなければ、それをqpfileで読み込む
@@ -488,7 +492,9 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --fps-num %d --fps-denom %d", oip->rate / gcd, oip->scale / gcd);
 #endif
     //出力ファイル
-    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -b \"%s\"", pe->temp_filename);
+    if (enc.pass != 1) {
+        sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -b \"%s\"", pe->temp_filename);
+    }
     //入力
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -i stdin");
 }
@@ -497,10 +503,11 @@ static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENCODER *enc,
     const int byte_per_pixel = (enc->bit_depth > 8) ? sizeof(short) : sizeof(BYTE);
     ZeroMemory(pixel_data, sizeof(CONVERT_CF_DATA));
     switch (enc->output_csp) {
-        case OUT_CSP_NV16: //nv16 (YUV422)
-            pixel_data->count = 2;
+        case OUT_CSP_YUV422: //yuv422 (YUV422)
+            pixel_data->count = 3;
             pixel_data->size[0] = w * h * byte_per_pixel;
-            pixel_data->size[1] = pixel_data->size[0];
+            pixel_data->size[1] = pixel_data->size[0] / 2;
+            pixel_data->size[2] = pixel_data->size[0] / 2;
             break;
         case OUT_CSP_YUY2: //yuy2 (YUV422)
             pixel_data->count = 1;
@@ -1042,49 +1049,62 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
     if (pe->video_out_type == VIDEO_OUTPUT_DISABLED)
         return ret;
 
-#if 0
     //最初のみ実行する部分
     if (pe->current_x264_pass <= 1) {
+#if ENABLE_AMP
         //自動マルチパス用チェック
         if ((ret |= check_amp(conf, oip, pe, sys_dat)) != AUO_RESULT_SUCCESS) {
             return (ret & ~AUO_RESULT_ABORT); //AUO_RESULT_ABORTなら、音声を先にエンコードするため、動画エンコードを一時的にスキップ
         }
+#endif
         //追加コマンドをパラメータに適用する
         ret |= check_cmdex(conf, oip, pe, sys_dat);
 
+#if 0
         //キーフレーム検出 (cmdexのほうに--qpfileの指定があればそれを優先する)
         if (!ret && conf->vid.check_keyframe && strstr(conf->vid.cmdex, "--qpfile") == NULL)
             set_keyframe(conf, oip, pe, sys_dat);
+#endif
     }
+
+    bool use_auto_npass = false;
+    if (!conf->oth.disable_guicmd) {
+        CONF_ENCODER enc = get_default_prm();
+        set_cmd(&enc, conf->enc.cmd, true);
+        use_auto_npass = enc.pass == 2;
+    }
+
     for (; !ret && pe->current_x264_pass <= pe->total_x264_pass; pe->current_x264_pass++) {
-        if (conf->enc.use_auto_npass) {
+        if (use_auto_npass) {
+            CONF_ENCODER enc = get_default_prm();
+            set_cmd(&enc, conf->enc.cmd, true);
             //自動npass出力
             switch (pe->current_x264_pass) {
-                case 1:
-                    conf->enc.pass = 1;
+                case 1: {
+                    enc.pass = 1;
+                    enc.preset = 8;
                     break;
+                }
                 case 2:
                     if (conf->vid.afs && conf->vid.afs_bitrate_correction)
-                        conf->enc.bitrate = (conf->enc.bitrate * oip->n) / (oip->n - pe->drop_count);
+                        enc.bitrate = (enc.bitrate * oip->n) / (oip->n - pe->drop_count);
                     //下へフォールスルー
                 default:
                     open_log_window(oip->savefile, sys_dat, pe->current_x264_pass, pe->total_x264_pass);
-                    if (pe->current_x264_pass == pe->total_x264_pass)
-                        conf->enc.nul_out = FALSE;
-                    conf->enc.pass = 3;
+                    //if (pe->current_x264_pass == pe->total_x264_pass)
+                    //    enc.nul_out = FALSE;
+                    //enc.pass = 2;
                     break;
             }
+            CONF_GUIEX conf_tmp = *conf;
+            strcpy_s(conf_tmp.enc.cmd, gen_cmd(&enc, false).c_str());
+            set_window_title_x264(pe);
+            ret |= x264_out(&conf_tmp, oip, pe, sys_dat);
+        } else {
+            set_window_title_x264(pe);
+            ret |= x264_out(conf, oip, pe, sys_dat);
         }
-        set_window_title_x264(pe);
-        ret |= x264_out(conf, oip, pe, sys_dat);
     }
-#else
-    //追加コマンドをパラメータに適用する
-    ret |= check_cmdex(conf, oip, pe, sys_dat);
-
-    set_window_title_x264(pe);
-    ret |= x264_out(conf, oip, pe, sys_dat);
-#endif
 
     set_window_title(AUO_FULL_NAME, PROGRESSBAR_DISABLED);
     return ret;

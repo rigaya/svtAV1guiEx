@@ -294,8 +294,15 @@ int get_total_path(const CONF_GUIEX *conf) {
          && conf->enc.rc_mode == X264_RC_BITRATE
          && !conf->oth.disable_guicmd)
          ? conf->enc.auto_npass : 1;
-#endif
+#else
+    bool use_auto_npass = false;
+    if (!conf->oth.disable_guicmd) {
+        CONF_ENCODER enc = get_default_prm();
+        set_cmd(&enc, conf->enc.cmd, true);
+        return enc.pass == 2 ? 2 : 1;
+    }
     return 1;
+#endif
 }
 
 void set_enc_prm(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *oip, const SYSTEM_DATA *sys_dat) {

@@ -61,8 +61,9 @@ enum {
 };
 
 enum {
+    OUT_CSP_YUV400,
     OUT_CSP_YV12,
-    OUT_CSP_NV16,
+    OUT_CSP_YUV422,
     OUT_CSP_YUV444,
     OUT_CSP_RGB,
     OUT_CSP_YUY2,
@@ -91,17 +92,19 @@ const ENC_OPTION_STR list_rc[] = {
 //x264のinput-cspとして使用するもの
 //OUT_CSP_NV12, OUT_CSP_YUV444, OUT_CSP_RGB に合わせる
 static const char * const specify_csp[] = {
-    "yv12", //OUT_CSP_YV12
-    "nv16", //OUT_CSP_NV16
-    "i444", //OUT_CSP_YUV444
+    "yuv400", //OUT_CSP_YUV400
+    "yuv420", //OUT_CSP_YV12
+    "yuv422", //OUT_CSP_YUV422
+    "yuv444", //OUT_CSP_YUV444
     "rgb"   //OUT_CSP_RGB
 };
 //文字列を引数にとるオプションの引数リスト
 //OUT_CSP_NV12, OUT_CSP_YUV444, OUT_CSP_RGB に合わせる
 const ENC_OPTION_STR list_output_csp[] = {
-    { "i420", L"i420" },
-    { "i422", L"i422" },
-    { "i444", L"i444" },
+    { "yuv400", L"yuv400" },
+    { "yuv420", L"yuv420" },
+    { "yuv422", L"yuv422" },
+    { "yuv444", L"yuv444" },
     { "rgb",  L"rgb"  },
     { NULL, NULL }
 };
@@ -213,22 +216,25 @@ typedef struct {
 typedef struct {
     int     preset;            //enc-mode
     int     bit_depth;           //bit-depth
-    int     output_csp;          //output-csp
+    int     output_csp;        //color_format
+    int     profile;
+    int     pass;
     int     qp;                  //q
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
     int     aq;
     int     altref_strength;
     int     altref_nframe;
+    int     bias_pct; //--bias-pct
     int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
     int     cdef_level; //--cdef-level
     int     chroma_mode; //--chroma-mode
     int     compound;  //-compound  (list_compound)
     int     disable_cfl; //--disable-cfl
-    int     enable_class_12;  //-class-12 (on,off,default)
     int     enable_framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
     int     enable_filter_intra; //--enable-filter-intra
     int     enable_global_motion; //--enable-global-motion
+    int     enable_hdr; //--enable-hdr
     int     enable_intra_angle_delta; //--enable-intra-angle-delta
     int     enable_intra_edge_filter; //--enable-intra-edge-filter
     int     enable_intra_edge_skp;  //--enable-intra-edge-skp (on,off,default)
@@ -236,11 +242,8 @@ typedef struct {
     BOOL    enable_local_warp; //local-warp
     int     enable_mfmv;  //-mfmv (on,off,default)
     int     enable_new_nrst_near_comb;  //-new-nrst-near-comb (on,off,default)
-    int     enable_obmc;
     int     enable_over_bndry_blk;  //-over-bndry-blk (on,off,default)
     int     enable_paeth;
-    int     enable_prune_unipred_me;  //-prune-unipred-me (on,off,default)
-    int     enable_prune_ref_rec_part;  //-prune-ref-rec-part (on,off,default)
     int     enable_redundant_blk;  //-redundant-blk (on,off,default)
     int     enable_restoration_filtering; //restoration-filtering (on,off,default)
     int     enable_smooth;
@@ -255,7 +258,12 @@ typedef struct {
     int     lookahead;        //lookahead (lookahead distance)
     int     lp;         //lp (LogicalProcessorNumber)
     int     max_qp;
+    int     maxsection_pct; //--maxsection-pct
     int     min_qp;
+    int     minsection_pct; //--minsection-pct
+    int     mrp_level;
+    int     obmc_level;  // 	--obmc-level
+    int     overshoot_pct; //--overshoot-pct
     int     palette;   //-palette
     int     pred_me;      //pred-me (list_pred_me)
     int     rdoq;         // (on,off,default)
@@ -269,6 +277,7 @@ typedef struct {
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     umv; //-umv
+    int     undershoot_pct; //--undershoot-pct
     BOOL    use_default_me_hme;  //use-default-me-hme
     int     vbv_bufsize;  //vbv-bufsize
     int     wn_filter_mode; //wn-filter-mode
@@ -328,19 +337,26 @@ const CX_DESC list_on_off_default[] = {
     { "1: on", 1 },
     { nullptr, 0 }
 };
-const CX_DESC list_compound[] = {
-    { "-1: default", -1 },
-    { "0: off", 0 },
-    { "1: on (AVG/DIST/DIFF)", 1 },
-    { "2: on (AVG/DIST/DIFF/WEDGE)", 2 },
+const CX_DESC list_color_format[] = {
+    { "0: yuv400", 0 },
+    { "1: yuv420", 1 },
+    { "2: yuv422", 2 },
+    { "3: yuv444", 3 },
     { nullptr, 0 }
 };
 const CX_DESC list_chroma_mode[] = {
     { "-1: default", -1 },
     { "0: Full chroma search", 0 },
-    { "1: Fast chroma search ", 1 },
+    { "1: Fast chroma search", 1 },
     { "2: Chroma blind @ MD + CFL", 2 },
     { "3: Chroma blind @ MD + no CFL", 3 },
+    { nullptr, 0 }
+};
+const CX_DESC list_compound[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: on (AVG/DIST/DIFF)", 1 },
+    { "2: on (AVG/DIST/DIFF/WEDGE)", 2 },
     { nullptr, 0 }
 };
 const CX_DESC list_hbd_md[] = {
@@ -389,6 +405,34 @@ const CX_DESC list_pred_me[] = {
     { "3: ", 3 },
     { "4: ", 4 },
     { "5: slower", 5 },
+    { nullptr, 0 }
+};
+const CX_DESC list_profile_av1[] = {
+    { "0: main", 0 },
+    { "1: high", 1 },
+    { "2: professional", 2 },
+    { nullptr, 0 }
+};
+const CX_DESC list_obmc_level[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: full", 1 },
+    { "2: fast", 2 },
+    { "3: faster", 3 },
+    { nullptr, 0 }
+};
+const CX_DESC list_mrp_level[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: full ", 1 },
+    { "2: Level 1", 2 },
+    { "3: Level 2", 3 },
+    { "7: Level 3", 4 },
+    { "5: Level 4", 5 },
+    { "6: Level 5", 6 },
+    { "7: Level 6", 7 },
+    { "8: Level 7", 8 },
+    { "9: Level 8", 9 },
     { nullptr, 0 }
 };
 const CX_DESC list_scm[] = {

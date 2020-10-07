@@ -112,7 +112,7 @@ typedef struct {
 
 typedef struct {
     BOOL   afs;                      //自動フィールドシフトの使用
-    //BOOL   afs_bitrate_correction;   //afs & 2pass時、ドロップ数に応じてビットレートを補正
+    BOOL   afs_bitrate_correction;   //afs & 2pass時、ドロップ数に応じてビットレートを補正
     BOOL   auo_tcfile_out;           //auo側でタイムコードを出力する
     //DWORD  check_keyframe;           //キーフレームチェックを行う (CHECK_KEYFRAME_xxx)
     int    priority;                 //x264のCPU優先度(インデックス)

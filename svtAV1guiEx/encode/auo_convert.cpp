@@ -185,7 +185,7 @@ static const COVERT_FUNC_INFO FUNC_TABLE[] = {
     { CF_YC48, OUT_CSP_YV12,   BIT10, I,  1,  SSE2,                 convert_yc48_to_yv12_i_10bit_sse2 },
 #endif
 #endif
-#if 0
+#if 1
 #if ENABLE_NV12
     //YUY2 -> nv16(8bit)
     { CF_YUY2, OUT_CSP_NV16,   BIT_8, A,  1,  AVX2|AVX,             convert_yuy2_to_nv16_avx2 },
@@ -203,7 +203,7 @@ static const COVERT_FUNC_INFO FUNC_TABLE[] = {
     { CF_YC48, OUT_CSP_NV16,   BIT16, A,  8,  SSE2,                 convert_yc48_to_nv16_16bit_sse2_mod8 },
     { CF_YC48, OUT_CSP_NV16,   BIT16, A,  1,  SSE2,                 convert_yc48_to_nv16_16bit_sse2 },
     { CF_YC48, OUT_CSP_NV16,   BIT16, A,  1,  NONE,                 convert_yc48_to_nv16_16bit },
-#elif 0
+#elif 1
     //YUY2 -> yuv422(8bit)
     { CF_YUY2, OUT_CSP_YUV422, BIT_8, A,  1,  NONE,                 convert_yuy2_to_yuv422 },
 #endif
@@ -393,10 +393,11 @@ BOOL malloc_pixel_data(CONVERT_CF_DATA * const pixel_data, int width, int height
             if ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size * 2, max(align_size, 16))) == NULL)
                 ret = FALSE;
             break;
-        case OUT_CSP_NV16:
+        case OUT_CSP_YUV422:
             if ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size * 2, max(align_size, 16))) == NULL)
                 ret = FALSE;
             pixel_data->data[1] = pixel_data->data[0] + frame_size;
+            pixel_data->data[2] = pixel_data->data[1] + frame_size / 2;
             break;
         case OUT_CSP_YUV444:
             if ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size * 3, max(align_size, 16))) == NULL)
