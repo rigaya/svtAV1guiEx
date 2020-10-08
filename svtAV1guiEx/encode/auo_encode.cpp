@@ -288,6 +288,15 @@ static void set_aud_delay_cut(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *
     }
 }
 
+int get_auto_npass(const CONF_GUIEX *conf) {
+    if (!conf->oth.disable_guicmd) {
+        CONF_ENCODER enc = get_default_prm();
+        set_cmd(&enc, conf->enc.cmd, true);
+        return enc.pass == 2 ? 2 : 1;
+    }
+    return 1;
+}
+
 int get_total_path(const CONF_GUIEX *conf) {
 #if ENABLE_AMP
     return (conf->enc.use_auto_npass
@@ -295,13 +304,7 @@ int get_total_path(const CONF_GUIEX *conf) {
          && !conf->oth.disable_guicmd)
          ? conf->enc.auto_npass : 1;
 #else
-    bool use_auto_npass = false;
-    if (!conf->oth.disable_guicmd) {
-        CONF_ENCODER enc = get_default_prm();
-        set_cmd(&enc, conf->enc.cmd, true);
-        return enc.pass == 2 ? 2 : 1;
-    }
-    return 1;
+    return get_auto_npass(conf);
 #endif
 }
 
@@ -626,17 +629,15 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
         move_temp_file(NULL, chap_file,  NULL, ret, TRUE, "チャプター",        FALSE);
         move_temp_file(NULL, chap_apple, NULL, ret, TRUE, "チャプター(Apple)", FALSE);
     }
-#if 0
     //ステータスファイル
-    if (conf->enc.use_auto_npass && sys_dat->exstg->s_local.auto_del_stats) {
+    if (get_auto_npass(conf) > 1 && sys_dat->exstg->s_local.auto_del_stats) {
         char stats[MAX_PATH_LEN];
         strcpy_s(stats, sizeof(stats), conf->vid.stats);
         cmd_replace(stats, sizeof(stats), pe, sys_dat, conf, oip);
         move_temp_file(NULL, stats, NULL, ret, TRUE, "ステータス", FALSE);
-        strcat_s(stats, sizeof(stats), ".mbtree");
-        move_temp_file(NULL, stats, NULL, ret, TRUE, "mbtree ステータス", FALSE);
+        //strcat_s(stats, sizeof(stats), ".mbtree");
+        //move_temp_file(NULL, stats, NULL, ret, TRUE, "mbtree ステータス", FALSE);
     }
-#endif
     //音声ファイル(wav)
     if (strcmp(pe->append.aud[0], pe->append.wav)) //「wav出力」ならここでは処理せず下のエンコード後ファイルとして扱う
         move_temp_file(pe->append.wav,  pe->temp_filename, oip->savefile, ret, TRUE, "wav", FALSE);
