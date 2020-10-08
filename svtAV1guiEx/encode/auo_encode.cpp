@@ -537,6 +537,10 @@ void cmd_replace(char *cmd, size_t nSize, const PRM_ENC *pe, const SYSTEM_DATA *
     //%{fps_rate}
     int fps_rate = oip->rate;
     int fps_scale = oip->scale;
+    if (conf->vid.afs && conf->vid.afs_24fps) {
+        fps_rate *= 4;
+        fps_scale *= 5;
+    }
 #ifdef MSDK_SAMPLE_VERSION
     if (conf->qsv.vpp.nDeinterlace == MFX_DEINTERLACE_IT)
         fps_rate = (fps_rate * 4) / 5;
@@ -618,7 +622,7 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
     //qpファイル
     move_temp_file(pe->append.qp,   pe->temp_filename, oip->savefile, ret, !sys_dat->exstg->s_local.keep_qp_file, "qp", FALSE);
     //tcファイル
-    BOOL erase_tc = conf->vid.afs && !conf->vid.auo_tcfile_out && pe->muxer_to_be_used != MUXER_DISABLED;
+    BOOL erase_tc = conf->vid.afs && !conf->vid.afs_24fps && !conf->vid.auo_tcfile_out && pe->muxer_to_be_used != MUXER_DISABLED;
     move_temp_file(pe->append.tc,   pe->temp_filename, oip->savefile, ret, erase_tc, "タイムコード", FALSE);
     //チャプターファイル
     if (pe->muxer_to_be_used >= 0 && sys_dat->exstg->s_local.auto_del_chap) {
@@ -695,7 +699,7 @@ int check_muxer_to_be_used(const CONF_GUIEX *conf, const SYSTEM_DATA *sys_dat, c
 
     int muxer_to_be_used = MUXER_DISABLED;
     if (video_output_type == VIDEO_OUTPUT_MP4 && !conf->mux.disable_mp4ext)
-        muxer_to_be_used = (conf->vid.afs) ? MUXER_TC2MP4 : MUXER_MP4;
+        muxer_to_be_used = (conf->vid.afs && !conf->vid.afs_24fps) ? MUXER_TC2MP4 : MUXER_MP4;
     else if (video_output_type == VIDEO_OUTPUT_MKV && !conf->mux.disable_mkvext)
         muxer_to_be_used = MUXER_MKV;
     else if (video_output_type == VIDEO_OUTPUT_MPEG2 && !conf->mux.disable_mpgext)

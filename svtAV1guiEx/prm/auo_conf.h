@@ -126,6 +126,7 @@ typedef struct {
 #endif
     int sar_x;
     int sar_y;
+    BOOL afs_24fps;
 } CONF_VIDEO; //動画用設定(x264以外)
 
 typedef struct {

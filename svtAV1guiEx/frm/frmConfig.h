@@ -997,6 +997,8 @@ private: System::Windows::Forms::NumericUpDown ^fcgNUBiasPct;
 private: System::Windows::Forms::Label ^fcgLBSTATUS;
 private: System::Windows::Forms::TextBox ^fcgTXStatusFile;
 private: System::Windows::Forms::Button ^fcgBTStatusFile;
+private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
+
 
 
 
@@ -1278,6 +1280,7 @@ private: System::Windows::Forms::Button ^fcgBTStatusFile;
             this->fcgCXX264Priority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBX264Priority = (gcnew System::Windows::Forms::Label());
             this->fcggroupBoxExSettings = (gcnew System::Windows::Forms::GroupBox());
+            this->fcgCBAfs24fpsMode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAuoTcfileout = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAFSBitrateCorrection = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAFS = (gcnew System::Windows::Forms::CheckBox());
@@ -3213,6 +3216,7 @@ private: System::Windows::Forms::Button ^fcgBTStatusFile;
             // 
             // fcggroupBoxExSettings
             // 
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAfs24fpsMode);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAuoTcfileout);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFSBitrateCorrection);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFS);
@@ -3223,10 +3227,21 @@ private: System::Windows::Forms::Button ^fcgBTStatusFile;
             this->fcggroupBoxExSettings->TabStop = false;
             this->fcggroupBoxExSettings->Text = L"拡張設定";
             // 
+            // fcgCBAfs24fpsMode
+            // 
+            this->fcgCBAfs24fpsMode->AutoSize = true;
+            this->fcgCBAfs24fpsMode->Location = System::Drawing::Point(34, 77);
+            this->fcgCBAfs24fpsMode->Name = L"fcgCBAfs24fpsMode";
+            this->fcgCBAfs24fpsMode->Size = System::Drawing::Size(67, 18);
+            this->fcgCBAfs24fpsMode->TabIndex = 3;
+            this->fcgCBAfs24fpsMode->Tag = L"chValue";
+            this->fcgCBAfs24fpsMode->Text = L"24fps化";
+            this->fcgCBAfs24fpsMode->UseVisualStyleBackColor = true;
+            // 
             // fcgCBAuoTcfileout
             // 
             this->fcgCBAuoTcfileout->AutoSize = true;
-            this->fcgCBAuoTcfileout->Location = System::Drawing::Point(18, 92);
+            this->fcgCBAuoTcfileout->Location = System::Drawing::Point(18, 114);
             this->fcgCBAuoTcfileout->Name = L"fcgCBAuoTcfileout";
             this->fcgCBAuoTcfileout->Size = System::Drawing::Size(98, 18);
             this->fcgCBAuoTcfileout->TabIndex = 2;

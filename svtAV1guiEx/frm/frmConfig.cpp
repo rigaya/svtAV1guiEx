@@ -1166,6 +1166,8 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
         fcgTXStatusFile->Text = (str_has_char(cnf->vid.stats))     ? String(cnf->vid.stats).ToString() : String(DefaultStatusFilePath).ToString();
 
         fcgCBAFS->Checked                  = cnf->vid.afs != 0;
+        fcgCBAFSBitrateCorrection->Checked = cnf->vid.afs_bitrate_correction != 0;
+        fcgCBAfs24fpsMode->Checked         = cnf->vid.afs_24fps != 0;
 
         SetCXIndex(fcgCXX264Priority,        cnf->vid.priority);
         SetCXIndex(fcgCXTempDir,             cnf->oth.temp_dir);
@@ -1295,6 +1297,8 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     //拡張部
     GetCHARfromString(cnf->vid.stats, fcgTXStatusFile->Text);
     cnf->vid.afs                    = fcgCBAFS->Checked;
+    cnf->vid.afs_bitrate_correction = fcgCBAFSBitrateCorrection->Checked;
+    cnf->vid.afs_24fps              = fcgCBAfs24fpsMode->Checked;
     cnf->vid.priority               = fcgCXX264Priority->SelectedIndex;
     cnf->oth.temp_dir               = fcgCXTempDir->SelectedIndex;
     GetCHARfromString(cnf->vid.cmdex, fcgTXCmdEx->Text);

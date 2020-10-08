@@ -488,8 +488,14 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
         sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -fps-num %d -fps-denom %d", oip->rate / gcd, oip->scale / gcd);
     }
 #else
-    int gcd = get_gcd(oip->rate, oip->scale);
-    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --fps-num %d --fps-denom %d", oip->rate / gcd, oip->scale / gcd);
+    int rate = oip->rate;
+    int scale = oip->scale;
+    if (conf->vid.afs && conf->vid.afs_24fps) {
+        rate *= 4;
+        scale *= 5;
+    }
+    int gcd = get_gcd(rate, scale);
+    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --fps-num %d --fps-denom %d", rate / gcd, scale / gcd);
 #endif
     //出力ファイル
     if (enc.pass != 1) {
@@ -908,7 +914,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         release_audio_parallel_events(pe);
 
         //タイムコード出力
-        if (!ret && (afs || conf->vid.auo_tcfile_out))
+        if (!ret && ((afs && !conf->vid.afs_24fps)  || conf->vid.auo_tcfile_out))
             tcfile_out(jitter, oip->n, (double)oip->rate / (double)oip->scale, afs, pe);
 
         //エンコーダ終了待機
