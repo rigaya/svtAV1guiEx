@@ -155,7 +155,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("tbr", bitrate);
     OPT_NUM("lp", lp);
 
-    OPT_NUM("adaptive-quantization", aq);
+    OPT_NUM("aq-mode", aq);
     OPT_NUM("altref-strength", altref_strength);
     OPT_NUM("altref-nframes", altref_nframe);
     OPT_NUM("bias-pct", bias_pct);
@@ -269,7 +269,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("tbr", bitrate);
     OPT_NUM("lp", lp);
 
-    OPT_NUM("adaptive-quantization", aq);
+    OPT_NUM("aq-mode", aq);
     OPT_NUM("altref-strength", altref_strength);
     OPT_NUM("altref-nframes", altref_nframe);
     OPT_NUM("bias-pct", bias_pct);
