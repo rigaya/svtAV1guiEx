@@ -454,9 +454,9 @@ const CX_DESC list_enc_mode[] = {
     { NULL, NULL }
 };
 const CX_DESC list_aq[] = {
-    { "off",  0 },
-    { "variance base",  1 },
-    { "Deltaq pred efficiency",  4 },
+    { "0: off",  0 },
+    { "1: variance base",  1 },
+    { "2: deltaq pred efficiency",  2 },
     { NULL, NULL }
 };
 
