@@ -584,7 +584,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItemFilePathOp
                 SB->Append(frame_n);
                 if (add_progress) {
                     DWORD time_remain = (DWORD)(time_elapsed * ((double)(total_frame - frame_n) / (double)frame_n)) / 1000;
-                    SB->Insert(0, L"[" + ProgressPercent + "] ");
+                    //SB->Insert(0, L"[" + ProgressPercent + "] ");
 
                     t = (int)(time_remain / 3600);
                     SB->Append(", eta ");
@@ -602,7 +602,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItemFilePathOp
                 StringBuilder ^SB = gcnew StringBuilder();
                 SB->Append(title);
                 DWORD time_remain = (DWORD)(time_elapsed * ((double)(total_frame - frame_n) / (double)frame_n)) / 1000;
-                SB->Insert(0, L"[" + ProgressPercent + "] ");
+                //SB->Insert(0, L"[" + ProgressPercent + "] ");
 
                 t = (int)(time_remain / 3600);
                 SB->Append(", eta ");

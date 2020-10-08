@@ -398,14 +398,14 @@ static AUO_RESULT set_keyframe(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, c
 #endif
 
 //auo_pipe.cppのread_from_pipeの特別版
-static int ReadLogEnc(PIPE_SET *pipes, int total_drop, int current_frames) {
+static int ReadLogEnc(PIPE_SET *pipes, int total_drop, int current_frames, int total_frames) {
     DWORD pipe_read = 0;
     if (!PeekNamedPipe(pipes->stdErr.h_read, NULL, 0, NULL, &pipe_read, NULL))
         return -1;
     if (pipe_read) {
         ReadFile(pipes->stdErr.h_read, pipes->read_buf + pipes->buf_len, sizeof(pipes->read_buf) - pipes->buf_len - 1, &pipe_read, NULL);
         pipes->buf_len += pipe_read;
-        write_log_enc_mes(pipes->read_buf, &pipes->buf_len, total_drop, current_frames);
+        write_log_enc_mes(pipes->read_buf, &pipes->buf_len, total_drop, current_frames, total_frames);
     } else {
         log_process_events();
     }
@@ -497,6 +497,7 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
     }
     //入力
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " -i stdin");
+    sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --progress 2");
 }
 
 static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENCODER *enc, int w, int h) {
@@ -808,7 +809,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
             ret |= (oip->func_is_abort()) ? AUO_RESULT_ABORT : AUO_RESULT_SUCCESS;
 
             //svt-av1が実行中なら、メッセージを取得・ログウィンドウに表示
-            if (ReadLogEnc(&pipes, pe->drop_count, i) < 0) {
+            if (ReadLogEnc(&pipes, pe->drop_count, i, oip->n) < 0) {
                 //勝手に死んだ...
                 ret |= AUO_RESULT_ERROR; error_x264_dead();
                 break;
@@ -912,12 +913,12 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
 
         //エンコーダ終了待機
         while (WaitForSingleObject(pi_enc.hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
-            ReadLogEnc(&pipes, pe->drop_count, i);
+            ReadLogEnc(&pipes, pe->drop_count, i, oip->n);
 
         DWORD tm_vid_enc_fin = timeGetTime();
 
         //最後にメッセージを取得
-        while (ReadLogEnc(&pipes, pe->drop_count, i) > 0);
+        while (ReadLogEnc(&pipes, pe->drop_count, i, oip->n) > 0);
 
         if (!(ret & AUO_RESULT_ERROR) && afs)
             write_log_auo_line_fmt(LOG_INFO, "drop %d / %d frames", pe->drop_count, i);

@@ -131,47 +131,70 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
 }
 #else
 
-void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames) {
-    char buf[256];
-    sprintf_s(buf, _countof(buf), "%d frame", current_frames);
-    set_window_title_enc_mes(buf, total_drop, current_frames);
+void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames, int total_frames) {
+    double fps = 0, bitrate = 0;
+    int i_frame = 0;
+    int remain_time[3] = { 0 }, elapsed_time[3] = { 0 };
+    char buffer[1024] = { 0 };
+    int length = 0;
+    const char *ptr = buffer;
+    static std::chrono::system_clock::time_point last_update = std::chrono::system_clock::now();
+    auto current = std::chrono::system_clock::now();
+    if ((current - last_update) < std::chrono::milliseconds(300)) {
+        return;
+    }
+    last_update = current;
+    if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3) {
+        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
+            (i_frame + total_drop) * 100.0 / (double)total_frames,
+            i_frame + total_drop,
+            total_frames,
+            fps,
+            bitrate);
+    } else if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
+        fps *= (1.0 / 60.0);
+        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.4lf fps, %.2lf kb/s",
+            (i_frame + total_drop) * 100.0 / (double)total_frames,
+            i_frame + total_drop,
+            total_frames,
+            fps,
+            bitrate);
+    } else {
+        ptr = mes;
+    }
+    set_window_title_enc_mes(ptr, total_drop, current_frames);
 }
 #endif
 
-void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int current_frames) {
+void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int current_frames, int total_frames) {
     char *a, *b, *mes = msg;
-    char * const fin = mes + *log_len; //null文字の位置
+    char *const fin = mes + *log_len; //null文字の位置
     *fin = '\0';
-    a = strrchr(mes, '\b', fin - mes);
-    if (a != nullptr) {
-        while (*a == '\b')
-            a++;
-        while (*a == ' ')
-            a++;
-        mes = a;
-    }
-    if (mes >= fin) {
-        *log_len = 0;
-        return;
-    }
     while ((a = strchr(mes, '\n')) != NULL) {
         if ((b = strrchr(mes, '\r', a - mes - 2)) != NULL)
             mes = b + 1;
         *a = '\0';
         write_log_enc_mes_line(mes, NULL);
-        mes = a+1;
+        mes = a + 1;
     }
-    static auto last_update = std::chrono::system_clock::now();
-    auto now = std::chrono::system_clock::now();
-    if (now - last_update > std::chrono::milliseconds::duration(800)) {
-        set_reconstructed_title_mes(a, total_drop, current_frames);
-        last_update = now;
+    if ((a = strrchr(mes, '\r', fin - mes - 1)) != NULL) {
+        b = a - 1;
+        while (*b == ' ' || *b == '\r')
+            b--;
+        *(b + 1) = '\0';
+        if ((b = strrchr(mes, '\r', b - mes - 2)) != NULL)
+            mes = b + 1;
+        if (strstr(mes, "Encoding frame")) {
+            set_reconstructed_title_mes(mes, total_drop, current_frames, total_frames);
+        } else {
+            set_window_title_enc_mes(mes, total_drop, current_frames);
+        }
+        mes = a + 1;
     }
     //if (mes == msg && *log_len)
     //    mes += write_log_enc_mes_line(mes, NULL);
     memmove(msg, mes, ((*log_len = fin - mes) + 1) * sizeof(msg[0]));
 }
-
 void write_args(const char *args) {
     size_t len = strlen(args);
     char *const c = (char *)malloc((len+1)*sizeof(c[0]));
