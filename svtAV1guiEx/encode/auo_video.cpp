@@ -1093,7 +1093,8 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
                     break;
                 }
                 case 2:
-                    if (conf->vid.afs && conf->vid.afs_bitrate_correction)
+                    if (enc.rc != 0 //CQPの時は除く
+                        && conf->vid.afs && conf->vid.afs_bitrate_correction)
                         enc.bitrate = (enc.bitrate * oip->n) / (oip->n - pe->drop_count);
                     //下へフォールスルー
                 default:
