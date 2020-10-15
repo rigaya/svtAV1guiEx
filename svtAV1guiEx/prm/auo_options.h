@@ -459,6 +459,14 @@ const CX_DESC list_aq[] = {
     { "2: deltaq pred efficiency",  2 },
     { NULL, NULL }
 };
+const CX_DESC list_tf_level[] = {
+    { "-1: default", -1 },
+    { "0: off", 0 },
+    { "1: on", 1 },
+    { "2: fast", 2 },
+    { "3: faster", 3 },
+    { nullptr, 0 }
+};
 
 const CX_DESC list_palette[] = {
     { "-1: default", -1 },

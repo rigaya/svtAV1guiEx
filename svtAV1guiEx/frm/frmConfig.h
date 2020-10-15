@@ -967,7 +967,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXRDOQ;
 private: System::Windows::Forms::Label ^fcgLBRDOQ;
 private: System::Windows::Forms::ComboBox ^fcgCXBipred3x3;
 private: System::Windows::Forms::Label ^fcgLBBipred3x3;
-private: System::Windows::Forms::NumericUpDown ^fcgNUTFLevel;
+
 private: System::Windows::Forms::Label ^fcgLBTFLevel;
 private: System::Windows::Forms::ComboBox ^fcgCXExtBlock;
 private: System::Windows::Forms::Label ^fcgLBExtBlock;
@@ -998,6 +998,7 @@ private: System::Windows::Forms::Label ^fcgLBSTATUS;
 private: System::Windows::Forms::TextBox ^fcgTXStatusFile;
 private: System::Windows::Forms::Button ^fcgBTStatusFile;
 private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
+private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
 
 
 
@@ -1212,7 +1213,6 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             this->fcgLBObmcLevel = (gcnew System::Windows::Forms::Label());
             this->fcgCXExtBlock = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBExtBlock = (gcnew System::Windows::Forms::Label());
-            this->fcgNUTFLevel = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBTFLevel = (gcnew System::Windows::Forms::Label());
             this->fcgCXUMV = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBUMV = (gcnew System::Windows::Forms::Label());
@@ -1403,6 +1403,7 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgCXTFLevel = (gcnew System::Windows::Forms::ComboBox());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUCDEFLevel))->BeginInit();
@@ -1428,7 +1429,6 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUUnderShootPct))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMaxSectionPct))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMinSectionPct))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUTFLevel))->BeginInit();
             this->fcggroupBoxColorMatrix->SuspendLayout();
             this->fcggroupBoxAepectRatio->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUAspectRatioY))->BeginInit();
@@ -2293,6 +2293,7 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             // 
             // fcgtabPageSVTAV1_2
             // 
+            this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgCXTFLevel);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgLBSTATUS);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgTXStatusFile);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgBTStatusFile);
@@ -2312,7 +2313,6 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgLBObmcLevel);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgCXExtBlock);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgLBExtBlock);
-            this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgNUTFLevel);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgLBTFLevel);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgCXUMV);
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgLBUMV);
@@ -2539,16 +2539,6 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             this->fcgLBExtBlock->Size = System::Drawing::Size(53, 14);
             this->fcgLBExtBlock->TabIndex = 215;
             this->fcgLBExtBlock->Text = L"ExtBlock";
-            // 
-            // fcgNUTFLevel
-            // 
-            this->fcgNUTFLevel->Location = System::Drawing::Point(480, 12);
-            this->fcgNUTFLevel->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-            this->fcgNUTFLevel->Name = L"fcgNUTFLevel";
-            this->fcgNUTFLevel->Size = System::Drawing::Size(64, 21);
-            this->fcgNUTFLevel->TabIndex = 214;
-            this->fcgNUTFLevel->Tag = L"reCmd";
-            this->fcgNUTFLevel->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
             // 
             // fcgLBTFLevel
             // 
@@ -4549,6 +4539,16 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
+            // fcgCXTFLevel
+            // 
+            this->fcgCXTFLevel->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXTFLevel->FormattingEnabled = true;
+            this->fcgCXTFLevel->Location = System::Drawing::Point(480, 11);
+            this->fcgCXTFLevel->Name = L"fcgCXTFLevel";
+            this->fcgCXTFLevel->Size = System::Drawing::Size(118, 22);
+            this->fcgCXTFLevel->TabIndex = 237;
+            this->fcgCXTFLevel->Tag = L"reCmd";
+            // 
             // frmConfig
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
@@ -4602,7 +4602,6 @@ private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUUnderShootPct))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMaxSectionPct))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMinSectionPct))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUTFLevel))->EndInit();
             this->fcggroupBoxColorMatrix->ResumeLayout(false);
             this->fcggroupBoxColorMatrix->PerformLayout();
             this->fcggroupBoxAepectRatio->ResumeLayout(false);

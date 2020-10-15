@@ -869,6 +869,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXIntraBCMode, list_intra_bcmode);
 
     setComboBox(fcgCXSgFilterMode, list_sg_filter_mode);
+    setComboBox(fcgCXTFLevel,      list_tf_level);
     setComboBox(fcgCXWnFilterMode, list_wn_filter_mode);
 
     setComboBox(fcgCXMrpLevel,       list_mrp_level);
@@ -1152,7 +1153,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUSQW, enc.sqw);
     SetCXIndex(fcgCXSubpel, get_cx_index(list_on_off_default, enc.subpel));
 
-    SetNUValue(fcgNUTFLevel, enc.tf_level);
+    SetCXIndex(fcgCXTFLevel, get_cx_index(list_tf_level, enc.tf_level));
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
     SetCXIndex(fcgCXUMV, get_cx_index(list_on_off_default, enc.umv));
@@ -1285,7 +1286,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.sqw = (int)fcgNUSQW->Value;
     enc.subpel = list_on_off_default[fcgCXSubpel->SelectedIndex].value;
 
-    enc.tf_level = (int)fcgNUTFLevel->Value;
+    enc.tf_level = (int)list_tf_level[fcgCXTFLevel->SelectedIndex].value;
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
     enc.umv = list_on_off_default[fcgCXUMV->SelectedIndex].value;
