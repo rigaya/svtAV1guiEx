@@ -144,20 +144,16 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
         return;
     }
     last_update = current;
-    if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3) {
-        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
+    if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
+        || sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
+        const bool isfpm = strstr(mes, " fpm");
+        sprintf_s(buffer, _countof(buffer),
+            (isfpm) ? "[%3.1lf%%] %d/%d frames, %.3lf fps, %.2lf kb/s"
+                    : "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
             (i_frame + total_drop) * 100.0 / (double)total_frames,
             i_frame + total_drop,
             total_frames,
-            fps,
-            bitrate);
-    } else if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
-        fps *= (1.0 / 60.0);
-        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.4lf fps, %.2lf kb/s",
-            (i_frame + total_drop) * 100.0 / (double)total_frames,
-            i_frame + total_drop,
-            total_frames,
-            fps,
+            isfpm ? fps * (1.0 / 60.0) : fps,
             bitrate);
     } else {
         ptr = mes;
