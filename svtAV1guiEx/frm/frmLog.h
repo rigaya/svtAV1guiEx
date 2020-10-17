@@ -448,8 +448,8 @@ private: System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItemFilePathOp
             this->fontDialogLog->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(0)));
             this->fontDialogLog->FontMustExist = true;
-            this->fontDialogLog->MaxSize = 9;
-            this->fontDialogLog->MinSize = 9;
+            this->fontDialogLog->MaxSize = 32;
+            this->fontDialogLog->MinSize = 6;
             this->fontDialogLog->ShowEffects = false;
             //
             // frmLog
