@@ -1,6 +1,8 @@
 ﻿#ifndef AFS_CLIENT_H
 #define AFS_CLIENT_H
 
+#include <cstdint>
+
 #define AFS_FLAG_SHIFT0      0x01
 #define AFS_FLAG_SHIFT1      0x02
 #define AFS_FLAG_SHIFT2      0x04
@@ -28,21 +30,20 @@
 #define AFS_OFFSET_FRAME_N   0x0008
 #define AFS_OFFSET_STARTFRM  0x000C
 #define AFS_OFFSET_STATUSPTR 0x0010
+#define AFS_OFFSET_NEVALPTR  0x0014
 
 #define afs_header(x) (*(int*)(MemView+(x)))
 #define afs_headerp(x) (*(BYTE**)(MemView+(x)))
 
-static BYTE afs_read(int frame)
+static BYTE afs_read(int frame, int64_t *eval_noise, int64_t *eval_noise_next)
 {
   static char MemFile[256] = "afs7_"; /* major version in the memory name */
-  HANDLE hMemMap;
-  BYTE *MemView, *statusp;
-  DWORD pid, temp;
-  int offset, frame_n, i;
 
   if(MemFile[5] == 0){
-    pid = GetCurrentProcessId();
+    DWORD pid = GetCurrentProcessId();
+    int i;
     for(i = 5; pid >= 10;){
+        DWORD temp;
       for(temp = 10; pid / 10 >= temp;) temp *= 10;
       MemFile[i++] = '0' + (char)(pid / temp);
       pid %= temp;
@@ -53,10 +54,10 @@ static BYTE afs_read(int frame)
 
   if(frame < 0) return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
 
-  hMemMap = OpenFileMappingA(FILE_MAP_READ, FALSE, MemFile);
+  HANDLE hMemMap = OpenFileMappingA(FILE_MAP_READ, FALSE, MemFile);
   if(hMemMap == NULL) return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
 
-  MemView = (BYTE*) MapViewOfFile(hMemMap, FILE_MAP_READ, 0, 0, 0);
+  BYTE *MemView = (BYTE*) MapViewOfFile(hMemMap, FILE_MAP_READ, 0, 0, 0);
   if(MemView == NULL){
     CloseHandle(hMemMap);
     return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
@@ -67,14 +68,17 @@ static BYTE afs_read(int frame)
     CloseHandle(hMemMap);
     return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
   }
-  statusp = afs_headerp(AFS_OFFSET_STATUSPTR);
-  offset  = afs_header(AFS_OFFSET_STARTFRM);
-  frame_n = afs_header(AFS_OFFSET_FRAME_N);
+  BYTE *statusp = afs_headerp(AFS_OFFSET_STATUSPTR);
+  int64_t *nevalp = (int64_t *)afs_headerp(AFS_OFFSET_NEVALPTR);
+  int offset  = afs_header(AFS_OFFSET_STARTFRM);
+  int frame_n = afs_header(AFS_OFFSET_FRAME_N);
   UnmapViewOfFile(MemView);
   CloseHandle(hMemMap);
 
   if(frame >= frame_n) return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
   if(statusp == NULL)  return AFS_STATUS_DEFAULT | AFS_FLAG_ERROR;
+  if (eval_noise) *eval_noise = (nevalp) ? nevalp[offset + frame + 0] : -1;
+  if (eval_noise_next) *eval_noise_next = (nevalp) ? nevalp[offset + frame + 1] : -1;
   return statusp[offset+frame];
 }
 #endif /* !AFS_CLIENT_NO_SHARE */
@@ -87,6 +91,8 @@ typedef struct {
   int position24;
   int prev_jitter;
   BYTE prev_status;
+  int pull_next_drop;
+  int pull_next_drop24;
 } AFS_CLIENT_STATUS;
 
 static AFS_CLIENT_STATUS afs_client_status;
@@ -109,14 +115,18 @@ static int afs_init(BYTE status, int drop24)
     afs_client_status.phase24 -= afs_client_status.position24 + 1;
     afs_client_status.position24 = 0;
   }
+  afs_client_status.pull_next_drop = 0;
+  afs_client_status.pull_next_drop24 = 0;
   return 0;
 }
 
-static int afs_set_status(BYTE status, int drop24)
+static int afs_set_status(BYTE status, int drop24, int64_t eval_noise, int64_t eval_noise_next)
 {
   AFS_CLIENT_STATUS* afs = &afs_client_status;
-  int drop, pull_drop, quarter_jitter;
-
+  if (eval_noise < 0 || eval_noise_next < 0) {
+      eval_noise = eval_noise_next = -1;
+  }
+  int quarter_jitter = 0;
   if(status & AFS_FLAG_SHIFT0)
     quarter_jitter = -2;
   else if(afs->prev_status & AFS_FLAG_SHIFT0)
@@ -125,9 +135,18 @@ static int afs_set_status(BYTE status, int drop24)
     quarter_jitter = 0;
   quarter_jitter += ((status & AFS_FLAG_SMOOTHING) || afs->additional_jitter != -1) ? afs->additional_jitter : -2;
 
-  pull_drop = (status & AFS_FLAG_FRAME_DROP)
+  bool pull_drop = (status & AFS_FLAG_FRAME_DROP)
               && !((afs->prev_status|status) & AFS_FLAG_SHIFT0)
               && (status & AFS_FLAG_SHIFT1);
+  if (afs->pull_next_drop) { //dropを先送りした場合
+      pull_drop = true;
+      afs->pull_next_drop = false;
+  } else if (pull_drop) { //dropを先送りするべきか判定する
+      if (eval_noise < eval_noise_next) {
+          pull_drop = false;
+          afs->pull_next_drop = true;
+      }
+  }
   afs->additional_jitter = pull_drop ? -1 : 0;
 
   drop24 = drop24 ||
@@ -136,11 +155,23 @@ static int afs_set_status(BYTE status, int drop24)
              (status & AFS_FLAG_SHIFT2));
   if(drop24) afs->phase24 = (afs->position24 + 100) % 5;
   drop24 = 0;
-  if(afs->position24 >= afs->phase24 &&
-     ((afs->position24 + 100) % 5 == afs->phase24 ||
-      (afs->position24 +  99) % 5 == afs->phase24)){
-    afs->position24 -= 5;
-    drop24 = 1;
+
+  if (afs->pull_next_drop24) { //dropを先送りした場合
+      afs->position24 -= 5;
+      drop24 = 1;
+      afs->pull_next_drop24 = false;
+  } else if (afs->position24 >= afs->phase24 &&
+           ((afs->position24 + 100) % 5 == afs->phase24 ||
+            (afs->position24 +  99) % 5 == afs->phase24)) {
+      //dropを先送りするべきか判定する
+      if (eval_noise < eval_noise_next) {
+          drop24 = false;
+          afs->pull_next_drop24 = true;
+      } else {
+          afs->position24 -= 5;
+          drop24 = 1;
+          afs->pull_next_drop24 = false;
+      }
   }
 
   if(status & AFS_FLAG_FORCE24){
@@ -150,7 +181,9 @@ static int afs_set_status(BYTE status, int drop24)
     afs->phase24 -= afs->position24 + 1;
     afs->position24 = 0;
   }
-  drop = (quarter_jitter - afs->prev_jitter < ((status & AFS_FLAG_FRAME_DROP) ? 0 : -3));
+  const int drop = (quarter_jitter - afs->prev_jitter < ((status & AFS_FLAG_FRAME_DROP) ? 0 : -3))
+      && !afs->pull_next_drop
+      && !afs->pull_next_drop24;
 
   afs->quarter_jitter = quarter_jitter;
   afs->prev_status = status;
@@ -233,7 +266,7 @@ static int afs_vbuf_setup(OUTPUT_INFO *oip, int mode, int size, int buf_size, DW
   memcpy(afs_vbuf.buf[0], data, size);
 
   if(mode){
-    if((status = afs_read(0)) & AFS_FLAG_ERROR) return 0;
+    if((status = afs_read(0, nullptr, nullptr)) & AFS_FLAG_ERROR) return 0;
     afs_init(status, 0);
   }
 
@@ -263,9 +296,10 @@ static void* afs_get_video(OUTPUT_INFO *oip, int frame, int* drop, int* next_jit
     }
 
     if(afs_vbuf.mode){
-      status = afs_read(frame + 1);
+      int64_t eval_noise = -1, eval_noise_next = -1;
+      status = afs_read(frame + 1, &eval_noise, &eval_noise_next);
       if(status & AFS_FLAG_ERROR) return NULL;
-      next_drop = afs_set_status(status, 0);
+      next_drop = afs_set_status(status, 0, eval_noise, eval_noise_next);
       if(next_drop){
         afs_drop();
         quarter_jitter = 0;
