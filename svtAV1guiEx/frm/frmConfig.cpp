@@ -1431,7 +1431,7 @@ System::Void frmConfig::SetAllCheckChangedEvents(Control ^top) {
 System::Void frmConfig::SetHelpToolTips() {
     //x264基本
     fcgTTX264->SetToolTip(fcgCBUsehighbit, L""
-        + L"--input-depth 16 --output-depth 10\n"
+        + L"--input-depth 10\n"
         + L"\n"
         + L"10bit深度でエンコードを行います。\n"
         + L"通常のプレーヤーでは再生できないこともあるため、\n"
