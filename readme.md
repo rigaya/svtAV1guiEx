@@ -1,6 +1,7 @@
 
 # 拡張 SVT-AV1 出力(GUI) Ex  
-by rigaya
+by rigaya  
+[![Build status](https://ci.appveyor.com/api/projects/status/9qd44m7iafjecxfc?svg=true)](https://ci.appveyor.com/project/rigaya/svtav1guiex)
 
 拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) は、[SVT-AV1](https://github.com/OpenVisualCloud/SVT-AV1)を使用してエンコードを行うAviutlの出力プラグインです。
 
