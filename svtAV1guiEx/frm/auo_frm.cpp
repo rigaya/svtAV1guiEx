@@ -132,17 +132,15 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
 #else
 
 void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames, int total_frames) {
-    double fps = 0, bitrate = 0;
-    int i_frame = 0;
-    int remain_time[3] = { 0 }, elapsed_time[3] = { 0 };
-    char buffer[1024] = { 0 };
-    int length = 0;
-    const char *ptr = buffer;
     static std::chrono::system_clock::time_point last_update = std::chrono::system_clock::now();
     auto current = std::chrono::system_clock::now();
     if ((current - last_update) < std::chrono::milliseconds(300)) {
         return;
     }
+    double fps = 0.0, bitrate = 0.0;
+    int i_frame = 0;
+    char buffer[1024] = { 0 };
+    const char *ptr = buffer;
     last_update = current;
     if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
         || sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
