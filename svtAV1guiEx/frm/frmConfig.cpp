@@ -1060,7 +1060,15 @@ System::Void frmConfig::InitForm() {
     //スレッド数上限
     int max_threads_set = (int)(cpu_core_count() * 1.5 + 0.51);
     fcgNUThreads->Maximum = max_threads_set;
-    fcgtabControlMux->SelectedTab = fcgtabPageMKV;
+    switch (sys_dat->exstg->s_local.default_output_ext) {
+    case 0: //mp4
+        fcgtabControlMux->SelectedTab = fcgtabPageMP4;
+        break;
+    case 1: //mkv
+    default:
+        fcgtabControlMux->SelectedTab = fcgtabPageMKV;
+        break;
+    }
     //ツールチップ
     SetHelpToolTips();
     SetX264VersionToolTip(LocalStg.x264Path);
