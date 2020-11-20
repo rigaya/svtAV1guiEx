@@ -865,6 +865,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXEnableSpatialSSEfl, list_on_off_default);
 
     setComboBox(fcgCXExtBlock, list_on_off_default);
+    setComboBox(fcgCXHierarchicalLevels, list_hierarchical_levels);
     setComboBox(fcgCXHighBitDepthModeDecision, list_hbd_md);
     setComboBox(fcgCXIntraBCMode, list_intra_bcmode);
 
@@ -1137,7 +1138,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXExtBlock, get_cx_index(list_on_off_default, enc.ext_block));
 
     SetCXIndex(fcgCXHighBitDepthModeDecision, get_cx_index(list_hbd_md, enc.hbd_md));
-    SetNUValue(fcgNUHierarchicalLevels, enc.hierarchical_levels); //hierarchical-levels
+    SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
     SetCXIndex(fcgCXIntraBCMode, get_cx_index(list_intra_bcmode, enc.intra_bc_mode));
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
@@ -1269,7 +1270,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.ext_block = list_on_off_default[fcgCXExtBlock->SelectedIndex].value;  //ext-block
 
     enc.hbd_md = list_hbd_md[fcgCXHighBitDepthModeDecision->SelectedIndex].value;
-    enc.hierarchical_levels = (int)fcgNUHierarchicalLevels->Value;
+    enc.hierarchical_levels = (int)list_hierarchical_levels[fcgCXHierarchicalLevels->SelectedIndex].value;
     enc.intra_bc_mode = list_intra_bcmode[fcgCXIntraBCMode->SelectedIndex].value;
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
     enc.keyint = (int)fcgNUKeyint->Value;

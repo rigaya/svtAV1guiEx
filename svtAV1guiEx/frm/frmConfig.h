@@ -755,7 +755,7 @@ private: System::Windows::Forms::NumericUpDown ^fcgNUQP;
 private: System::Windows::Forms::ComboBox ^fcgCXEncMode;
 private: System::Windows::Forms::NumericUpDown ^fcgNUBitrate;
 private: System::Windows::Forms::Label ^fcgLBHierarchicalLevels;
-private: System::Windows::Forms::NumericUpDown ^fcgNUHierarchicalLevels;
+
 private: System::Windows::Forms::CheckBox ^fcgCBUseDefaultMeHme;
 private: System::Windows::Forms::Label ^fcgLBAQ;
 private: System::Windows::Forms::ComboBox ^fcgCXAQ;
@@ -999,6 +999,8 @@ private: System::Windows::Forms::TextBox ^fcgTXStatusFile;
 private: System::Windows::Forms::Button ^fcgBTStatusFile;
 private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
 private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
+private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
+
 
 
 
@@ -1117,6 +1119,15 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             System::ComponentModel::ComponentResourceManager ^resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
+            this->fcgCXHierarchicalLevels = (gcnew System::Windows::Forms::ComboBox());
+            this->fcgPNX264Mode = (gcnew System::Windows::Forms::Panel());
+            this->fcgLBKbps = (gcnew System::Windows::Forms::Label());
+            this->fcgLBRC = (gcnew System::Windows::Forms::Label());
+            this->fcgLBEncMode = (gcnew System::Windows::Forms::Label());
+            this->fcgNUBitrate = (gcnew System::Windows::Forms::NumericUpDown());
+            this->fcgCXEncMode = (gcnew System::Windows::Forms::ComboBox());
+            this->fcgNUQP = (gcnew System::Windows::Forms::NumericUpDown());
+            this->fcgCXRC = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLB2pasAuto = (gcnew System::Windows::Forms::Label());
             this->fcgCB2PassAuto = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXProfileAV1 = (gcnew System::Windows::Forms::ComboBox());
@@ -1163,7 +1174,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgCXAQ = (gcnew System::Windows::Forms::ComboBox());
             this->fcgCBUseDefaultMeHme = (gcnew System::Windows::Forms::CheckBox());
             this->fcgLBHierarchicalLevels = (gcnew System::Windows::Forms::Label());
-            this->fcgNUHierarchicalLevels = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBSearch2 = (gcnew System::Windows::Forms::Label());
             this->fcgLBTile2 = (gcnew System::Windows::Forms::Label());
             this->fcgNUSearchH = (gcnew System::Windows::Forms::NumericUpDown());
@@ -1181,14 +1191,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgCBEnableLocalWarp = (gcnew System::Windows::Forms::CheckBox());
             this->fcgLBThreads = (gcnew System::Windows::Forms::Label());
             this->fcgNUThreads = (gcnew System::Windows::Forms::NumericUpDown());
-            this->fcgPNX264Mode = (gcnew System::Windows::Forms::Panel());
-            this->fcgLBKbps = (gcnew System::Windows::Forms::Label());
-            this->fcgLBRC = (gcnew System::Windows::Forms::Label());
-            this->fcgLBEncMode = (gcnew System::Windows::Forms::Label());
-            this->fcgNUBitrate = (gcnew System::Windows::Forms::NumericUpDown());
-            this->fcgCXEncMode = (gcnew System::Windows::Forms::ComboBox());
-            this->fcgNUQP = (gcnew System::Windows::Forms::NumericUpDown());
-            this->fcgCXRC = (gcnew System::Windows::Forms::ComboBox());
             this->fcgCBUsehighbit = (gcnew System::Windows::Forms::CheckBox());
             this->fcgBTX264Path = (gcnew System::Windows::Forms::Button());
             this->fcgTXX264Path = (gcnew System::Windows::Forms::TextBox());
@@ -1406,12 +1408,14 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
+            this->fcgPNX264Mode->SuspendLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBitrate))->BeginInit();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUQP))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUCDEFLevel))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUVBVBufSize))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMaxQP))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMinQP))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSQW))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUHierarchicalLevels))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSearchH))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSearchW))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUTileColumns))->BeginInit();
@@ -1420,9 +1424,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUKeyint))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNULookaheadDistance))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUThreads))->BeginInit();
-            this->fcgPNX264Mode->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBitrate))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUQP))->BeginInit();
             this->fcgtabPageSVTAV1_2->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBiasPct))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUOverShootPct))->BeginInit();
@@ -1467,6 +1468,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXHierarchicalLevels);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgPNX264Mode);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLB2pasAuto);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCB2PassAuto);
@@ -1514,7 +1516,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXAQ);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBUseDefaultMeHme);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBHierarchicalLevels);
-            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUHierarchicalLevels);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBSearch2);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBTile2);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUSearchH);
@@ -1544,6 +1545,100 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgtabPageSVTAV1_1->Text = L"SVT-AV1 (1)";
             this->fcgtabPageSVTAV1_1->UseVisualStyleBackColor = true;
             // 
+            // fcgCXHierarchicalLevels
+            // 
+            this->fcgCXHierarchicalLevels->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXHierarchicalLevels->FormattingEnabled = true;
+            this->fcgCXHierarchicalLevels->Location = System::Drawing::Point(482, 225);
+            this->fcgCXHierarchicalLevels->Name = L"fcgCXHierarchicalLevels";
+            this->fcgCXHierarchicalLevels->Size = System::Drawing::Size(118, 22);
+            this->fcgCXHierarchicalLevels->TabIndex = 227;
+            this->fcgCXHierarchicalLevels->Tag = L"reCmd";
+            // 
+            // fcgPNX264Mode
+            // 
+            this->fcgPNX264Mode->Controls->Add(this->fcgLBKbps);
+            this->fcgPNX264Mode->Controls->Add(this->fcgLBRC);
+            this->fcgPNX264Mode->Controls->Add(this->fcgLBEncMode);
+            this->fcgPNX264Mode->Controls->Add(this->fcgNUBitrate);
+            this->fcgPNX264Mode->Controls->Add(this->fcgCXEncMode);
+            this->fcgPNX264Mode->Controls->Add(this->fcgNUQP);
+            this->fcgPNX264Mode->Controls->Add(this->fcgCXRC);
+            this->fcgPNX264Mode->Location = System::Drawing::Point(5, 67);
+            this->fcgPNX264Mode->Name = L"fcgPNX264Mode";
+            this->fcgPNX264Mode->Size = System::Drawing::Size(376, 71);
+            this->fcgPNX264Mode->TabIndex = 4;
+            // 
+            // fcgLBKbps
+            // 
+            this->fcgLBKbps->AutoSize = true;
+            this->fcgLBKbps->Location = System::Drawing::Point(339, 10);
+            this->fcgLBKbps->Name = L"fcgLBKbps";
+            this->fcgLBKbps->Size = System::Drawing::Size(32, 14);
+            this->fcgLBKbps->TabIndex = 76;
+            this->fcgLBKbps->Text = L"kbps";
+            // 
+            // fcgLBRC
+            // 
+            this->fcgLBRC->AutoSize = true;
+            this->fcgLBRC->Location = System::Drawing::Point(9, 10);
+            this->fcgLBRC->Name = L"fcgLBRC";
+            this->fcgLBRC->Size = System::Drawing::Size(54, 14);
+            this->fcgLBRC->TabIndex = 75;
+            this->fcgLBRC->Text = L"レート制御";
+            // 
+            // fcgLBEncMode
+            // 
+            this->fcgLBEncMode->AutoSize = true;
+            this->fcgLBEncMode->Location = System::Drawing::Point(9, 44);
+            this->fcgLBEncMode->Name = L"fcgLBEncMode";
+            this->fcgLBEncMode->Size = System::Drawing::Size(51, 14);
+            this->fcgLBEncMode->TabIndex = 74;
+            this->fcgLBEncMode->Text = L"速度設定";
+            // 
+            // fcgNUBitrate
+            // 
+            this->fcgNUBitrate->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
+            this->fcgNUBitrate->Location = System::Drawing::Point(254, 8);
+            this->fcgNUBitrate->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 4294967, 0, 0, 0 });
+            this->fcgNUBitrate->Name = L"fcgNUBitrate";
+            this->fcgNUBitrate->Size = System::Drawing::Size(79, 21);
+            this->fcgNUBitrate->TabIndex = 6;
+            this->fcgNUBitrate->Tag = L"reCmd";
+            this->fcgNUBitrate->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            this->fcgNUBitrate->Visible = false;
+            // 
+            // fcgCXEncMode
+            // 
+            this->fcgCXEncMode->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXEncMode->FormattingEnabled = true;
+            this->fcgCXEncMode->Location = System::Drawing::Point(84, 41);
+            this->fcgCXEncMode->Name = L"fcgCXEncMode";
+            this->fcgCXEncMode->Size = System::Drawing::Size(164, 22);
+            this->fcgCXEncMode->TabIndex = 7;
+            this->fcgCXEncMode->Tag = L"reCmd";
+            // 
+            // fcgNUQP
+            // 
+            this->fcgNUQP->Location = System::Drawing::Point(262, 8);
+            this->fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 120, 0, 0, 0 });
+            this->fcgNUQP->Name = L"fcgNUQP";
+            this->fcgNUQP->Size = System::Drawing::Size(64, 21);
+            this->fcgNUQP->TabIndex = 65;
+            this->fcgNUQP->Tag = L"reCmd";
+            this->fcgNUQP->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            // 
+            // fcgCXRC
+            // 
+            this->fcgCXRC->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXRC->FormattingEnabled = true;
+            this->fcgCXRC->Location = System::Drawing::Point(84, 7);
+            this->fcgCXRC->Name = L"fcgCXRC";
+            this->fcgCXRC->Size = System::Drawing::Size(164, 22);
+            this->fcgCXRC->TabIndex = 5;
+            this->fcgCXRC->Tag = L"reCmd";
+            this->fcgCXRC->SelectedIndexChanged += gcnew System::EventHandler(this, &frmConfig::fcgCXRC_SelectedIndexChanged);
+            // 
             // fcgLB2pasAuto
             // 
             this->fcgLB2pasAuto->AutoSize = true;
@@ -1567,7 +1662,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // 
             this->fcgCXProfileAV1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXProfileAV1->FormattingEnabled = true;
-            this->fcgCXProfileAV1->Location = System::Drawing::Point(481, 171);
+            this->fcgCXProfileAV1->Location = System::Drawing::Point(482, 171);
             this->fcgCXProfileAV1->Name = L"fcgCXProfileAV1";
             this->fcgCXProfileAV1->Size = System::Drawing::Size(118, 22);
             this->fcgCXProfileAV1->TabIndex = 60;
@@ -1576,7 +1671,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBProfileAV1
             // 
             this->fcgLBProfileAV1->AutoSize = true;
-            this->fcgLBProfileAV1->Location = System::Drawing::Point(386, 174);
+            this->fcgLBProfileAV1->Location = System::Drawing::Point(375, 174);
             this->fcgLBProfileAV1->Name = L"fcgLBProfileAV1";
             this->fcgLBProfileAV1->Size = System::Drawing::Size(42, 14);
             this->fcgLBProfileAV1->TabIndex = 222;
@@ -1587,7 +1682,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgCXColorFormat->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXColorFormat->Enabled = false;
             this->fcgCXColorFormat->FormattingEnabled = true;
-            this->fcgCXColorFormat->Location = System::Drawing::Point(481, 198);
+            this->fcgCXColorFormat->Location = System::Drawing::Point(482, 198);
             this->fcgCXColorFormat->Name = L"fcgCXColorFormat";
             this->fcgCXColorFormat->Size = System::Drawing::Size(118, 22);
             this->fcgCXColorFormat->TabIndex = 61;
@@ -1596,7 +1691,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBColorFormat
             // 
             this->fcgLBColorFormat->AutoSize = true;
-            this->fcgLBColorFormat->Location = System::Drawing::Point(385, 201);
+            this->fcgLBColorFormat->Location = System::Drawing::Point(374, 201);
             this->fcgLBColorFormat->Name = L"fcgLBColorFormat";
             this->fcgLBColorFormat->Size = System::Drawing::Size(79, 14);
             this->fcgLBColorFormat->TabIndex = 220;
@@ -1779,7 +1874,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBCDEFLevel
             // 
             this->fcgLBCDEFLevel->AutoSize = true;
-            this->fcgLBCDEFLevel->Location = System::Drawing::Point(386, 282);
+            this->fcgLBCDEFLevel->Location = System::Drawing::Point(375, 282);
             this->fcgLBCDEFLevel->Name = L"fcgLBCDEFLevel";
             this->fcgLBCDEFLevel->Size = System::Drawing::Size(62, 14);
             this->fcgLBCDEFLevel->TabIndex = 181;
@@ -1896,7 +1991,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBSQW
             // 
             this->fcgLBSQW->AutoSize = true;
-            this->fcgLBSQW->Location = System::Drawing::Point(386, 255);
+            this->fcgLBSQW->Location = System::Drawing::Point(375, 255);
             this->fcgLBSQW->Name = L"fcgLBSQW";
             this->fcgLBSQW->Size = System::Drawing::Size(83, 14);
             this->fcgLBSQW->TabIndex = 131;
@@ -1982,23 +2077,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBHierarchicalLevels
             // 
             this->fcgLBHierarchicalLevels->AutoSize = true;
-            this->fcgLBHierarchicalLevels->Location = System::Drawing::Point(386, 228);
+            this->fcgLBHierarchicalLevels->Location = System::Drawing::Point(375, 228);
             this->fcgLBHierarchicalLevels->Name = L"fcgLBHierarchicalLevels";
             this->fcgLBHierarchicalLevels->Size = System::Drawing::Size(103, 14);
             this->fcgLBHierarchicalLevels->TabIndex = 85;
             this->fcgLBHierarchicalLevels->Text = L"hierarchical levels";
-            // 
-            // fcgNUHierarchicalLevels
-            // 
-            this->fcgNUHierarchicalLevels->Location = System::Drawing::Point(525, 226);
-            this->fcgNUHierarchicalLevels->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 4, 0, 0, 0 });
-            this->fcgNUHierarchicalLevels->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3, 0, 0, 0 });
-            this->fcgNUHierarchicalLevels->Name = L"fcgNUHierarchicalLevels";
-            this->fcgNUHierarchicalLevels->Size = System::Drawing::Size(64, 21);
-            this->fcgNUHierarchicalLevels->TabIndex = 70;
-            this->fcgNUHierarchicalLevels->Tag = L"reCmd";
-            this->fcgNUHierarchicalLevels->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-            this->fcgNUHierarchicalLevels->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 3, 0, 0, 0 });
             // 
             // fcgLBSearch2
             // 
@@ -2031,7 +2114,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBSearch
             // 
             this->fcgLBSearch->AutoSize = true;
-            this->fcgLBSearch->Location = System::Drawing::Point(385, 338);
+            this->fcgLBSearch->Location = System::Drawing::Point(374, 338);
             this->fcgLBSearch->Name = L"fcgLBSearch";
             this->fcgLBSearch->Size = System::Drawing::Size(42, 14);
             this->fcgLBSearch->TabIndex = 80;
@@ -2060,7 +2143,7 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             // fcgLBTile
             // 
             this->fcgLBTile->AutoSize = true;
-            this->fcgLBTile->Location = System::Drawing::Point(386, 311);
+            this->fcgLBTile->Location = System::Drawing::Point(375, 311);
             this->fcgLBTile->Name = L"fcgLBTile";
             this->fcgLBTile->Size = System::Drawing::Size(23, 14);
             this->fcgLBTile->TabIndex = 77;
@@ -2164,90 +2247,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgNUThreads->TabIndex = 51;
             this->fcgNUThreads->Tag = L"reCmd";
             this->fcgNUThreads->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-            // 
-            // fcgPNX264Mode
-            // 
-            this->fcgPNX264Mode->Controls->Add(this->fcgLBKbps);
-            this->fcgPNX264Mode->Controls->Add(this->fcgLBRC);
-            this->fcgPNX264Mode->Controls->Add(this->fcgLBEncMode);
-            this->fcgPNX264Mode->Controls->Add(this->fcgNUBitrate);
-            this->fcgPNX264Mode->Controls->Add(this->fcgCXEncMode);
-            this->fcgPNX264Mode->Controls->Add(this->fcgNUQP);
-            this->fcgPNX264Mode->Controls->Add(this->fcgCXRC);
-            this->fcgPNX264Mode->Location = System::Drawing::Point(5, 67);
-            this->fcgPNX264Mode->Name = L"fcgPNX264Mode";
-            this->fcgPNX264Mode->Size = System::Drawing::Size(376, 71);
-            this->fcgPNX264Mode->TabIndex = 4;
-            // 
-            // fcgLBKbps
-            // 
-            this->fcgLBKbps->AutoSize = true;
-            this->fcgLBKbps->Location = System::Drawing::Point(339, 10);
-            this->fcgLBKbps->Name = L"fcgLBKbps";
-            this->fcgLBKbps->Size = System::Drawing::Size(32, 14);
-            this->fcgLBKbps->TabIndex = 76;
-            this->fcgLBKbps->Text = L"kbps";
-            // 
-            // fcgLBRC
-            // 
-            this->fcgLBRC->AutoSize = true;
-            this->fcgLBRC->Location = System::Drawing::Point(9, 10);
-            this->fcgLBRC->Name = L"fcgLBRC";
-            this->fcgLBRC->Size = System::Drawing::Size(54, 14);
-            this->fcgLBRC->TabIndex = 75;
-            this->fcgLBRC->Text = L"レート制御";
-            // 
-            // fcgLBEncMode
-            // 
-            this->fcgLBEncMode->AutoSize = true;
-            this->fcgLBEncMode->Location = System::Drawing::Point(9, 44);
-            this->fcgLBEncMode->Name = L"fcgLBEncMode";
-            this->fcgLBEncMode->Size = System::Drawing::Size(51, 14);
-            this->fcgLBEncMode->TabIndex = 74;
-            this->fcgLBEncMode->Text = L"速度設定";
-            // 
-            // fcgNUBitrate
-            // 
-            this->fcgNUBitrate->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 100, 0, 0, 0 });
-            this->fcgNUBitrate->Location = System::Drawing::Point(254, 8);
-            this->fcgNUBitrate->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 4294967, 0, 0, 0 });
-            this->fcgNUBitrate->Name = L"fcgNUBitrate";
-            this->fcgNUBitrate->Size = System::Drawing::Size(79, 21);
-            this->fcgNUBitrate->TabIndex = 6;
-            this->fcgNUBitrate->Tag = L"reCmd";
-            this->fcgNUBitrate->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-            this->fcgNUBitrate->Visible = false;
-            // 
-            // fcgCXEncMode
-            // 
-            this->fcgCXEncMode->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-            this->fcgCXEncMode->FormattingEnabled = true;
-            this->fcgCXEncMode->Location = System::Drawing::Point(84, 41);
-            this->fcgCXEncMode->Name = L"fcgCXEncMode";
-            this->fcgCXEncMode->Size = System::Drawing::Size(164, 22);
-            this->fcgCXEncMode->TabIndex = 7;
-            this->fcgCXEncMode->Tag = L"reCmd";
-            // 
-            // fcgNUQP
-            // 
-            this->fcgNUQP->Location = System::Drawing::Point(262, 8);
-            this->fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 120, 0, 0, 0 });
-            this->fcgNUQP->Name = L"fcgNUQP";
-            this->fcgNUQP->Size = System::Drawing::Size(64, 21);
-            this->fcgNUQP->TabIndex = 65;
-            this->fcgNUQP->Tag = L"reCmd";
-            this->fcgNUQP->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-            // 
-            // fcgCXRC
-            // 
-            this->fcgCXRC->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-            this->fcgCXRC->FormattingEnabled = true;
-            this->fcgCXRC->Location = System::Drawing::Point(84, 7);
-            this->fcgCXRC->Name = L"fcgCXRC";
-            this->fcgCXRC->Size = System::Drawing::Size(164, 22);
-            this->fcgCXRC->TabIndex = 5;
-            this->fcgCXRC->Tag = L"reCmd";
-            this->fcgCXRC->SelectedIndexChanged += gcnew System::EventHandler(this, &frmConfig::fcgCXRC_SelectedIndexChanged);
             // 
             // fcgCBUsehighbit
             // 
@@ -4577,12 +4576,15 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             this->fcgtabControlVideo->ResumeLayout(false);
             this->fcgtabPageSVTAV1_1->ResumeLayout(false);
             this->fcgtabPageSVTAV1_1->PerformLayout();
+            this->fcgPNX264Mode->ResumeLayout(false);
+            this->fcgPNX264Mode->PerformLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBitrate))->EndInit();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUQP))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUCDEFLevel))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUVBVBufSize))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMaxQP))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUMinQP))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSQW))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUHierarchicalLevels))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSearchH))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUSearchW))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUTileColumns))->EndInit();
@@ -4591,10 +4593,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUKeyint))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNULookaheadDistance))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUThreads))->EndInit();
-            this->fcgPNX264Mode->ResumeLayout(false);
-            this->fcgPNX264Mode->PerformLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBitrate))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUQP))->EndInit();
             this->fcgtabPageSVTAV1_2->ResumeLayout(false);
             this->fcgtabPageSVTAV1_2->PerformLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize ^>(this->fcgNUBiasPct))->EndInit();

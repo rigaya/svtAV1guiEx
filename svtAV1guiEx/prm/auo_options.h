@@ -344,6 +344,15 @@ const CX_DESC list_color_format[] = {
     { "3: yuv444", 3 },
     { nullptr, 0 }
 };
+const CX_DESC list_hierarchical_levels[] = {
+    { "0:  0B Pyramid", 0 },
+    { "1:  1B Pyramid", 1 },
+    { "2:  3B Pyramid", 2 },
+    { "3:  7B Pyramid", 3 },
+    { "4: 15B Pyramid", 4 },
+    { "5: 31B Pyramid", 5 },
+    { nullptr, 0 }
+};
 const CX_DESC list_chroma_mode[] = {
     { "-1: default", -1 },
     { "0: Full chroma search", 0 },
