@@ -855,6 +855,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXEnableIntraEdgeFilter, list_on_off_default);
     setComboBox(fcgCXEnableIntraEdgeSkp, list_on_off_default);
     setComboBox(fcgCXEnableInterIntraComp, list_on_off_default);
+    setComboBox(fcgCXEnableLocalWarp, list_on_off_default);
     setComboBox(fcgCXEnableMfmv, list_on_off_default);
     setComboBox(fcgCXEnableNewNearestCombInjection, list_on_off_default);
     setComboBox(fcgCXEnableSmooth, list_on_off_default);
@@ -1125,7 +1126,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXEnableIntraEdgeSkp, get_cx_index(list_on_off_default, enc.enable_intra_edge_skp));
     SetCXIndex(fcgCXEnableIntraAngleDelta, get_cx_index(list_on_off_default, enc.enable_intra_angle_delta));
     SetCXIndex(fcgCXEnableInterIntraComp, get_cx_index(list_on_off_default, enc.enable_interintra_comp));
-    fcgCBEnableLocalWarp->Checked = enc.enable_local_warp != 0; //local-warp
+    SetCXIndex(fcgCXEnableLocalWarp, get_cx_index(list_on_off_default, enc.enable_local_warp));
     SetCXIndex(fcgCXEnableMfmv, get_cx_index(list_on_off_default, enc.enable_mfmv));
     SetCXIndex(fcgCXEnableNewNearestCombInjection, get_cx_index(list_on_off_default, enc.enable_new_nrst_near_comb));
     SetCXIndex(fcgCXEnableOverBoundryBlock, get_cx_index(list_on_off_default, enc.enable_over_bndry_blk));
@@ -1257,7 +1258,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_intra_edge_skp = list_on_off_default[fcgCXEnableIntraEdgeSkp->SelectedIndex].value;
     enc.enable_intra_angle_delta = list_on_off_default[fcgCXEnableIntraAngleDelta->SelectedIndex].value;
     enc.enable_interintra_comp = list_on_off_default[fcgCXEnableInterIntraComp->SelectedIndex].value;
-    enc.enable_local_warp = fcgCBEnableLocalWarp->Checked; //local-warp
+    enc.enable_local_warp = list_on_off_default[fcgCXEnableLocalWarp->SelectedIndex].value;
     enc.enable_mfmv = list_on_off_default[fcgCXEnableMfmv->SelectedIndex].value;
     enc.enable_new_nrst_near_comb = list_on_off_default[fcgCXEnableNewNearestCombInjection->SelectedIndex].value;
     enc.enable_over_bndry_blk = list_on_off_default[fcgCXEnableOverBoundryBlock->SelectedIndex].value;

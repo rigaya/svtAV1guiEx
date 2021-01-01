@@ -720,7 +720,7 @@ private: System::Windows::Forms::NumericUpDown ^fcgNULookaheadDistance;
 
 
 
-private: System::Windows::Forms::CheckBox ^fcgCBEnableLocalWarp;
+
 
 
 
@@ -1000,6 +1000,11 @@ private: System::Windows::Forms::Button ^fcgBTStatusFile;
 private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
 private: System::Windows::Forms::ComboBox ^fcgCXTFLevel;
 private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
+private: System::Windows::Forms::Label ^fcgLBEnableStatReport;
+private: System::Windows::Forms::Label ^fcgLBEnableGlobalMotion;
+private: System::Windows::Forms::Label ^fcgLBUseDefaultMeHme;
+private: System::Windows::Forms::ComboBox ^fcgCXEnableLocalWarp;
+private: System::Windows::Forms::Label ^fcgLBEnableLocalWarp;
 
 
 
@@ -1188,7 +1193,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             this->fcgNUKeyint = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBLookahead = (gcnew System::Windows::Forms::Label());
             this->fcgNULookaheadDistance = (gcnew System::Windows::Forms::NumericUpDown());
-            this->fcgCBEnableLocalWarp = (gcnew System::Windows::Forms::CheckBox());
             this->fcgLBThreads = (gcnew System::Windows::Forms::Label());
             this->fcgNUThreads = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgCBUsehighbit = (gcnew System::Windows::Forms::CheckBox());
@@ -1406,6 +1410,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgCXEnableLocalWarp = (gcnew System::Windows::Forms::ComboBox());
+            this->fcgLBEnableLocalWarp = (gcnew System::Windows::Forms::Label());
+            this->fcgLBUseDefaultMeHme = (gcnew System::Windows::Forms::Label());
+            this->fcgLBEnableGlobalMotion = (gcnew System::Windows::Forms::Label());
+            this->fcgLBEnableStatReport = (gcnew System::Windows::Forms::Label());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             this->fcgPNX264Mode->SuspendLayout();
@@ -1468,6 +1477,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBEnableStatReport);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBEnableGlobalMotion);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBUseDefaultMeHme);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXEnableLocalWarp);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBEnableLocalWarp);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXHierarchicalLevels);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgPNX264Mode);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLB2pasAuto);
@@ -1530,7 +1544,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUKeyint);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBLookahead);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNULookaheadDistance);
-            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBEnableLocalWarp);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBThreads);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUThreads);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBUsehighbit);
@@ -1700,12 +1713,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             // fcgCBEnableStatReport
             // 
             this->fcgCBEnableStatReport->AutoSize = true;
-            this->fcgCBEnableStatReport->Location = System::Drawing::Point(483, 414);
+            this->fcgCBEnableStatReport->Location = System::Drawing::Point(517, 470);
             this->fcgCBEnableStatReport->Name = L"fcgCBEnableStatReport";
-            this->fcgCBEnableStatReport->Size = System::Drawing::Size(84, 18);
-            this->fcgCBEnableStatReport->TabIndex = 93;
+            this->fcgCBEnableStatReport->Size = System::Drawing::Size(15, 14);
+            this->fcgCBEnableStatReport->TabIndex = 97;
             this->fcgCBEnableStatReport->Tag = L"reCmd";
-            this->fcgCBEnableStatReport->Text = L"StatReport";
             this->fcgCBEnableStatReport->UseVisualStyleBackColor = true;
             // 
             // fcgCXDisableCfl
@@ -1980,12 +1992,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             // fcgCBEnableGlobalMotion
             // 
             this->fcgCBEnableGlobalMotion->AutoSize = true;
-            this->fcgCBEnableGlobalMotion->Location = System::Drawing::Point(483, 391);
+            this->fcgCBEnableGlobalMotion->Location = System::Drawing::Point(517, 423);
             this->fcgCBEnableGlobalMotion->Name = L"fcgCBEnableGlobalMotion";
-            this->fcgCBEnableGlobalMotion->Size = System::Drawing::Size(97, 18);
-            this->fcgCBEnableGlobalMotion->TabIndex = 91;
+            this->fcgCBEnableGlobalMotion->Size = System::Drawing::Size(15, 14);
+            this->fcgCBEnableGlobalMotion->TabIndex = 93;
             this->fcgCBEnableGlobalMotion->Tag = L"reCmd";
-            this->fcgCBEnableGlobalMotion->Text = L"GlobalMotion";
             this->fcgCBEnableGlobalMotion->UseVisualStyleBackColor = true;
             // 
             // fcgLBSQW
@@ -2066,12 +2077,11 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             // fcgCBUseDefaultMeHme
             // 
             this->fcgCBUseDefaultMeHme->AutoSize = true;
-            this->fcgCBUseDefaultMeHme->Location = System::Drawing::Point(337, 414);
+            this->fcgCBUseDefaultMeHme->Location = System::Drawing::Point(517, 447);
             this->fcgCBUseDefaultMeHme->Name = L"fcgCBUseDefaultMeHme";
-            this->fcgCBUseDefaultMeHme->Size = System::Drawing::Size(135, 18);
-            this->fcgCBUseDefaultMeHme->TabIndex = 92;
+            this->fcgCBUseDefaultMeHme->Size = System::Drawing::Size(15, 14);
+            this->fcgCBUseDefaultMeHme->TabIndex = 95;
             this->fcgCBUseDefaultMeHme->Tag = L"reCmd";
-            this->fcgCBUseDefaultMeHme->Text = L"Use default me hme";
             this->fcgCBUseDefaultMeHme->UseVisualStyleBackColor = true;
             // 
             // fcgLBHierarchicalLevels
@@ -2218,17 +2228,6 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             this->fcgNULookaheadDistance->TabIndex = 54;
             this->fcgNULookaheadDistance->Tag = L"reCmd";
             this->fcgNULookaheadDistance->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-            // 
-            // fcgCBEnableLocalWarp
-            // 
-            this->fcgCBEnableLocalWarp->AutoSize = true;
-            this->fcgCBEnableLocalWarp->Location = System::Drawing::Point(337, 391);
-            this->fcgCBEnableLocalWarp->Name = L"fcgCBEnableLocalWarp";
-            this->fcgCBEnableLocalWarp->Size = System::Drawing::Size(132, 18);
-            this->fcgCBEnableLocalWarp->TabIndex = 90;
-            this->fcgCBEnableLocalWarp->Tag = L"reCmd";
-            this->fcgCBEnableLocalWarp->Text = L"LocalWarpedMotion";
-            this->fcgCBEnableLocalWarp->UseVisualStyleBackColor = true;
             // 
             // fcgLBThreads
             // 
@@ -4547,6 +4546,52 @@ private: System::Windows::Forms::ComboBox ^fcgCXHierarchicalLevels;
             this->fcgLBAudioPriority->Size = System::Drawing::Size(62, 14);
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
+            // 
+            // fcgCXEnableLocalWarp
+            // 
+            this->fcgCXEnableLocalWarp->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXEnableLocalWarp->FormattingEnabled = true;
+            this->fcgCXEnableLocalWarp->Location = System::Drawing::Point(494, 392);
+            this->fcgCXEnableLocalWarp->Name = L"fcgCXEnableLocalWarp";
+            this->fcgCXEnableLocalWarp->Size = System::Drawing::Size(106, 22);
+            this->fcgCXEnableLocalWarp->TabIndex = 91;
+            this->fcgCXEnableLocalWarp->Tag = L"reCmd";
+            // 
+            // fcgLBEnableLocalWarp
+            // 
+            this->fcgLBEnableLocalWarp->AutoSize = true;
+            this->fcgLBEnableLocalWarp->Location = System::Drawing::Point(375, 395);
+            this->fcgLBEnableLocalWarp->Name = L"fcgLBEnableLocalWarp";
+            this->fcgLBEnableLocalWarp->Size = System::Drawing::Size(113, 14);
+            this->fcgLBEnableLocalWarp->TabIndex = 90;
+            this->fcgLBEnableLocalWarp->Text = L"LocalWarpedMotion";
+            // 
+            // fcgLBUseDefaultMeHme
+            // 
+            this->fcgLBUseDefaultMeHme->AutoSize = true;
+            this->fcgLBUseDefaultMeHme->Location = System::Drawing::Point(374, 445);
+            this->fcgLBUseDefaultMeHme->Name = L"fcgLBUseDefaultMeHme";
+            this->fcgLBUseDefaultMeHme->Size = System::Drawing::Size(116, 14);
+            this->fcgLBUseDefaultMeHme->TabIndex = 94;
+            this->fcgLBUseDefaultMeHme->Text = L"Use default me hme";
+            // 
+            // fcgLBEnableGlobalMotion
+            // 
+            this->fcgLBEnableGlobalMotion->AutoSize = true;
+            this->fcgLBEnableGlobalMotion->Location = System::Drawing::Point(375, 421);
+            this->fcgLBEnableGlobalMotion->Name = L"fcgLBEnableGlobalMotion";
+            this->fcgLBEnableGlobalMotion->Size = System::Drawing::Size(78, 14);
+            this->fcgLBEnableGlobalMotion->TabIndex = 92;
+            this->fcgLBEnableGlobalMotion->Text = L"GlobalMotion";
+            // 
+            // fcgLBEnableStatReport
+            // 
+            this->fcgLBEnableStatReport->AutoSize = true;
+            this->fcgLBEnableStatReport->Location = System::Drawing::Point(375, 469);
+            this->fcgLBEnableStatReport->Name = L"fcgLBEnableStatReport";
+            this->fcgLBEnableStatReport->Size = System::Drawing::Size(69, 14);
+            this->fcgLBEnableStatReport->TabIndex = 96;
+            this->fcgLBEnableStatReport->Text = L"Stat Report";
             // 
             // frmConfig
             // 
