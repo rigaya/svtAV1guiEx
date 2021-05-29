@@ -840,7 +840,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXMP4BoxTempDir,  mp4boxtempdir_desc);
     setComboBox(fcgCXTempDir,        tempdir_desc);
     setComboBox(fcgCXTransfer,       list_transfer);
-    setComboBox(fcgCXRC,             x264_encodemode_desc);
+    setComboBox(fcgCXRC,             list_rc);
     setComboBox(fcgCXEncMode,        list_enc_mode);
     setComboBox(fcgCXSCM,            list_scm);
 
@@ -1103,7 +1103,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     parse_cmd(&enc, cnf->enc.cmd, true);
     this->SuspendLayout();
     fcgCBUsehighbit->Checked = enc.bit_depth > 8;
-    SetCXIndex(fcgCXRC, enc.rc);
+    SetCXIndex(fcgCXRC, get_cx_index(list_rc, enc.rc));
     SetCXIndex(fcgCXEncMode, enc.preset);
     SetNUValue(fcgNUQP, enc.qp);
     SetNUValue(fcgNUBitrate, enc.bitrate);
@@ -1235,7 +1235,8 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     CONF_ENCODER enc = get_default_prm();
     //x264部
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
-    enc.rc                   = fcgCXRC->SelectedIndex;
+    enc.rc                   = list_rc[fcgCXRC->SelectedIndex].value;
+    enc.enable_tpl_la        = (enc.rc == get_cx_value(list_rc, "CQP")) ? 0 : 1;
     enc.preset               = fcgCXEncMode->SelectedIndex;
     enc.bitrate              = (int)fcgNUBitrate->Value;
     enc.qp                   = (int)fcgNUQP->Value;

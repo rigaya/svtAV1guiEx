@@ -635,18 +635,12 @@ namespace svtAV1guiEx {
 
 
 //コンボボックスの表示名
-const WCHAR * const x264_encodemode_desc[] = {
-    L"0 - CQP",
-    L"1 - VBR",
-    L"2 - CVBR",
-    NULL
-};
 
 #define STR_BITRATE_AUTO (L"-1: 自動 ")
 
 const int x264_encmode_to_RCint[] = {
     X264_RC_QP,
-    X264_RC_BITRATE,
+    X264_RC_QP,
     X264_RC_BITRATE,
     NULL
 };

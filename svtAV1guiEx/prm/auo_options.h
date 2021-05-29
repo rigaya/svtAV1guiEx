@@ -82,13 +82,6 @@ enum {
     AUTO_NPASS_CRF,
 };
 
-const ENC_OPTION_STR list_rc[] = {
-    { "CQP",  L"CQP" },
-    { "VBR",  L"VBR" },
-    { "CVBR", L"CVBR"  },
-    { NULL, NULL }
-};
-
 //x264のinput-cspとして使用するもの
 //OUT_CSP_NV12, OUT_CSP_YUV444, OUT_CSP_RGB に合わせる
 static const char * const specify_csp[] = {
@@ -249,6 +242,7 @@ typedef struct {
     int     enable_smooth;
     int     enable_spatial_sse_fl;  //-spatial-sse-fl (on,off,default)
     int     enable_stat_report;
+    int     enable_tpl_la;
     int     ext_block;  //ext-block
     int     hbd_md; // 	--hbd-md
     int     hierarchical_levels; //hierarchical-levels
@@ -330,6 +324,13 @@ static const TCHAR *get_cx_desc(const CX_DESC *list, int v) {
             return list[i].desc;
     return nullptr;
 }
+
+const CX_DESC list_rc[] = {
+    { "CQP",  0 },
+    { "CRF", -1 },
+    { "VBR",  1 },
+    { nullptr, 0 }
+};
 
 const CX_DESC list_on_off_default[] = {
     { "-1: default", -1 },

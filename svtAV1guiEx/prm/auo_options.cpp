@@ -147,6 +147,13 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
 
     OPT_NUM("preset", preset);
     OPT_NUM("input-depth", bit_depth);
+    if (IS_OPTION("crf")) {
+        i++;
+        int ret = to_int(&cx->qp, argv[i]);
+        cx->rc = get_cx_value(list_rc, "CRF");
+        cx->enable_tpl_la = 1;
+        return ret;
+    }
     OPT_NUM("rc", rc);
     OPT_NUM("q", qp);
     OPT_NUM("color-format", output_csp);
@@ -182,6 +189,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("enable-smooth", enable_smooth);
     OPT_NUM("enable-spatial-sse-full-loop-level", enable_spatial_sse_fl);
     OPT_NUM("enable-stat-report", enable_stat_report);
+    OPT_NUM("enable-tpl-la", enable_tpl_la);
     OPT_NUM("ext-block", ext_block);
     OPT_NUM("hbd-md", hbd_md);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
@@ -261,8 +269,12 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
 
     OPT_NUM("preset", preset);
     OPT_NUM("input-depth", bit_depth);
-    OPT_NUM("rc", rc);
-    if ((cx->qp) != (encPrmDefault.qp)) cmd << " -q " << (int)(cx->qp);
+    if (cx->rc == get_cx_value(list_rc, "CRF") && cx->enable_tpl_la != 0) {
+        cmd << " --crf " << (int)(cx->qp);
+    } else {
+        OPT_NUM("rc", rc);
+        if ((cx->qp) != (encPrmDefault.qp)) cmd << " -q " << (int)(cx->qp);
+    }
     OPT_NUM("color-format", output_csp);
     OPT_NUM("profile", profile);
     OPT_NUM("pass", pass);
@@ -296,6 +308,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("enable-smooth", enable_smooth);
     OPT_NUM("enable-spatial-sse-full-loop-level", enable_spatial_sse_fl);
     OPT_NUM("enable-stat-report", enable_stat_report);
+    OPT_NUM("enable-tpl-la", enable_tpl_la);
     OPT_NUM("ext-block", ext_block);
     OPT_NUM("hbd-md", hbd_md);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
