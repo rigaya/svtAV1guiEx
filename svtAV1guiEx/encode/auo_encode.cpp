@@ -473,27 +473,37 @@ static void replace_aspect_ratio(char *cmd, size_t nSize, const CONF_GUIEX *conf
             dar_x /= gcd;
             dar_y /= gcd;
         }
-    }
-    if (sar_x * sar_y <= 0)
-        sar_x = sar_y = 1;
-    if (dar_x * dar_y <= 0)
-        dar_x = dar_y = 1;
+        if (sar_x * sar_y <= 0)
+            sar_x = sar_y = 1;
 
-    char buf[32];
-    //%{sar_x} / %{par_x}
-    sprintf_s(buf, _countof(buf), "%d", sar_x);
-    replace(cmd, nSize, "%{sar_x}", buf);
-    replace(cmd, nSize, "%{par_x}", buf);
-    //%{sar_x} / %{sar_y}
-    sprintf_s(buf, _countof(buf), "%d", sar_y);
-    replace(cmd, nSize, "%{sar_y}", buf);
-    replace(cmd, nSize, "%{par_y}", buf);
-    //%{dar_x}
-    sprintf_s(buf, _countof(buf), "%d", dar_x);
-    replace(cmd, nSize, "%{dar_x}", buf);
-    //%{dar_y}
-    sprintf_s(buf, _countof(buf), "%d", dar_y);
-    replace(cmd, nSize, "%{dar_y}", buf);
+        char buf[32];
+        //%{sar_x} / %{par_x}
+        sprintf_s(buf, _countof(buf), "%d", sar_x);
+        replace(cmd, nSize, "%{sar_x}", buf);
+        replace(cmd, nSize, "%{par_x}", buf);
+        //%{sar_x} / %{sar_y}
+        sprintf_s(buf, _countof(buf), "%d", sar_y);
+        replace(cmd, nSize, "%{sar_y}", buf);
+        replace(cmd, nSize, "%{par_y}", buf);
+        if ((sar_x == 1 && sar_y == 1) || (dar_x * dar_y <= 0)) {
+            del_arg(cmd, "%{dar_x}", -1);
+            del_arg(cmd, "%{dar_y}", -1);
+        } else {
+            //%{dar_x}
+            sprintf_s(buf, _countof(buf), "%d", dar_x);
+            replace(cmd, nSize, "%{dar_x}", buf);
+            //%{dar_y}
+            sprintf_s(buf, _countof(buf), "%d", dar_y);
+            replace(cmd, nSize, "%{dar_y}", buf);
+        }
+    } else {
+        del_arg(cmd, "%{sar_x}", -1);
+        del_arg(cmd, "%{sar_y}", -1);
+        del_arg(cmd, "%{par_x}", -1);
+        del_arg(cmd, "%{par_y}", -1);
+        del_arg(cmd, "%{dar_x}", -1);
+        del_arg(cmd, "%{dar_y}", -1);
+    }
 }
 
 void cmd_replace(char *cmd, size_t nSize, const PRM_ENC *pe, const SYSTEM_DATA *sys_dat, const CONF_GUIEX *conf, const OUTPUT_INFO *oip) {

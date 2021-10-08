@@ -1172,6 +1172,11 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUVBVBufSize, enc.vbv_bufsize);
     SetCXIndex(fcgCXWnFilterMode, get_cx_index(list_wn_filter_mode, enc.wn_filter_mode));
 
+    if (cnf->vid.sar_x * cnf->vid.sar_y < 0)
+        cnf->vid.sar_x = cnf->vid.sar_y = 0;
+    fcgCXAspectRatio->SelectedIndex = (cnf->vid.sar_x < 0);
+    SetNUValue(fcgNUAspectRatioX, abs(cnf->vid.sar_x));
+    SetNUValue(fcgNUAspectRatioY, abs(cnf->vid.sar_y));
 
     if (all) {
         fcgTXStatusFile->Text = (str_has_char(cnf->vid.stats))     ? String(cnf->vid.stats).ToString() : String(DefaultStatusFilePath).ToString();
@@ -1305,6 +1310,9 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.use_default_me_hme = fcgCBUseDefaultMeHme->Checked;  //use-default-me-hme
     enc.vbv_bufsize = (int)fcgNUVBVBufSize->Value;
     enc.wn_filter_mode  = list_wn_filter_mode[fcgCXWnFilterMode->SelectedIndex].value;
+
+    cnf->vid.sar_x = (int)fcgNUAspectRatioX->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);
+    cnf->vid.sar_y = (int)fcgNUAspectRatioY->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);
 
     //拡張部
     GetCHARfromString(cnf->vid.stats, fcgTXStatusFile->Text);
