@@ -705,7 +705,7 @@ static __forceinline void convert_yc48_to_nv16_16bit_simd(void *pixel, CONVERT_C
     short *ycp = (short *)pixel;
     short * const ycp_fin = ycp + width * height * 3;
     const __m128i xC_pw_one = _mm_set1_epi16(1);
-    const __m128i xC_max = _mm_set1_epi16((short)LIMIT_16);
+    const __m128i xC_max = _mm_set1_epi16(*(short*)&LIMIT_16);
     const __m128i xC_YCC = _mm_set1_epi32(1<<LSFT_YCC_16);
     __m128i x1, x2, x3;
     for (; ycp < ycp_fin; ycp += 24, dst_Y += 8, dst_C += 8) {
@@ -789,7 +789,7 @@ static __forceinline void convert_yc48_to_yuv444_simd(void *pixel, CONVERT_CF_DA
     short *ycp;
     short *const ycp_fin = (short *)pixel + width * height * 3;
     const __m128i xC_pw_one = _mm_set1_epi16(1);
-    const __m128i xC_max = _mm_set1_epi16((short)LIMIT_16);
+    const __m128i xC_max = _mm_set1_epi16(*(short*)&LIMIT_16);
     const __m128i xC_YCC = _mm_set1_epi32(1<<LSFT_YCC_16);
     __m128i x1, x2, x3, xY, xU, xV;
     for (ycp = (short *)pixel; ycp < ycp_fin; ycp += 48, Y += 16, U += 16, V += 16) {
@@ -834,7 +834,7 @@ static __forceinline void convert_yc48_to_yuv444_16bit_simd(void *pixel, CONVERT
     short *ycp;
     short *const ycp_fin = (short *)pixel + width * height * 3;
     const __m128i xC_pw_one = _mm_set1_epi16(1);
-    const __m128i xC_max = _mm_set1_epi16((short)LIMIT_16);
+    const __m128i xC_max = _mm_set1_epi16(*(short*)&LIMIT_16);
     const __m128i xC_YCC = _mm_set1_epi32(1<<LSFT_YCC_16);
     __m128i x1, x2, x3;
     for (ycp = (short *)pixel; ycp < ycp_fin; ycp += 24, Y += 8, U += 8, V += 8) {
