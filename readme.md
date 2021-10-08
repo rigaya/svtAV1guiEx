@@ -9,7 +9,7 @@ by rigaya
 [rigayaの日記兼メモ帳＞＞](http://rigaya34589.blog135.fc2.com/blog-category-28.html)
 
 ## 想定動作環境
-Windows 10 (x64)  
+Windows 10/11 (x64)  
 Aviutl 1.00 以降 推奨
 
 x86(32bit)環境では動作しません。
