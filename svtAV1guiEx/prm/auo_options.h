@@ -101,63 +101,77 @@ const ENC_OPTION_STR list_output_csp[] = {
     { "rgb",  L"rgb"  },
     { NULL, NULL }
 };
-const ENC_OPTION_STR list_input_range[] = {
-    { "auto", L"auto" },
-    { "pc",   L"pc" },
+
+typedef struct CX_DESC {
+    const TCHAR *desc;
+    int value;
+} CX_DESC;
+
+enum {
+    COLOR_MATRIX_AUTO = 0,
+};
+const int COLOR_MATRIX_THRESHOLD = 720;
+
+const CX_DESC list_color_range[] = {
+    { "auto",  0 },
+    { "pc",    1 },
+    { nullptr, 0 }
+};
+const CX_DESC list_colorprim[] = {
+    { "undef",     2   },
+    { "auto",      COLOR_MATRIX_AUTO   },
+    { "bt709",     1   },
+    //{ "smpte170m", 3 },
+    { "bt470m",    4   },
+    { "bt470bg",   5   },
+    { "bt601",     6   },
+    { "smpte240m", 7   },
+    { "film",      8   },
+    { "bt2020",    9   },
+    { "smpte428",  10  },
+    { "smpte431",  11  },
+    { "smpte432",  12  },
+    { "ebu3213",   13  },
     { NULL, NULL }
 };
-const ENC_OPTION_STR list_colorprim[] = {
-    { "undef",     L"指定なし"  },
-    { "auto",      L"自動"      },
-    { "bt709",     L"bt709"     },
-    { "smpte170m", L"smpte170m" },
-    { "bt470m",    L"bt470m"    },
-    { "bt470bg",   L"bt470bg"   },
-    { "smpte240m", L"smpte240m" },
-    { "film",      L"film"      },
-    { "bt2020",    L"bt2020"    },
-    { "smpte428",  L"smpte428"  },
-    { "smpte431",  L"smpte431"  },
-    { "smpte432",  L"smpte432"  },
+const CX_DESC list_transfer[] = {
+    { "undef",        2  },
+    { "auto",         COLOR_MATRIX_AUTO  },
+    { "bt709",        1  },
+    //{ "smpte170m",    3    },
+    { "bt470m",       4  },
+    { "bt470bg",      5  },
+    { "bt601",        6  },
+    { "smpte240m",    7  },
+    { "linear",       8  },
+    { "log100",       9  },
+    { "log316",       10 },
+    { "iec61966-2-4", 11 },
+    { "bt1361e",      12 },
+    { "srgb",         13 },
+    { "bt2020-10",    14 },
+    { "bt2020-12",    15 },
+    { "smpte2084",    16 },
+    { "smpte428",     17 },
+    { "arib-std-b67", 18 },
     { NULL, NULL }
 };
-const ENC_OPTION_STR list_transfer[] = {
-    { "undef",        L"指定なし"     },
-    { "auto",         L"自動"         },
-    { "bt709",        L"bt709"        },
-    { "smpte170m",    L"smpte170m"    },
-    { "bt470m",       L"bt470m"       },
-    { "bt470bg",      L"bt470bg"      },
-    { "smpte240m",    L"smpte240m"    },
-    { "linear",       L"linear"       },
-    { "log100",       L"log100"       },
-    { "log316",       L"log316"       },
-    { "iec61966-2-4", L"iec61966-2-4" },
-    { "bt1361e",      L"bt1361e"      },
-    { "iec61966-2-1", L"iec61966-2-1" },
-    { "bt2020-10",    L"bt2020-10"    },
-    { "bt2020-12",    L"bt2020-12"    },
-    { "smpte2084",    L"smpte2084"    },
-    { "smpte428",     L"smpte428"     },
-    { "arib-std-b67", L"arib-std-b67" },
-    { NULL, NULL }
-};
-const ENC_OPTION_STR list_colormatrix[] = {
-    { "undef",     L"指定なし"  },
-    { "auto",      L"自動"      },
-    { "bt709",     L"bt709"     },
-    { "smpte170m", L"smpte170m" },
-    { "bt470bg",   L"bt470bg"   },
-    { "smpte240m", L"smpte240m" },
-    { "YCgCo",     L"YCgCo"     },
-    { "fcc",       L"fcc"       },
-    { "GBR",       L"GBR"       },
-    { "bt2020nc",  L"bt2020nc"  },
-    { "bt2020c",   L"bt2020c"   },
-    { "smpte2085", L"smpte2085" },
-    { "chroma-derived-nc", L"chroma-derived-nc" },
-    { "chroma-derived-c",  L"chroma-derived-c" },
-    { "ICtCp",     L"ICtCp" },
+const CX_DESC list_colormatrix[] = {
+    { "undef",     2  },
+    { "auto",      COLOR_MATRIX_AUTO  },
+    { "bt709",     1  },
+    //{ "smpte170m", 3 },
+    { "fcc",       4  },
+    { "bt470bg",   5  },
+    { "bt601",     6  },
+    { "smpte240m", 7  },
+    { "YCgCo",     8  },
+    { "bt2020nc",  9  },
+    { "bt2020c",   10 },
+    { "smpte2085", 11 },
+    { "chromat ncl", 12 },
+    { "chromat cl",  13 },
+    { "ictcp",       14 },
     { NULL, NULL }
 };
 const ENC_OPTION_STR list_videoformat[] = {
@@ -177,16 +191,6 @@ const ENC_OPTION_STR list_log_type[] = {
     { "debug",   L"debug"   },
     { NULL, NULL }
 };
-
-//色についてのオプション設定(0がデフォルトとなるよう、x264とは並び順が異なる)
-//まあGUIで順番なんてどうでも…
-enum {
-    COLOR_MATRIX_DEFAULT   = 0,
-    COLOR_MATRIX_AUTO      = 1,
-    COLOR_MATRIX_HD        = 2,
-    COLOR_MATRIX_SD        = 3,
-};
-const int COLOR_MATRIX_THRESHOLD = 720;
 
 #pragma pack(push,1)
 typedef struct {
@@ -222,6 +226,8 @@ typedef struct {
     int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
     int     cdef_level; //--cdef-level
     int     chroma_mode; //--chroma-mode
+    int     color_primaries; //--color-primaries
+    int     color_range; //--color_range
     int     compound;  //-compound  (list_compound)
     int     disable_cfl; //--disable-cfl
     int     enable_framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
@@ -244,6 +250,7 @@ typedef struct {
     int     enable_stat_report;
     int     enable_tpl_la;
     int     ext_block;  //ext-block
+    int     film_grain; //--film-grain
     int     hbd_md; // 	--hbd-md
     int     hierarchical_levels; //hierarchical-levels
     int     intra_bc_mode;       //intrabc-mode
@@ -251,6 +258,7 @@ typedef struct {
     int     keyint;        //keyint
     int     lookahead;        //lookahead (lookahead distance)
     int     lp;         //lp (LogicalProcessorNumber)
+    int     matrix_coefficients; //--matrix-coefficients
     int     max_qp;
     int     maxsection_pct; //--maxsection-pct
     int     min_qp;
@@ -270,6 +278,7 @@ typedef struct {
     BOOL    tf_level;
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
+    int     transfer_characteristics; // --transfer-characteristics
     int     umv; //-umv
     int     undershoot_pct; //--undershoot-pct
     BOOL    use_default_me_hme;  //use-default-me-hme
@@ -277,11 +286,6 @@ typedef struct {
     int     wn_filter_mode; //wn-filter-mode
 } CONF_ENCODER;
 #pragma pack(pop)
-
-typedef struct CX_DESC {
-    const TCHAR *desc;
-    int value;
-} CX_DESC;
 
 static const TCHAR *get_chr_from_value(const CX_DESC *list, int v) {
     for (int i = 0; list[i].desc; i++)
@@ -520,5 +524,6 @@ int parse_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err);
 std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm);
 CONF_ENCODER get_default_prm();
 void set_ex_stg_ptr(guiEx_settings *_ex_stg);
+void set_auto_colormatrix(CONF_ENCODER *cx, int height);
 
 #endif //_AUO_OPTIONS_H_

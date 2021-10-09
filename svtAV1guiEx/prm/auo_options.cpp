@@ -170,6 +170,8 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("compound", compound);
     OPT_NUM("cdef-level", cdef_level);
     OPT_NUM("chroma-mode", chroma_mode);
+    OPT_NUM("color-primaries", color_primaries);
+    OPT_NUM("color-range", color_range);
     OPT_NUM("disable-cfl", disable_cfl);
     OPT_NUM("enable-framend-cdf-upd-mode", enable_framend_cdf_upd_mode);
     OPT_NUM("enable-filter-intra", enable_filter_intra);
@@ -191,12 +193,14 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("enable-tpl-la", enable_tpl_la);
     OPT_NUM("ext-block", ext_block);
+    OPT_NUM("film-grain", film_grain);
     OPT_NUM("hbd-md", hbd_md);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("intrabc-mode", intra_bc_mode);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
     OPT_NUM("lookahead", lookahead);
+    OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
     OPT_NUM("min-qp", min_qp);
@@ -216,6 +220,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("tf-level", tf_level);
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
+    OPT_NUM("transfer-characteristics", transfer_characteristics);
     OPT_NUM("umv", umv);
     OPT_NUM("undershoot-pct", undershoot_pct);
     OPT_NUM("use-default-me-hme", use_default_me_hme);
@@ -289,6 +294,8 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("compound", compound);
     OPT_NUM("cdef-level", cdef_level);
     OPT_NUM("chroma-mode", chroma_mode);
+    OPT_NUM("color-primaries", color_primaries);
+    OPT_NUM("color-range", color_range);
     OPT_NUM("disable-cfl", disable_cfl);
     OPT_NUM("enable-framend-cdf-upd-mode", enable_framend_cdf_upd_mode);
     OPT_NUM("enable-filter-intra", enable_filter_intra);
@@ -310,12 +317,14 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("enable-tpl-la", enable_tpl_la);
     OPT_NUM("ext-block", ext_block);
+    OPT_NUM("film-grain", film_grain);
     OPT_NUM("hbd-md", hbd_md);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("intrabc-mode", intra_bc_mode);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
     OPT_NUM("lookahead", lookahead);
+    OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
     OPT_NUM("min-qp", min_qp);
@@ -335,6 +344,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("tf-level", tf_level);
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
+    OPT_NUM("transfer-characteristics", transfer_characteristics);
     OPT_NUM("umv", umv);
     OPT_NUM("undershoot-pct", undershoot_pct);
     OPT_NUM("use-default-me-hme", use_default_me_hme);
@@ -342,4 +352,13 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("wn-filter-mode", wn_filter_mode);
 
     return cmd.str();
+}
+
+void set_auto_colormatrix(CONF_ENCODER *cx, int height) {
+    if (cx->matrix_coefficients == COLOR_MATRIX_AUTO)
+        cx->matrix_coefficients = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colormatrix, "bt709") : get_cx_value(list_colormatrix, "bt601");
+    if (cx->color_primaries == COLOR_MATRIX_AUTO)
+        cx->color_primaries = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colorprim, "bt709") : get_cx_value(list_colormatrix, "bt601");
+    if (cx->transfer_characteristics == COLOR_MATRIX_AUTO)
+        cx->transfer_characteristics = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_transfer, "bt709") : get_cx_value(list_colormatrix, "bt601");
 }

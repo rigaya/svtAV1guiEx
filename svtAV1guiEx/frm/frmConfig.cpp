@@ -836,7 +836,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXAudioTempDir,   audtempdir_desc);
     setComboBox(fcgCXColorMatrix,    list_colormatrix);
     setComboBox(fcgCXColorPrim,      list_colorprim);
-    setComboBox(fcgCXInputRange,     list_input_range);
+    setComboBox(fcgCXColorRange,     list_color_range);
     setComboBox(fcgCXMP4BoxTempDir,  mp4boxtempdir_desc);
     setComboBox(fcgCXTempDir,        tempdir_desc);
     setComboBox(fcgCXTransfer,       list_transfer);
@@ -1118,6 +1118,8 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXChromaMode, get_cx_index(list_chroma_mode, enc.chroma_mode));
     SetCXIndex(fcgCXColorFormat, get_cx_index(list_color_format, enc.output_csp));
     SetCXIndex(fcgCXCompund, get_cx_index(list_compound, enc.compound));
+    SetCXIndex(fcgCXColorPrim, get_cx_index(list_colorprim, enc.color_primaries));
+    SetCXIndex(fcgCXColorRange, get_cx_index(list_color_range, enc.color_range));
     SetCXIndex(fcgCXDisableCfl, get_cx_index(list_on_off_default, enc.disable_cfl));
     SetCXIndex(fcgCXEnableFrameEndCdfUpdate, get_cx_index(list_on_off_default, enc.enable_framend_cdf_upd_mode));
     SetCXIndex(fcgCXEnableFilterIntra, get_cx_index(list_on_off_default, enc.enable_filter_intra));
@@ -1138,6 +1140,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
     SetCXIndex(fcgCXExtBlock, get_cx_index(list_on_off_default, enc.ext_block));
 
+    SetNUValue(fcgNUFilmGrain, enc.film_grain);
     SetCXIndex(fcgCXHighBitDepthModeDecision, get_cx_index(list_hbd_md, enc.hbd_md));
     SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
     SetCXIndex(fcgCXIntraBCMode, get_cx_index(list_intra_bcmode, enc.intra_bc_mode));
@@ -1145,6 +1148,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
     SetNUValue(fcgNULookaheadDistance, enc.lookahead);        //lad (lookahead distance)
     SetNUValue(fcgNUThreads, enc.lp);         //lp (LogicalProcessorNumber)
+    SetCXIndex(fcgCXColorMatrix, get_cx_index(list_colormatrix, enc.matrix_coefficients));
     SetNUValue(fcgNUMaxQP, enc.max_qp);
     SetNUValue(fcgNUMaxSectionPct, enc.maxsection_pct);
     SetNUValue(fcgNUMinQP, enc.min_qp);
@@ -1166,6 +1170,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXTFLevel, get_cx_index(list_tf_level, enc.tf_level));
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
+    SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
     SetCXIndex(fcgCXUMV, get_cx_index(list_on_off_default, enc.umv));
     SetNUValue(fcgNUUnderShootPct, enc.undershoot_pct); //tile-columns
     fcgCBUseDefaultMeHme->Checked = enc.use_default_me_hme != 0;  //use-default-me-hme
@@ -1254,6 +1259,8 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.bipred_3x3 = list_bipred_3x3[fcgCXBipred3x3->SelectedIndex].value;
     enc.cdef_level = (int)fcgNUCDEFLevel->Value;
     enc.chroma_mode = list_chroma_mode[fcgCXChromaMode->SelectedIndex].value;
+    enc.color_primaries = list_colorprim[fcgCXColorPrim->SelectedIndex].value;
+    enc.color_range = list_color_range[fcgCXColorRange->SelectedIndex].value;
     enc.output_csp = list_color_format[fcgCXColorFormat->SelectedIndex].value;
     enc.compound = list_on_off_default[fcgCXCompund->SelectedIndex].value;
     enc.disable_cfl = list_on_off_default[fcgCXDisableCfl->SelectedIndex].value;
@@ -1276,6 +1283,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_stat_report = fcgCBEnableStatReport->Checked;
     enc.ext_block = list_on_off_default[fcgCXExtBlock->SelectedIndex].value;  //ext-block
 
+    enc.film_grain = (int)fcgNUFilmGrain->Value;
     enc.hbd_md = list_hbd_md[fcgCXHighBitDepthModeDecision->SelectedIndex].value;
     enc.hierarchical_levels = (int)list_hierarchical_levels[fcgCXHierarchicalLevels->SelectedIndex].value;
     enc.intra_bc_mode = list_intra_bcmode[fcgCXIntraBCMode->SelectedIndex].value;
@@ -1287,6 +1295,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.minsection_pct = (int)fcgNUMinSectionPct->Value;
     enc.max_qp = (int)fcgNUMaxQP->Value;
     enc.maxsection_pct = (int)fcgNUMaxSectionPct->Value;
+    enc.matrix_coefficients = list_colormatrix[fcgCXColorMatrix->SelectedIndex].value;
 
     enc.mrp_level = list_mrp_level[fcgCXMrpLevel->SelectedIndex].value;
     enc.obmc_level = list_obmc_level[fcgCXObmcLevel->SelectedIndex].value;
@@ -1305,6 +1314,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.tf_level = (int)list_tf_level[fcgCXTFLevel->SelectedIndex].value;
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
+    enc.transfer_characteristics = list_transfer[fcgCXTransfer->SelectedIndex].value;
     enc.umv = list_on_off_default[fcgCXUMV->SelectedIndex].value;
     enc.undershoot_pct = (int)fcgNUUnderShootPct->Value;
     enc.use_default_me_hme = fcgCBUseDefaultMeHme->Checked;  //use-default-me-hme

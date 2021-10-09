@@ -731,6 +731,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     set_cmd(&enc, conf->vid.cmdex, true);
 
     set_pixel_data(&pixel_data, &enc, oip->w, oip->h);
+    set_auto_colormatrix(&enc, oip->h);
 
     int *jitter = NULL;
     int rp_ret = 0;
