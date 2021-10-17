@@ -269,6 +269,7 @@ typedef struct {
     int     palette;   //-palette
     int     pred_me;      //pred-me (list_pred_me)
     int     rdoq;         // (on,off,default)
+    int     scd;        //scd (scene change detection)
     int     scm;        //scm (list_scm)
     int     search_w;   //search_w
     int     search_h;   //search_h

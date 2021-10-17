@@ -1161,6 +1161,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXProfileAV1, get_cx_index(list_profile_av1, enc.profile));
     SetCXIndex(fcgCXRDOQ, get_cx_index(list_on_off_default, enc.rdoq));
     SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
+    fcgCBSceneChangeDetection->Checked = enc.scd != 0;  //scd
     SetNUValue(fcgNUSearchW, enc.search_w);   //search_w
     SetNUValue(fcgNUSearchH, enc.search_h);   //search_h
     SetCXIndex(fcgCXSgFilterMode, get_cx_index(list_sg_filter_mode, enc.sg_filter_mode));
@@ -1304,6 +1305,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.pred_me = list_pred_me[fcgCXPredMe->SelectedIndex].value;
     enc.profile = list_profile_av1[fcgCXProfileAV1->SelectedIndex].value;
     enc.rdoq = list_on_off_default[fcgCXRDOQ->SelectedIndex].value;
+    enc.scd = fcgCBSceneChangeDetection->Checked;
     enc.scm = list_scm[fcgCXSCM->SelectedIndex].value;
     enc.search_w = (int)fcgNUSearchW->Value;
     enc.search_h = (int)fcgNUSearchH->Value;

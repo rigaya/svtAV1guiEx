@@ -211,6 +211,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("palette-level", palette);
     OPT_NUM("pred-me", pred_me);
     OPT_NUM("rdoq-level", rdoq);
+    OPT_NUM("scd", scd);
     OPT_NUM("scm", scm);
     OPT_NUM("search-w", search_w);
     OPT_NUM("search-h", search_h);
@@ -335,6 +336,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("palette-level", palette);
     OPT_NUM("pred-me", pred_me);
     OPT_NUM("rdoq-level", rdoq);
+    OPT_NUM("scd", scd);
     OPT_NUM("scm", scm);
     OPT_NUM("search-w", search_w);
     OPT_NUM("search-h", search_h);

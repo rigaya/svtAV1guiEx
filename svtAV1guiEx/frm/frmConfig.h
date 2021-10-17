@@ -1070,6 +1070,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXColorMatrix;
 private: System::Windows::Forms::Label^  fcgLBTransfer;
 private: System::Windows::Forms::Label^  fcgLBColorPrim;
 private: System::Windows::Forms::Label^  fcgLBColorMatrix;
+private: System::Windows::Forms::Label^  fcgLBSceneChangeDetection;
+private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
 
 
 
@@ -1194,6 +1196,8 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
+            this->fcgLBSceneChangeDetection = (gcnew System::Windows::Forms::Label());
+            this->fcgCBSceneChangeDetection = (gcnew System::Windows::Forms::CheckBox());
             this->fcggroupBoxColorMatrix = (gcnew System::Windows::Forms::GroupBox());
             this->fcgCXColorRange = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBInputRange = (gcnew System::Windows::Forms::Label());
@@ -1545,11 +1549,13 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabControlVideo->Location = System::Drawing::Point(0, 25);
             this->fcgtabControlVideo->Name = L"fcgtabControlVideo";
             this->fcgtabControlVideo->SelectedIndex = 0;
-            this->fcgtabControlVideo->Size = System::Drawing::Size(616, 546);
+            this->fcgtabControlVideo->Size = System::Drawing::Size(616, 565);
             this->fcgtabControlVideo->TabIndex = 0;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBSceneChangeDetection);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBSceneChangeDetection);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcggroupBoxColorMatrix);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcggroupBoxAepectRatio);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXHierarchicalLevels);
@@ -1614,10 +1620,29 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageSVTAV1_1->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageSVTAV1_1->Name = L"fcgtabPageSVTAV1_1";
             this->fcgtabPageSVTAV1_1->Padding = System::Windows::Forms::Padding(3);
-            this->fcgtabPageSVTAV1_1->Size = System::Drawing::Size(608, 519);
+            this->fcgtabPageSVTAV1_1->Size = System::Drawing::Size(608, 538);
             this->fcgtabPageSVTAV1_1->TabIndex = 0;
             this->fcgtabPageSVTAV1_1->Text = L"SVT-AV1 (1)";
             this->fcgtabPageSVTAV1_1->UseVisualStyleBackColor = true;
+            // 
+            // fcgLBSceneChangeDetection
+            // 
+            this->fcgLBSceneChangeDetection->AutoSize = true;
+            this->fcgLBSceneChangeDetection->Location = System::Drawing::Point(416, 178);
+            this->fcgLBSceneChangeDetection->Name = L"fcgLBSceneChangeDetection";
+            this->fcgLBSceneChangeDetection->Size = System::Drawing::Size(83, 14);
+            this->fcgLBSceneChangeDetection->TabIndex = 228;
+            this->fcgLBSceneChangeDetection->Text = L"Scene Change";
+            // 
+            // fcgCBSceneChangeDetection
+            // 
+            this->fcgCBSceneChangeDetection->AutoSize = true;
+            this->fcgCBSceneChangeDetection->Location = System::Drawing::Point(526, 179);
+            this->fcgCBSceneChangeDetection->Name = L"fcgCBSceneChangeDetection";
+            this->fcgCBSceneChangeDetection->Size = System::Drawing::Size(15, 14);
+            this->fcgCBSceneChangeDetection->TabIndex = 227;
+            this->fcgCBSceneChangeDetection->Tag = L"reCmd";
+            this->fcgCBSceneChangeDetection->UseVisualStyleBackColor = true;
             // 
             // fcggroupBoxColorMatrix
             // 
@@ -1629,7 +1654,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcggroupBoxColorMatrix->Controls->Add(this->fcgLBTransfer);
             this->fcggroupBoxColorMatrix->Controls->Add(this->fcgLBColorPrim);
             this->fcggroupBoxColorMatrix->Controls->Add(this->fcgLBColorMatrix);
-            this->fcggroupBoxColorMatrix->Location = System::Drawing::Point(367, 368);
+            this->fcggroupBoxColorMatrix->Location = System::Drawing::Point(367, 390);
             this->fcggroupBoxColorMatrix->Name = L"fcggroupBoxColorMatrix";
             this->fcggroupBoxColorMatrix->Size = System::Drawing::Size(232, 145);
             this->fcggroupBoxColorMatrix->TabIndex = 90;
@@ -1881,7 +1906,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             this->fcgCXProfileAV1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXProfileAV1->FormattingEnabled = true;
-            this->fcgCXProfileAV1->Location = System::Drawing::Point(481, 230);
+            this->fcgCXProfileAV1->Location = System::Drawing::Point(481, 252);
             this->fcgCXProfileAV1->Name = L"fcgCXProfileAV1";
             this->fcgCXProfileAV1->Size = System::Drawing::Size(118, 22);
             this->fcgCXProfileAV1->TabIndex = 60;
@@ -1890,7 +1915,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBProfileAV1
             // 
             this->fcgLBProfileAV1->AutoSize = true;
-            this->fcgLBProfileAV1->Location = System::Drawing::Point(374, 233);
+            this->fcgLBProfileAV1->Location = System::Drawing::Point(374, 255);
             this->fcgLBProfileAV1->Name = L"fcgLBProfileAV1";
             this->fcgLBProfileAV1->Size = System::Drawing::Size(42, 14);
             this->fcgLBProfileAV1->TabIndex = 222;
@@ -1901,7 +1926,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgCXColorFormat->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXColorFormat->Enabled = false;
             this->fcgCXColorFormat->FormattingEnabled = true;
-            this->fcgCXColorFormat->Location = System::Drawing::Point(481, 257);
+            this->fcgCXColorFormat->Location = System::Drawing::Point(481, 279);
             this->fcgCXColorFormat->Name = L"fcgCXColorFormat";
             this->fcgCXColorFormat->Size = System::Drawing::Size(118, 22);
             this->fcgCXColorFormat->TabIndex = 61;
@@ -1910,7 +1935,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBColorFormat
             // 
             this->fcgLBColorFormat->AutoSize = true;
-            this->fcgLBColorFormat->Location = System::Drawing::Point(373, 260);
+            this->fcgLBColorFormat->Location = System::Drawing::Point(373, 282);
             this->fcgLBColorFormat->Name = L"fcgLBColorFormat";
             this->fcgLBColorFormat->Size = System::Drawing::Size(79, 14);
             this->fcgLBColorFormat->TabIndex = 220;
@@ -2070,7 +2095,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUCDEFLevel
             // 
-            this->fcgNUCDEFLevel->Location = System::Drawing::Point(524, 286);
+            this->fcgNUCDEFLevel->Location = System::Drawing::Point(524, 308);
             this->fcgNUCDEFLevel->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
             this->fcgNUCDEFLevel->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
             this->fcgNUCDEFLevel->Name = L"fcgNUCDEFLevel";
@@ -2082,7 +2107,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBCDEFLevel
             // 
             this->fcgLBCDEFLevel->AutoSize = true;
-            this->fcgLBCDEFLevel->Location = System::Drawing::Point(374, 288);
+            this->fcgLBCDEFLevel->Location = System::Drawing::Point(374, 310);
             this->fcgLBCDEFLevel->Name = L"fcgLBCDEFLevel";
             this->fcgLBCDEFLevel->Size = System::Drawing::Size(62, 14);
             this->fcgLBCDEFLevel->TabIndex = 181;
@@ -2129,7 +2154,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBVBVBufSize
             // 
             this->fcgLBVBVBufSize->AutoSize = true;
-            this->fcgLBVBVBufSize->Location = System::Drawing::Point(415, 205);
+            this->fcgLBVBVBufSize->Location = System::Drawing::Point(415, 227);
             this->fcgLBVBVBufSize->Name = L"fcgLBVBVBufSize";
             this->fcgLBVBVBufSize->Size = System::Drawing::Size(70, 14);
             this->fcgLBVBVBufSize->TabIndex = 174;
@@ -2137,7 +2162,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUVBVBufSize
             // 
-            this->fcgNUVBVBufSize->Location = System::Drawing::Point(526, 203);
+            this->fcgNUVBVBufSize->Location = System::Drawing::Point(526, 225);
             this->fcgNUVBVBufSize->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000000, 0, 0, 0 });
             this->fcgNUVBVBufSize->Name = L"fcgNUVBVBufSize";
             this->fcgNUVBVBufSize->Size = System::Drawing::Size(64, 21);
@@ -2148,7 +2173,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBMaxQP
             // 
             this->fcgLBMaxQP->AutoSize = true;
-            this->fcgLBMaxQP->Location = System::Drawing::Point(519, 344);
+            this->fcgLBMaxQP->Location = System::Drawing::Point(519, 366);
             this->fcgLBMaxQP->Name = L"fcgLBMaxQP";
             this->fcgLBMaxQP->Size = System::Drawing::Size(12, 14);
             this->fcgLBMaxQP->TabIndex = 172;
@@ -2156,7 +2181,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUMaxQP
             // 
-            this->fcgNUMaxQP->Location = System::Drawing::Point(534, 342);
+            this->fcgNUMaxQP->Location = System::Drawing::Point(534, 364);
             this->fcgNUMaxQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 63, 0, 0, 0 });
             this->fcgNUMaxQP->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
             this->fcgNUMaxQP->Name = L"fcgNUMaxQP";
@@ -2168,7 +2193,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBMinQP
             // 
             this->fcgLBMinQP->AutoSize = true;
-            this->fcgLBMinQP->Location = System::Drawing::Point(373, 344);
+            this->fcgLBMinQP->Location = System::Drawing::Point(373, 366);
             this->fcgLBMinQP->Name = L"fcgLBMinQP";
             this->fcgLBMinQP->Size = System::Drawing::Size(71, 14);
             this->fcgLBMinQP->TabIndex = 170;
@@ -2176,7 +2201,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUMinQP
             // 
-            this->fcgNUMinQP->Location = System::Drawing::Point(451, 342);
+            this->fcgNUMinQP->Location = System::Drawing::Point(451, 364);
             this->fcgNUMinQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 63, 0, 0, 0 });
             this->fcgNUMinQP->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
             this->fcgNUMinQP->Name = L"fcgNUMinQP";
@@ -2254,7 +2279,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBTile2
             // 
             this->fcgLBTile2->AutoSize = true;
-            this->fcgLBTile2->Location = System::Drawing::Point(518, 317);
+            this->fcgLBTile2->Location = System::Drawing::Point(518, 339);
             this->fcgLBTile2->Name = L"fcgLBTile2";
             this->fcgLBTile2->Size = System::Drawing::Size(13, 14);
             this->fcgLBTile2->TabIndex = 82;
@@ -2262,7 +2287,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUTileColumns
             // 
-            this->fcgNUTileColumns->Location = System::Drawing::Point(534, 314);
+            this->fcgNUTileColumns->Location = System::Drawing::Point(534, 336);
             this->fcgNUTileColumns->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
             this->fcgNUTileColumns->Name = L"fcgNUTileColumns";
             this->fcgNUTileColumns->Size = System::Drawing::Size(64, 21);
@@ -2273,7 +2298,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBTile
             // 
             this->fcgLBTile->AutoSize = true;
-            this->fcgLBTile->Location = System::Drawing::Point(374, 318);
+            this->fcgLBTile->Location = System::Drawing::Point(374, 340);
             this->fcgLBTile->Name = L"fcgLBTile";
             this->fcgLBTile->Size = System::Drawing::Size(23, 14);
             this->fcgLBTile->TabIndex = 77;
@@ -2281,7 +2306,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNUTileRows
             // 
-            this->fcgNUTileRows->Location = System::Drawing::Point(451, 314);
+            this->fcgNUTileRows->Location = System::Drawing::Point(451, 336);
             this->fcgNUTileRows->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
             this->fcgNUTileRows->Name = L"fcgNUTileRows";
             this->fcgNUTileRows->Size = System::Drawing::Size(64, 21);
@@ -2333,7 +2358,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgLBLookahead
             // 
             this->fcgLBLookahead->AutoSize = true;
-            this->fcgLBLookahead->Location = System::Drawing::Point(415, 179);
+            this->fcgLBLookahead->Location = System::Drawing::Point(415, 201);
             this->fcgLBLookahead->Name = L"fcgLBLookahead";
             this->fcgLBLookahead->Size = System::Drawing::Size(62, 14);
             this->fcgLBLookahead->TabIndex = 65;
@@ -2341,7 +2366,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             // fcgNULookaheadDistance
             // 
-            this->fcgNULookaheadDistance->Location = System::Drawing::Point(526, 177);
+            this->fcgNULookaheadDistance->Location = System::Drawing::Point(526, 199);
             this->fcgNULookaheadDistance->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 120, 0, 0, 0 });
             this->fcgNULookaheadDistance->Name = L"fcgNULookaheadDistance";
             this->fcgNULookaheadDistance->Size = System::Drawing::Size(64, 21);
@@ -2486,7 +2511,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageSVTAV1_2->Controls->Add(this->fcgNUAltRefStrength);
             this->fcgtabPageSVTAV1_2->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageSVTAV1_2->Name = L"fcgtabPageSVTAV1_2";
-            this->fcgtabPageSVTAV1_2->Size = System::Drawing::Size(608, 519);
+            this->fcgtabPageSVTAV1_2->Size = System::Drawing::Size(608, 538);
             this->fcgtabPageSVTAV1_2->TabIndex = 4;
             this->fcgtabPageSVTAV1_2->Text = L"SVT-AV1 (2)";
             this->fcgtabPageSVTAV1_2->UseVisualStyleBackColor = true;
@@ -3199,7 +3224,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageExSettings->Controls->Add(this->fcggroupBoxExSettings);
             this->fcgtabPageExSettings->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageExSettings->Name = L"fcgtabPageExSettings";
-            this->fcgtabPageExSettings->Size = System::Drawing::Size(608, 519);
+            this->fcgtabPageExSettings->Size = System::Drawing::Size(608, 538);
             this->fcgtabPageExSettings->TabIndex = 3;
             this->fcgtabPageExSettings->Text = L"拡張";
             this->fcgtabPageExSettings->UseVisualStyleBackColor = true;
@@ -3591,7 +3616,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabControlMux->Location = System::Drawing::Point(622, 331);
             this->fcgtabControlMux->Name = L"fcgtabControlMux";
             this->fcgtabControlMux->SelectedIndex = 0;
-            this->fcgtabControlMux->Size = System::Drawing::Size(384, 240);
+            this->fcgtabControlMux->Size = System::Drawing::Size(384, 259);
             this->fcgtabControlMux->TabIndex = 3;
             // 
             // fcgtabPageMP4
@@ -3616,7 +3641,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageMP4->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMP4->Name = L"fcgtabPageMP4";
             this->fcgtabPageMP4->Padding = System::Windows::Forms::Padding(3);
-            this->fcgtabPageMP4->Size = System::Drawing::Size(376, 213);
+            this->fcgtabPageMP4->Size = System::Drawing::Size(376, 232);
             this->fcgtabPageMP4->TabIndex = 0;
             this->fcgtabPageMP4->Text = L"mp4";
             this->fcgtabPageMP4->UseVisualStyleBackColor = true;
@@ -3801,7 +3826,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageMKV->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMKV->Name = L"fcgtabPageMKV";
             this->fcgtabPageMKV->Padding = System::Windows::Forms::Padding(3);
-            this->fcgtabPageMKV->Size = System::Drawing::Size(376, 213);
+            this->fcgtabPageMKV->Size = System::Drawing::Size(376, 232);
             this->fcgtabPageMKV->TabIndex = 1;
             this->fcgtabPageMKV->Text = L"mkv";
             this->fcgtabPageMKV->UseVisualStyleBackColor = true;
@@ -3875,7 +3900,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageMPG->Controls->Add(this->fcgCBMPGMuxerExt);
             this->fcgtabPageMPG->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMPG->Name = L"fcgtabPageMPG";
-            this->fcgtabPageMPG->Size = System::Drawing::Size(376, 213);
+            this->fcgtabPageMPG->Size = System::Drawing::Size(376, 232);
             this->fcgtabPageMPG->TabIndex = 4;
             this->fcgtabPageMPG->Text = L"mpg";
             this->fcgtabPageMPG->UseVisualStyleBackColor = true;
@@ -3945,7 +3970,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageMux->Controls->Add(this->fcgLBMuxPriority);
             this->fcgtabPageMux->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMux->Name = L"fcgtabPageMux";
-            this->fcgtabPageMux->Size = System::Drawing::Size(376, 213);
+            this->fcgtabPageMux->Size = System::Drawing::Size(376, 232);
             this->fcgtabPageMux->TabIndex = 2;
             this->fcgtabPageMux->Text = L"Mux共通設定";
             this->fcgtabPageMux->UseVisualStyleBackColor = true;
@@ -3986,7 +4011,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgtabPageBat->Controls->Add(this->fcgCBRunBatBefore);
             this->fcgtabPageBat->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageBat->Name = L"fcgtabPageBat";
-            this->fcgtabPageBat->Size = System::Drawing::Size(376, 213);
+            this->fcgtabPageBat->Size = System::Drawing::Size(376, 232);
             this->fcgtabPageBat->TabIndex = 3;
             this->fcgtabPageBat->Text = L"エンコ前後バッチ処理";
             this->fcgtabPageBat->UseVisualStyleBackColor = true;
@@ -4138,7 +4163,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
                 | System::Windows::Forms::AnchorStyles::Right));
             this->fcgTXCmd->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
-            this->fcgTXCmd->Location = System::Drawing::Point(9, 573);
+            this->fcgTXCmd->Location = System::Drawing::Point(9, 593);
             this->fcgTXCmd->Name = L"fcgTXCmd";
             this->fcgTXCmd->ReadOnly = true;
             this->fcgTXCmd->Size = System::Drawing::Size(992, 21);
@@ -4148,7 +4173,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgBTCancel
             // 
             this->fcgBTCancel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-            this->fcgBTCancel->Location = System::Drawing::Point(771, 596);
+            this->fcgBTCancel->Location = System::Drawing::Point(771, 618);
             this->fcgBTCancel->Name = L"fcgBTCancel";
             this->fcgBTCancel->Size = System::Drawing::Size(84, 28);
             this->fcgBTCancel->TabIndex = 5;
@@ -4159,7 +4184,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgBTOK
             // 
             this->fcgBTOK->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-            this->fcgBTOK->Location = System::Drawing::Point(893, 596);
+            this->fcgBTOK->Location = System::Drawing::Point(893, 618);
             this->fcgBTOK->Name = L"fcgBTOK";
             this->fcgBTOK->Size = System::Drawing::Size(84, 28);
             this->fcgBTOK->TabIndex = 6;
@@ -4170,7 +4195,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgBTDefault
             // 
             this->fcgBTDefault->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
-            this->fcgBTDefault->Location = System::Drawing::Point(9, 598);
+            this->fcgBTDefault->Location = System::Drawing::Point(9, 620);
             this->fcgBTDefault->Name = L"fcgBTDefault";
             this->fcgBTDefault->Size = System::Drawing::Size(112, 28);
             this->fcgBTDefault->TabIndex = 7;
@@ -4185,7 +4210,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgLBVersionDate->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fcgLBVersionDate->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-            this->fcgLBVersionDate->Location = System::Drawing::Point(416, 605);
+            this->fcgLBVersionDate->Location = System::Drawing::Point(416, 627);
             this->fcgLBVersionDate->Name = L"fcgLBVersionDate";
             this->fcgLBVersionDate->Size = System::Drawing::Size(49, 15);
             this->fcgLBVersionDate->TabIndex = 8;
@@ -4198,7 +4223,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgLBVersion->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fcgLBVersion->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
-            this->fcgLBVersion->Location = System::Drawing::Point(180, 605);
+            this->fcgLBVersion->Location = System::Drawing::Point(180, 627);
             this->fcgLBVersion->Name = L"fcgLBVersion";
             this->fcgLBVersion->Size = System::Drawing::Size(49, 15);
             this->fcgLBVersion->TabIndex = 9;
@@ -4255,7 +4280,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             this->fcgLBguiExBlog->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fcgLBguiExBlog->LinkColor = System::Drawing::Color::Gray;
-            this->fcgLBguiExBlog->Location = System::Drawing::Point(623, 605);
+            this->fcgLBguiExBlog->Location = System::Drawing::Point(623, 627);
             this->fcgLBguiExBlog->Name = L"fcgLBguiExBlog";
             this->fcgLBguiExBlog->Size = System::Drawing::Size(110, 14);
             this->fcgLBguiExBlog->TabIndex = 10;
@@ -4689,7 +4714,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Dpi;
-            this->ClientSize = System::Drawing::Size(1008, 627);
+            this->ClientSize = System::Drawing::Size(1008, 649);
             this->Controls->Add(this->fcgtabControlAudio);
             this->Controls->Add(this->fcgLBguiExBlog);
             this->Controls->Add(this->fcgLBVersion);
