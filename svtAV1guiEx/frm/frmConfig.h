@@ -2322,7 +2322,7 @@ private: System::Windows::Forms::Label^  fcgLBColorMatrix;
             // fcgNUKeyint
             // 
             this->fcgNUKeyint->Location = System::Drawing::Point(526, 127);
-            this->fcgNUKeyint->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 255, 0, 0, 0 });
+            this->fcgNUKeyint->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
             this->fcgNUKeyint->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 2, 0, 0, System::Int32::MinValue });
             this->fcgNUKeyint->Name = L"fcgNUKeyint";
             this->fcgNUKeyint->Size = System::Drawing::Size(64, 21);
