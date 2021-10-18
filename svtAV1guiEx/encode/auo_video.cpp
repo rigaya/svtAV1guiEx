@@ -771,6 +771,10 @@ static AUO_RESULT run_new_process(const char *x264args, const char *x264dir, vid
     return AUO_RESULT_SUCCESS;
 }
 
+static bool process_private_ws_is_over_threshold(const PROCESS_INFORMATION& pi_enc, const int reinit_process_MB) {
+    const uint64_t proc_private_ws_MB = getProcessWorkingSet(pi_enc.dwProcessId) / (1024 * 1024);
+    return proc_private_ws_MB > reinit_process_MB;
+}
 
 static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
     AUO_RESULT ret = AUO_RESULT_SUCCESS;
@@ -864,10 +868,12 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         enable_x264_control(&set_priority, &enc_pause, afs, TRUE, tm_vid_enc_start, oip->n);
 
         //------------メインループ------------
-        pe->reinit_cycle_idx = (conf->vid.reinit_cycle > 0) ? 0 : -1;
+        pe->reinit_cycle_idx = (conf->vid.reinit_process_MB > 0) ? 0 : -1;
         for (i = 0, next_jitter = jitter + 1, pe->drop_count = 0; i < oip->n; i++, next_jitter++) {
             if (i == 0 //初回は必ず起動が必要
-                || (conf->vid.reinit_cycle > 0 && (i % conf->vid.reinit_cycle) == 0)) { // reinit_cycleが指定されていれば周期的に再起動を行う
+                || (conf->vid.reinit_process_MB > 0
+                    && (i % 50) == 0
+                    && process_private_ws_is_over_threshold(pi_enc, conf->vid.reinit_process_MB))) { // reinit_cycleが指定されていれば周期的に再起動を行う
                 if (run_new_process(x264args, x264dir, &thread_data, &pi_enc, &pipes, &pixel_data, pe, i, oip->n, set_priority) != AUO_RESULT_SUCCESS) {
                     ret |= AUO_RESULT_ERROR;
                 }

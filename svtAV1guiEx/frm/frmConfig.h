@@ -1076,8 +1076,12 @@ private: System::Windows::Forms::Label^  fcgLBColorPrim;
 private: System::Windows::Forms::Label^  fcgLBColorMatrix;
 private: System::Windows::Forms::Label^  fcgLBSceneChangeDetection;
 private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
-private: System::Windows::Forms::Label^  fcgLBReinitCycle;
-private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
+private: System::Windows::Forms::Label^  fcgLBReinitProcess;
+private: System::Windows::Forms::NumericUpDown^  fcgNUReinitProcess;
+private: System::Windows::Forms::Label^  fcgLBReinitProcess2;
+private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
+
+
 
 
 
@@ -1368,8 +1372,8 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgCXX264Priority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBX264Priority = (gcnew System::Windows::Forms::Label());
             this->fcggroupBoxExSettings = (gcnew System::Windows::Forms::GroupBox());
-            this->fcgLBReinitCycle = (gcnew System::Windows::Forms::Label());
-            this->fcgNUReinitCycle = (gcnew System::Windows::Forms::NumericUpDown());
+            this->fcgLBReinitProcess = (gcnew System::Windows::Forms::Label());
+            this->fcgNUReinitProcess = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgCBAfs24fpsMode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAuoTcfileout = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAFSBitrateCorrection = (gcnew System::Windows::Forms::CheckBox());
@@ -1493,6 +1497,8 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgLBReinitProcess3 = (gcnew System::Windows::Forms::Label());
+            this->fcgLBReinitProcess2 = (gcnew System::Windows::Forms::Label());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             this->fcggroupBoxColorMatrix->SuspendLayout();
@@ -1524,7 +1530,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageExSettings->SuspendLayout();
             this->fcggroupBoxCmdEx->SuspendLayout();
             this->fcggroupBoxExSettings->SuspendLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitCycle))->BeginInit();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitProcess))->BeginInit();
             this->fcgCSExeFiles->SuspendLayout();
             this->fcgtoolStripSettings->SuspendLayout();
             this->fcgtabControlMux->SuspendLayout();
@@ -3161,7 +3167,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageExSettings->Controls->Add(this->fcggroupBoxExSettings);
             this->fcgtabPageExSettings->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageExSettings->Name = L"fcgtabPageExSettings";
-            this->fcgtabPageExSettings->Size = System::Drawing::Size(608, 538);
+            this->fcgtabPageExSettings->Size = System::Drawing::Size(608, 518);
             this->fcgtabPageExSettings->TabIndex = 3;
             this->fcgtabPageExSettings->Text = L"拡張";
             this->fcgtabPageExSettings->UseVisualStyleBackColor = true;
@@ -3314,8 +3320,10 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             // 
             // fcggroupBoxExSettings
             // 
-            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitCycle);
-            this->fcggroupBoxExSettings->Controls->Add(this->fcgNUReinitCycle);
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess2);
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess3);
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess);
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgNUReinitProcess);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAfs24fpsMode);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAuoTcfileout);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFSBitrateCorrection);
@@ -3327,24 +3335,24 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcggroupBoxExSettings->TabStop = false;
             this->fcggroupBoxExSettings->Text = L"拡張設定";
             // 
-            // fcgLBReinitCycle
+            // fcgLBReinitProcess
             // 
-            this->fcgLBReinitCycle->AutoSize = true;
-            this->fcgLBReinitCycle->Location = System::Drawing::Point(24, 177);
-            this->fcgLBReinitCycle->Name = L"fcgLBReinitCycle";
-            this->fcgLBReinitCycle->Size = System::Drawing::Size(66, 14);
-            this->fcgLBReinitCycle->TabIndex = 256;
-            this->fcgLBReinitCycle->Text = L"reinit cycle";
+            this->fcgLBReinitProcess->AutoSize = true;
+            this->fcgLBReinitProcess->Location = System::Drawing::Point(15, 177);
+            this->fcgLBReinitProcess->Name = L"fcgLBReinitProcess";
+            this->fcgLBReinitProcess->Size = System::Drawing::Size(95, 14);
+            this->fcgLBReinitProcess->TabIndex = 256;
+            this->fcgLBReinitProcess->Text = L"プロセス再起動条件";
             // 
-            // fcgNUReinitCycle
+            // fcgNUReinitProcess
             // 
-            this->fcgNUReinitCycle->Location = System::Drawing::Point(96, 175);
-            this->fcgNUReinitCycle->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
-            this->fcgNUReinitCycle->Name = L"fcgNUReinitCycle";
-            this->fcgNUReinitCycle->Size = System::Drawing::Size(64, 21);
-            this->fcgNUReinitCycle->TabIndex = 255;
-            this->fcgNUReinitCycle->Tag = L"reCmd";
-            this->fcgNUReinitCycle->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            this->fcgNUReinitProcess->Location = System::Drawing::Point(104, 201);
+            this->fcgNUReinitProcess->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
+            this->fcgNUReinitProcess->Name = L"fcgNUReinitProcess";
+            this->fcgNUReinitProcess->Size = System::Drawing::Size(64, 21);
+            this->fcgNUReinitProcess->TabIndex = 255;
+            this->fcgNUReinitProcess->Tag = L"reCmd";
+            this->fcgNUReinitProcess->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
             // 
             // fcgCBAfs24fpsMode
             // 
@@ -3784,7 +3792,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageMKV->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMKV->Name = L"fcgtabPageMKV";
             this->fcgtabPageMKV->Padding = System::Windows::Forms::Padding(3);
-            this->fcgtabPageMKV->Size = System::Drawing::Size(376, 232);
+            this->fcgtabPageMKV->Size = System::Drawing::Size(376, 212);
             this->fcgtabPageMKV->TabIndex = 1;
             this->fcgtabPageMKV->Text = L"mkv";
             this->fcgtabPageMKV->UseVisualStyleBackColor = true;
@@ -3858,7 +3866,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageMPG->Controls->Add(this->fcgCBMPGMuxerExt);
             this->fcgtabPageMPG->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMPG->Name = L"fcgtabPageMPG";
-            this->fcgtabPageMPG->Size = System::Drawing::Size(376, 232);
+            this->fcgtabPageMPG->Size = System::Drawing::Size(376, 212);
             this->fcgtabPageMPG->TabIndex = 4;
             this->fcgtabPageMPG->Text = L"mpg";
             this->fcgtabPageMPG->UseVisualStyleBackColor = true;
@@ -3928,7 +3936,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageMux->Controls->Add(this->fcgLBMuxPriority);
             this->fcgtabPageMux->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageMux->Name = L"fcgtabPageMux";
-            this->fcgtabPageMux->Size = System::Drawing::Size(376, 232);
+            this->fcgtabPageMux->Size = System::Drawing::Size(376, 212);
             this->fcgtabPageMux->TabIndex = 2;
             this->fcgtabPageMux->Text = L"Mux共通設定";
             this->fcgtabPageMux->UseVisualStyleBackColor = true;
@@ -3969,7 +3977,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgtabPageBat->Controls->Add(this->fcgCBRunBatBefore);
             this->fcgtabPageBat->Location = System::Drawing::Point(4, 23);
             this->fcgtabPageBat->Name = L"fcgtabPageBat";
-            this->fcgtabPageBat->Size = System::Drawing::Size(376, 232);
+            this->fcgtabPageBat->Size = System::Drawing::Size(376, 212);
             this->fcgtabPageBat->TabIndex = 3;
             this->fcgtabPageBat->Text = L"エンコ前後バッチ処理";
             this->fcgtabPageBat->UseVisualStyleBackColor = true;
@@ -4668,6 +4676,24 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
+            // fcgLBReinitProcess3
+            // 
+            this->fcgLBReinitProcess3->AutoSize = true;
+            this->fcgLBReinitProcess3->Location = System::Drawing::Point(174, 203);
+            this->fcgLBReinitProcess3->Name = L"fcgLBReinitProcess3";
+            this->fcgLBReinitProcess3->Size = System::Drawing::Size(112, 14);
+            this->fcgLBReinitProcess3->TabIndex = 257;
+            this->fcgLBReinitProcess3->Text = L"MB以上  (※0で無効)";
+            // 
+            // fcgLBReinitProcess2
+            // 
+            this->fcgLBReinitProcess2->AutoSize = true;
+            this->fcgLBReinitProcess2->Location = System::Drawing::Point(31, 203);
+            this->fcgLBReinitProcess2->Name = L"fcgLBReinitProcess2";
+            this->fcgLBReinitProcess2->Size = System::Drawing::Size(62, 14);
+            this->fcgLBReinitProcess2->TabIndex = 258;
+            this->fcgLBReinitProcess2->Text = L"PrivateWS";
+            // 
             // frmConfig
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
@@ -4732,7 +4758,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
             this->fcggroupBoxCmdEx->PerformLayout();
             this->fcggroupBoxExSettings->ResumeLayout(false);
             this->fcggroupBoxExSettings->PerformLayout();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitCycle))->EndInit();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitProcess))->EndInit();
             this->fcgCSExeFiles->ResumeLayout(false);
             this->fcgtoolStripSettings->ResumeLayout(false);
             this->fcgtoolStripSettings->PerformLayout();

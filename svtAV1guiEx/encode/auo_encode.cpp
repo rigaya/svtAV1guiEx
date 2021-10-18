@@ -199,7 +199,7 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, c
     //自動マルチパス設定
     check &= check_amp(conf);
 #endif
-    if (conf->vid.reinit_cycle > 0) {
+    if (conf->vid.reinit_process_MB > 0) {
         if (pe->muxer_to_be_used == MUXER_DISABLED) {
             write_log_auo_line(LOG_ERROR, "raw出力時はreinit cycleは使用できません。");
             check = FALSE;
