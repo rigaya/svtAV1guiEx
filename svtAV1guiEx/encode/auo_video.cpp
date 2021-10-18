@@ -798,7 +798,6 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     set_auto_colormatrix(&enc, oip->h);
 
     int *jitter = NULL;
-    int rp_ret = 0;
 
     //svt-av1優先度関連の初期化
     DWORD set_priority = (pe->h_p_aviutl || conf->vid.priority != AVIUTLSYNC_PRIORITY_CLASS) ? priority_table[conf->vid.priority].value : NORMAL_PRIORITY_CLASS;
