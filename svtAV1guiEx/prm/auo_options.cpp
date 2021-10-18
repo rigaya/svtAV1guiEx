@@ -163,8 +163,6 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("lp", lp);
 
     OPT_NUM("aq-mode", aq);
-    OPT_NUM("altref-strength", altref_strength);
-    OPT_NUM("altref-nframes", altref_nframe);
     OPT_NUM("bias-pct", bias_pct);
     OPT_NUM("bipred-3x3", bipred_3x3);
     OPT_NUM("compound", compound);
@@ -199,7 +197,6 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("intrabc-mode", intra_bc_mode);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
-    OPT_NUM("lookahead", lookahead);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
@@ -288,8 +285,6 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("lp", lp);
 
     OPT_NUM("aq-mode", aq);
-    OPT_NUM("altref-strength", altref_strength);
-    OPT_NUM("altref-nframes", altref_nframe);
     OPT_NUM("bias-pct", bias_pct);
     OPT_NUM("bipred-3x3", bipred_3x3);
     OPT_NUM("compound", compound);
@@ -324,7 +319,6 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("intrabc-mode", intra_bc_mode);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
-    OPT_NUM("lookahead", lookahead);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);

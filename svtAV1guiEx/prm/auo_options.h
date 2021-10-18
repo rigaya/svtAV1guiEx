@@ -220,8 +220,6 @@ typedef struct {
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
     int     aq;
-    int     altref_strength;
-    int     altref_nframe;
     int     bias_pct; //--bias-pct
     int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
     int     cdef_level; //--cdef-level
@@ -256,7 +254,6 @@ typedef struct {
     int     intra_bc_mode;       //intrabc-mode
     int     intra_refresh_type;  //irefresh-type
     int     keyint;        //keyint
-    int     lookahead;        //lookahead (lookahead distance)
     int     lp;         //lp (LogicalProcessorNumber)
     int     matrix_coefficients; //--matrix-coefficients
     int     max_qp;
@@ -276,7 +273,7 @@ typedef struct {
     int     sg_filter_mode;
     int     sqw; //-sqw
     int     subpel;  //-subpel (on,off,default)
-    BOOL    tf_level;
+    int     tf_level; // tf-level
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     transfer_characteristics; // --transfer-characteristics
@@ -473,14 +470,6 @@ const CX_DESC list_aq[] = {
     { "1: variance base",  1 },
     { "2: deltaq pred efficiency",  2 },
     { NULL, NULL }
-};
-const CX_DESC list_tf_level[] = {
-    { "-1: default", -1 },
-    { "0: off", 0 },
-    { "1: on", 1 },
-    { "2: fast", 2 },
-    { "3: faster", 3 },
-    { nullptr, 0 }
 };
 
 const CX_DESC list_palette[] = {

@@ -871,7 +871,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXIntraBCMode, list_intra_bcmode);
 
     setComboBox(fcgCXSgFilterMode, list_sg_filter_mode);
-    setComboBox(fcgCXTFLevel,      list_tf_level);
+    setComboBox(fcgCXTfLevel,      list_on_off_default);
     setComboBox(fcgCXWnFilterMode, list_wn_filter_mode);
 
     setComboBox(fcgCXMrpLevel,       list_mrp_level);
@@ -1110,8 +1110,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCB2PassAuto->Checked = enc.pass > 0;
 
     SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
-    SetNUValue(fcgNUAltRefStrength, enc.altref_strength);
-    SetNUValue(fcgNUAltRefNframes, enc.altref_nframe);
     SetCXIndex(fcgCXBipred3x3, get_cx_index(list_bipred_3x3, enc.bipred_3x3));
     SetNUValue(fcgNUBiasPct, enc.bias_pct);
     SetNUValue(fcgNUCDEFLevel, enc.cdef_level);
@@ -1146,7 +1144,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXIntraBCMode, get_cx_index(list_intra_bcmode, enc.intra_bc_mode));
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
-    SetNUValue(fcgNULookaheadDistance, enc.lookahead);        //lad (lookahead distance)
     SetNUValue(fcgNUThreads, enc.lp);         //lp (LogicalProcessorNumber)
     SetCXIndex(fcgCXColorMatrix, get_cx_index(list_colormatrix, enc.matrix_coefficients));
     SetNUValue(fcgNUMaxQP, enc.max_qp);
@@ -1168,7 +1165,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUSQW, enc.sqw);
     SetCXIndex(fcgCXSubpel, get_cx_index(list_on_off_default, enc.subpel));
 
-    SetCXIndex(fcgCXTFLevel, get_cx_index(list_tf_level, enc.tf_level));
+    SetCXIndex(fcgCXTfLevel, get_cx_index(list_on_off_default, enc.tf_level));
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
     SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
@@ -1254,8 +1251,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.pass                 = (int)fcgCB2PassAuto->Checked ? 2 : 0;
 
     enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;
-    enc.altref_strength = (int)fcgNUAltRefStrength->Value;
-    enc.altref_nframe = (int)fcgNUAltRefNframes->Value;
     enc.bias_pct = (int)fcgNUBiasPct->Value;
     enc.bipred_3x3 = list_bipred_3x3[fcgCXBipred3x3->SelectedIndex].value;
     enc.cdef_level = (int)fcgNUCDEFLevel->Value;
@@ -1290,7 +1285,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.intra_bc_mode = list_intra_bcmode[fcgCXIntraBCMode->SelectedIndex].value;
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
     enc.keyint = (int)fcgNUKeyint->Value;
-    enc.lookahead = (int)fcgNULookaheadDistance->Value;
     enc.lp = (int)fcgNUThreads->Value;
     enc.min_qp = (int)fcgNUMinQP->Value;
     enc.minsection_pct = (int)fcgNUMinSectionPct->Value;
@@ -1313,7 +1307,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.sqw = (int)fcgNUSQW->Value;
     enc.subpel = list_on_off_default[fcgCXSubpel->SelectedIndex].value;
 
-    enc.tf_level = (int)list_tf_level[fcgCXTFLevel->SelectedIndex].value;
+    enc.tf_level = (int)list_on_off_default[fcgCXTfLevel->SelectedIndex].value;
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
     enc.transfer_characteristics = list_transfer[fcgCXTransfer->SelectedIndex].value;
