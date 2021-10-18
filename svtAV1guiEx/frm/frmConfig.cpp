@@ -1190,7 +1190,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
         fcgCBAFS->Checked                  = cnf->vid.afs != 0;
         fcgCBAFSBitrateCorrection->Checked = cnf->vid.afs_bitrate_correction != 0;
         fcgCBAfs24fpsMode->Checked         = cnf->vid.afs_24fps != 0;
-
+        SetNUValue(fcgNUReinitCycle,         cnf->vid.reinit_cycle);
         SetCXIndex(fcgCXX264Priority,        cnf->vid.priority);
         SetCXIndex(fcgCXTempDir,             cnf->oth.temp_dir);
 
@@ -1332,6 +1332,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     cnf->vid.afs_bitrate_correction = fcgCBAFSBitrateCorrection->Checked;
     cnf->vid.afs_24fps              = fcgCBAfs24fpsMode->Checked;
     cnf->vid.priority               = fcgCXX264Priority->SelectedIndex;
+    cnf->vid.reinit_cycle           = (int)fcgNUReinitCycle->Value;
     cnf->oth.temp_dir               = fcgCXTempDir->SelectedIndex;
     GetCHARfromString(cnf->vid.cmdex, fcgTXCmdEx->Text);
 

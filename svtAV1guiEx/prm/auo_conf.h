@@ -127,6 +127,7 @@ typedef struct {
     int sar_x;
     int sar_y;
     BOOL afs_24fps;
+    int reinit_cycle;                //svtav1encapp.exeの再起動を行うフレーム間隔
 } CONF_VIDEO; //動画用設定(x264以外)
 
 typedef struct {

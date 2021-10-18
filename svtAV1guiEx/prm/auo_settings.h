@@ -209,6 +209,7 @@ typedef struct {
     char *out_ext;                //mux後ファイルの拡張子
     char *base_cmd;               //もととなるコマンドライン
     char *vid_cmd;                //映像mux用のコマンドライン
+    char *vid_cat_cmd;            //映像mux結合用のコマンドライン
     char *aud_cmd;                //音声mux用のコマンドライン
     char *tc_cmd;                 //タイムコードmux用のコマンドライン
     char *tmp_cmd;                //一時フォルダ指定用コマンドライン

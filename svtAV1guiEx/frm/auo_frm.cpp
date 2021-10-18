@@ -148,8 +148,8 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
         sprintf_s(buffer, _countof(buffer),
             (isfpm) ? "[%3.1lf%%] %d/%d frames, %.3lf fps, %.2lf kb/s"
                     : "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
-            (i_frame + total_drop) * 100.0 / (double)total_frames,
-            i_frame + total_drop,
+            current_frames * 100.0 / (double)total_frames,
+            current_frames,
             total_frames,
             isfpm ? fps * (1.0 / 60.0) : fps,
             bitrate);

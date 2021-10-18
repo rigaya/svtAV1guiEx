@@ -1072,6 +1072,8 @@ private: System::Windows::Forms::Label^  fcgLBColorPrim;
 private: System::Windows::Forms::Label^  fcgLBColorMatrix;
 private: System::Windows::Forms::Label^  fcgLBSceneChangeDetection;
 private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
+private: System::Windows::Forms::Label^  fcgLBReinitCycle;
+private: System::Windows::Forms::NumericUpDown^  fcgNUReinitCycle;
 
 
 
@@ -1491,6 +1493,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgLBReinitCycle = (gcnew System::Windows::Forms::Label());
+            this->fcgNUReinitCycle = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             this->fcggroupBoxColorMatrix->SuspendLayout();
@@ -1537,6 +1541,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
             this->fcgtabPageAudioMain->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUAudioBitrate))->BeginInit();
             this->fcgtabPageAudioOther->SuspendLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitCycle))->BeginInit();
             this->SuspendLayout();
             // 
             // fcgtabControlVideo
@@ -3377,6 +3382,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
             // 
             // fcggroupBoxExSettings
             // 
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitCycle);
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgNUReinitCycle);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAfs24fpsMode);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAuoTcfileout);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFSBitrateCorrection);
@@ -4710,6 +4717,25 @@ private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
+            // fcgLBReinitCycle
+            // 
+            this->fcgLBReinitCycle->AutoSize = true;
+            this->fcgLBReinitCycle->Location = System::Drawing::Point(24, 177);
+            this->fcgLBReinitCycle->Name = L"fcgLBReinitCycle";
+            this->fcgLBReinitCycle->Size = System::Drawing::Size(66, 14);
+            this->fcgLBReinitCycle->TabIndex = 256;
+            this->fcgLBReinitCycle->Text = L"reinit cycle";
+            // 
+            // fcgNUReinitCycle
+            // 
+            this->fcgNUReinitCycle->Location = System::Drawing::Point(96, 175);
+            this->fcgNUReinitCycle->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
+            this->fcgNUReinitCycle->Name = L"fcgNUReinitCycle";
+            this->fcgNUReinitCycle->Size = System::Drawing::Size(64, 21);
+            this->fcgNUReinitCycle->TabIndex = 255;
+            this->fcgNUReinitCycle->Tag = L"reCmd";
+            this->fcgNUReinitCycle->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            // 
             // frmConfig
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
@@ -4797,6 +4823,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBSceneChangeDetection;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUAudioBitrate))->EndInit();
             this->fcgtabPageAudioOther->ResumeLayout(false);
             this->fcgtabPageAudioOther->PerformLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUReinitCycle))->EndInit();
             this->ResumeLayout(false);
             this->PerformLayout();
 

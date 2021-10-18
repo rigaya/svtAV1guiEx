@@ -245,7 +245,26 @@ static AUO_RESULT build_mux_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf,
     char audstr[MAX_CMD_LEN];
     build_aud_mux_cmd(audstr, _countof(audstr), mux_stg->aud_cmd, enable_aud_mux, pe);
     //映像用コマンド
-    replace(cmd, nSize, "%{vd_cmd}",  vidstr);
+    replace(cmd, nSize, "%{vd_cmd}", vidstr);
+    //分割エンコード時の映像結合用コマンド
+    if (str_has_char(mux_stg->vid_cat_cmd)) {
+        //icycle=0はpe->temp_filenameそのものなので対象外
+        for (int icycle = 1; icycle < pe->reinit_cycle_idx; icycle++) {
+            char srcfile[MAX_PATH_LEN] = { 0 };
+            strcpy_s(srcfile, pe->temp_filename);
+            sprintf_s(srcfile + strlen(srcfile), _countof(srcfile) - strlen(srcfile), ".%d", icycle);
+            if (!PathFileExists(srcfile)) {
+                break;
+            }
+            char subcmd[MAX_CMD_LEN];
+            strcpy_s(subcmd, mux_stg->vid_cat_cmd);
+            replace(subcmd, _countof(subcmd), "%{vidcatpath}", srcfile);
+            //%{vd_cat_cmd}を目印に挿入する
+            insert(cmd, nSize, "%{vd_cat_cmd}", subcmd);
+        }
+    }
+    //目印の%{vd_cat_cmd}を削除
+    replace(cmd, nSize, "%{vd_cat_cmd}", "");
     //音声用コマンド
     replace(cmd, nSize, "%{au_cmd}",  audstr);
     //タイムコード用
