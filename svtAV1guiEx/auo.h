@@ -33,7 +33,7 @@
 const int   MAX_PATH_LEN          = 1024; //NTFSでは32768文字らしいが...いらんやろ
 const int   MAX_APPENDIX_LEN      = 63; //適当
 
-const int   MAX_CMD_LEN           = 8192; //コマンドラインの最大長はよくわからん
+const int   MAX_CMD_LEN           = 16 * 1024; //コマンドラインの最大長はよくわからん
 
 const DWORD AUDIO_BUFFER_DEFAULT  = 48000;
 const DWORD AUDIO_BUFFER_MAX      = AUDIO_BUFFER_DEFAULT * 30;
