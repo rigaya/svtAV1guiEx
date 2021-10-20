@@ -283,7 +283,7 @@ static inline int countchr(const WCHAR *str, int ch) {
 static inline size_t deleteCRLFSpace_at_End(WCHAR *str) {
     WCHAR *pw = str + wcslen(str) - 1;
     WCHAR * const qw = pw;
-    while ((*pw == L'\n' || *pw == L'\r' || *pw == L' ') && pw >= str) {
+    while (pw >= str && (*pw == L'\n' || *pw == L'\r' || *pw == L' ')) {
         *pw = L'\0';
         pw--;
     }
@@ -293,7 +293,7 @@ static inline size_t deleteCRLFSpace_at_End(WCHAR *str) {
 static inline size_t deleteCRLFSpace_at_End(char *str) {
     char *pw = str + strlen(str) - 1;
     char *qw = pw;
-    while ((*pw == '\n' || *pw == '\r' || *pw == ' ') && pw >= str) {
+    while (pw >= str && (*pw == '\n' || *pw == '\r' || *pw == ' ')) {
         *pw = '\0';
         pw--;
     }
