@@ -493,7 +493,7 @@ static inline int replace(char *str, size_t nSize, const char *old_str, const ch
     const size_t old_len = strlen(old_str);
     const size_t new_len = strlen(new_str);
     const int move_len = (int)(new_len - old_len);
-    if (old_len) {
+    if (old_len && strlen(str) >= old_len) {
         while ((p = strstr(c, old_str)) != NULL) {
             if (move_len) {
                 if (fin + move_len > limit)
@@ -516,7 +516,7 @@ static inline int replace(WCHAR *str, size_t nSize, const WCHAR *old_str, const 
     const size_t old_len = wcslen(old_str);
     const size_t new_len = wcslen(new_str);
     const int move_len = (int)(new_len - old_len);
-    if (old_len) {
+    if (old_len && wcslen(str) >= old_len) {
         while ((p = wcsstr(c, old_str)) != NULL) {
             if (move_len) {
                 if (fin + move_len > limit)
