@@ -1080,6 +1080,7 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess;
 private: System::Windows::Forms::NumericUpDown^  fcgNUReinitProcess;
 private: System::Windows::Forms::Label^  fcgLBReinitProcess2;
 private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
+private: System::Windows::Forms::Label^ fcgLBReinitProcess4;
 
 
 
@@ -1203,7 +1204,7 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
         void InitializeComponent(void)
         {
             this->components = (gcnew System::ComponentModel::Container());
-            System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
+            System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
             this->fcgLBSceneChangeDetection = (gcnew System::Windows::Forms::Label());
@@ -1372,6 +1373,8 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
             this->fcgCXX264Priority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBX264Priority = (gcnew System::Windows::Forms::Label());
             this->fcggroupBoxExSettings = (gcnew System::Windows::Forms::GroupBox());
+            this->fcgLBReinitProcess2 = (gcnew System::Windows::Forms::Label());
+            this->fcgLBReinitProcess3 = (gcnew System::Windows::Forms::Label());
             this->fcgLBReinitProcess = (gcnew System::Windows::Forms::Label());
             this->fcgNUReinitProcess = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgCBAfs24fpsMode = (gcnew System::Windows::Forms::CheckBox());
@@ -1497,8 +1500,7 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
-            this->fcgLBReinitProcess3 = (gcnew System::Windows::Forms::Label());
-            this->fcgLBReinitProcess2 = (gcnew System::Windows::Forms::Label());
+            this->fcgLBReinitProcess4 = (gcnew System::Windows::Forms::Label());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             this->fcggroupBoxColorMatrix->SuspendLayout();
@@ -3320,6 +3322,7 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
             // 
             // fcggroupBoxExSettings
             // 
+            this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess4);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess2);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess3);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgLBReinitProcess);
@@ -3335,10 +3338,28 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
             this->fcggroupBoxExSettings->TabStop = false;
             this->fcggroupBoxExSettings->Text = L"拡張設定";
             // 
+            // fcgLBReinitProcess2
+            // 
+            this->fcgLBReinitProcess2->AutoSize = true;
+            this->fcgLBReinitProcess2->Location = System::Drawing::Point(31, 203);
+            this->fcgLBReinitProcess2->Name = L"fcgLBReinitProcess2";
+            this->fcgLBReinitProcess2->Size = System::Drawing::Size(62, 14);
+            this->fcgLBReinitProcess2->TabIndex = 258;
+            this->fcgLBReinitProcess2->Text = L"PrivateWS";
+            // 
+            // fcgLBReinitProcess3
+            // 
+            this->fcgLBReinitProcess3->AutoSize = true;
+            this->fcgLBReinitProcess3->Location = System::Drawing::Point(174, 203);
+            this->fcgLBReinitProcess3->Name = L"fcgLBReinitProcess3";
+            this->fcgLBReinitProcess3->Size = System::Drawing::Size(112, 14);
+            this->fcgLBReinitProcess3->TabIndex = 257;
+            this->fcgLBReinitProcess3->Text = L"MB以上  (※0で無効)";
+            // 
             // fcgLBReinitProcess
             // 
             this->fcgLBReinitProcess->AutoSize = true;
-            this->fcgLBReinitProcess->Location = System::Drawing::Point(15, 177);
+            this->fcgLBReinitProcess->Location = System::Drawing::Point(15, 161);
             this->fcgLBReinitProcess->Name = L"fcgLBReinitProcess";
             this->fcgLBReinitProcess->Size = System::Drawing::Size(95, 14);
             this->fcgLBReinitProcess->TabIndex = 256;
@@ -4676,23 +4697,14 @@ private: System::Windows::Forms::Label^  fcgLBReinitProcess3;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
-            // fcgLBReinitProcess3
+            // fcgLBReinitProcess4
             // 
-            this->fcgLBReinitProcess3->AutoSize = true;
-            this->fcgLBReinitProcess3->Location = System::Drawing::Point(174, 203);
-            this->fcgLBReinitProcess3->Name = L"fcgLBReinitProcess3";
-            this->fcgLBReinitProcess3->Size = System::Drawing::Size(112, 14);
-            this->fcgLBReinitProcess3->TabIndex = 257;
-            this->fcgLBReinitProcess3->Text = L"MB以上  (※0で無効)";
-            // 
-            // fcgLBReinitProcess2
-            // 
-            this->fcgLBReinitProcess2->AutoSize = true;
-            this->fcgLBReinitProcess2->Location = System::Drawing::Point(31, 203);
-            this->fcgLBReinitProcess2->Name = L"fcgLBReinitProcess2";
-            this->fcgLBReinitProcess2->Size = System::Drawing::Size(62, 14);
-            this->fcgLBReinitProcess2->TabIndex = 258;
-            this->fcgLBReinitProcess2->Text = L"PrivateWS";
+            this->fcgLBReinitProcess4->AutoSize = true;
+            this->fcgLBReinitProcess4->Location = System::Drawing::Point(15, 180);
+            this->fcgLBReinitProcess4->Name = L"fcgLBReinitProcess4";
+            this->fcgLBReinitProcess4->Size = System::Drawing::Size(231, 14);
+            this->fcgLBReinitProcess4->TabIndex = 259;
+            this->fcgLBReinitProcess4->Text = L" (メモリリーク対策用: 通常0のままにしてください！)";
             // 
             // frmConfig
             // 
