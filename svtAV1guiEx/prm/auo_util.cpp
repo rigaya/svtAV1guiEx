@@ -265,7 +265,7 @@ BOOL del_arg(char *cmd, char *target_arg, int del_arg_delta) {
     if (del_arg_delta) {
         while (cmd <= ptr + del_arg_delta && ptr + del_arg_delta < cmd_fin) {
             ptr += del_arg_delta;
-            if (is_space_or_crlf(*ptr)) {
+            if (!is_space_or_crlf(*ptr)) {
                 break;
             }
         }
