@@ -1816,5 +1816,6 @@ System::Void frmConfig::ShowExehelp(String^ ExePath, String^ args) {
 
 int64_t getProcessWorkingSet(const int pid) {
     auto process = System::Diagnostics::Process::GetProcessById(pid);
+    process->Refresh();
     return process->WorkingSet64;
 }

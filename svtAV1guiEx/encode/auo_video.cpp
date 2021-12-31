@@ -872,7 +872,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         for (i = 0, next_jitter = jitter + 1, pe->drop_count = 0; i < oip->n; i++, next_jitter++) {
             if (i == 0 //初回は必ず起動が必要
                 || (conf->vid.reinit_process_MB > 0
-                    && (i % 50) == 0
+                    && (i % 300) == 0
                     && process_private_ws_is_over_threshold(pi_enc, conf->vid.reinit_process_MB))) { // reinit_cycleが指定されていれば周期的に再起動を行う
                 if (run_new_process(x264args, x264dir, &thread_data, &pi_enc, &pipes, &pixel_data, pe, i, oip->n, set_priority) != AUO_RESULT_SUCCESS) {
                     ret |= AUO_RESULT_ERROR;
