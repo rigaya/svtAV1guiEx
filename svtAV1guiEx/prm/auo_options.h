@@ -221,37 +221,19 @@ typedef struct {
     int     rc;                  //rc
     int     aq;
     int     bias_pct; //--bias-pct
-    int     bipred_3x3;  //-bipred-3x3  (list_bipred_3x3)
-    int     cdef_level; //--cdef-level
-    int     chroma_mode; //--chroma-mode
     int     color_primaries; //--color-primaries
     int     color_range; //--color_range
-    int     compound;  //-compound  (list_compound)
-    int     disable_cfl; //--disable-cfl
-    int     enable_framend_cdf_upd_mode;  //-framend-cdf-upd-mode (on,off,default)
-    int     enable_filter_intra; //--enable-filter-intra
-    int     enable_global_motion; //--enable-global-motion
+    int     enable_cdef; //--enable-cdef
+    int     enable_dlf; //--enable-dlf
     int     enable_hdr; //--enable-hdr
-    int     enable_intra_angle_delta; //--enable-intra-angle-delta
-    int     enable_intra_edge_filter; //--enable-intra-edge-filter
-    int     enable_intra_edge_skp;  //--enable-intra-edge-skp (on,off,default)
-    int     enable_interintra_comp;  //-interintra-comp (on,off,default)
-    BOOL    enable_local_warp; //local-warp
-    int     enable_mfmv;  //-mfmv (on,off,default)
-    int     enable_new_nrst_near_comb;  //-new-nrst-near-comb (on,off,default)
-    int     enable_over_bndry_blk;  //-over-bndry-blk (on,off,default)
-    int     enable_paeth;
-    int     enable_redundant_blk;  //-redundant-blk (on,off,default)
-    int     enable_restoration_filtering; //restoration-filtering (on,off,default)
-    int     enable_smooth;
-    int     enable_spatial_sse_fl;  //-spatial-sse-fl (on,off,default)
+    int     enable_mfmv;  //--enable-mfmv (on,off,default)
+    int     enable_overlays; //--enable-overlays
+    int     enable_restoration; //--enable-restoration
     int     enable_stat_report;
+    int     enable_tf;
     int     enable_tpl_la;
-    int     ext_block;  //ext-block
     int     film_grain; //--film-grain
-    int     hbd_md; // 	--hbd-md
     int     hierarchical_levels; //hierarchical-levels
-    int     intra_bc_mode;       //intrabc-mode
     int     intra_refresh_type;  //irefresh-type
     int     keyint;        //keyint
     int     lp;         //lp (LogicalProcessorNumber)
@@ -260,28 +242,15 @@ typedef struct {
     int     maxsection_pct; //--maxsection-pct
     int     min_qp;
     int     minsection_pct; //--minsection-pct
-    int     mrp_level;
-    int     obmc_level;  // 	--obmc-level
     int     overshoot_pct; //--overshoot-pct
-    int     palette;   //-palette
-    int     pred_me;      //pred-me (list_pred_me)
-    int     rdoq;         // (on,off,default)
+    int     rmv;        //--rmv
     int     scd;        //scd (scene change detection)
     int     scm;        //scm (list_scm)
-    int     search_w;   //search_w
-    int     search_h;   //search_h
-    int     sg_filter_mode;
-    int     sqw; //-sqw
-    int     subpel;  //-subpel (on,off,default)
-    int     tf_level; // tf-level
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     transfer_characteristics; // --transfer-characteristics
-    int     umv; //-umv
     int     undershoot_pct; //--undershoot-pct
-    BOOL    use_default_me_hme;  //use-default-me-hme
     int     vbv_bufsize;  //vbv-bufsize
-    int     wn_filter_mode; //wn-filter-mode
 } CONF_ENCODER;
 #pragma pack(pop)
 
@@ -462,7 +431,11 @@ const CX_DESC list_enc_mode[] = {
     { "5",  5 },
     { "6",  6 },
     { "7",  7 },
-    { "8 - fast",  8 },
+    { "8",  8 },
+    { "9",  9 },
+    { "10",  10 },
+    { "11",  11 },
+    { "12 - fast",  12 },
     { NULL, NULL }
 };
 const CX_DESC list_aq[] = {
