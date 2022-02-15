@@ -127,7 +127,6 @@ typedef struct {
     int sar_x;
     int sar_y;
     BOOL afs_24fps;
-    int reinit_process_MB;           //svtav1encapp.exeの再起動を行うメモリ量
 } CONF_VIDEO; //動画用設定(x264以外)
 
 typedef struct {

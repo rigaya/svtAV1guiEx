@@ -685,10 +685,9 @@ static int video_output_create_thread(video_output_thread_t *thread_data, CONVER
     thread_data->abort = false;
     thread_data->pixel_data = pixel_data;
     thread_data->f_out = pipe_handle;
-    if (thread_data->thread == NULL // スレッドが起動していない場合
-        && (NULL == (thread_data->he_out_start = (HANDLE)CreateEvent(NULL, false, false, NULL))
-         || NULL == (thread_data->he_out_fin   = (HANDLE)CreateEvent(NULL, false, false, NULL))
-         || NULL == (thread_data->thread       = (HANDLE)_beginthreadex(NULL, 0, video_output_thread_func, thread_data, 0, NULL)))) {
+    if (   NULL == (thread_data->he_out_start = (HANDLE)CreateEvent(NULL, false, false, NULL))
+        || NULL == (thread_data->he_out_fin   = (HANDLE)CreateEvent(NULL, false, true,  NULL))
+        || NULL == (thread_data->thread       = (HANDLE)_beginthreadex(NULL, 0, video_output_thread_func, thread_data, 0, NULL))) {
         ret = AUO_RESULT_ERROR;
     }
     SetEvent(thread_data->he_out_fin);
@@ -708,67 +707,6 @@ static void video_output_close_thread(video_output_thread_t *thread_data, AUO_RE
         CloseHandle(thread_data->he_out_fin);
     }
     memset(thread_data, 0, sizeof(thread_data[0]));
-}
-
-static AUO_RESULT run_new_process(const char *x264args, const char *x264dir, video_output_thread_t *thread_data,
-    PROCESS_INFORMATION *pi_enc, PIPE_SET *pipes, CONVERT_CF_DATA *pixel_data, PRM_ENC *pe,
-    const int iframe, const int nframe, DWORD set_priority) {
-    if (pi_enc->hProcess) { // すでにプロセスが起動済みなら、一度終了させる
-        //まずは終了待機
-        while (WAIT_TIMEOUT == WaitForSingleObject(thread_data->he_out_fin, LOG_UPDATE_INTERVAL)) {
-            log_process_events();
-        }
-        //stdinを閉じてプロセスに終了を通知
-        CloseStdIn(pipes);
-
-        //エンコーダ終了待機
-        while (WaitForSingleObject(pi_enc->hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
-            ReadLogEnc(pipes, pe->drop_count, iframe, nframe);
-
-        //最後にメッセージを取得
-        while (ReadLogEnc(pipes, pe->drop_count, iframe, nframe) > 0);
-
-        if (pipes->stdErr.mode)
-            CloseHandle(pipes->stdErr.h_read);
-        CloseHandle(pi_enc->hProcess);
-        CloseHandle(pi_enc->hThread);
-
-        //再初期化
-        memset(pi_enc, 0, sizeof(pi_enc[0]));
-        memset(pipes, 0, sizeof(pipes[0]));
-        pipes->stdErr.mode = AUO_PIPE_ENABLE;
-        pipes->stdIn.mode = AUO_PIPE_ENABLE;
-        pipes->stdIn.bufferSize = pixel_data->total_size * 2;
-    }
-
-    char exe_args[MAX_CMD_LEN] = { 0 };
-    strcpy_s(exe_args, x264args);
-    if (pe->reinit_cycle_idx >= 0) { // reinit_cycleが指定されている
-        if (pe->reinit_cycle_idx > 0) { // 初回はpe->temp_filename、それ以降はファイル名を置換する
-            char tmppath_org[MAX_PATH_LEN] = { 0 }; // pe->temp_filename の "" で括られたもの
-            char tmppath_new[MAX_PATH_LEN] = { 0 }; // 置換するファイル名の "" で括られたもの
-            sprintf_s(tmppath_org, "\"%s", pe->temp_filename);
-            strcpy_s(tmppath_new, tmppath_org);
-            strcat_s(tmppath_org, "\"");
-            sprintf_s(tmppath_new + strlen(tmppath_new), _countof(tmppath_new) - strlen(tmppath_new), ".%d\"", pe->reinit_cycle_idx);
-            replace(exe_args, _countof(exe_args), tmppath_org, tmppath_new);
-            write_log_auo_line_fmt(LOG_INFO, "一時ファイル %s を使用します。", tmppath_new);
-        }
-        pe->reinit_cycle_idx++;
-    }
-    //svt-av1プロセス開始
-    auto rp_ret = RunProcess(exe_args, x264dir, pi_enc, pipes, (set_priority == AVIUTLSYNC_PRIORITY_CLASS) ? GetPriorityClass(pe->h_p_aviutl) : set_priority, TRUE, FALSE);
-    if (rp_ret != RP_SUCCESS) {
-        error_run_process("svt-av1", rp_ret); return AUO_RESULT_ERROR;
-    }
-    //書き込みスレッドを開始
-    if (video_output_create_thread(thread_data, pixel_data, pipes->f_stdin)) {
-        error_video_output_thread_start(); return AUO_RESULT_ERROR;
-    }
-    //svt-av1が待機に入るまでこちらも待機
-    while (WaitForInputIdle(pi_enc->hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
-        log_process_events();
-    return AUO_RESULT_SUCCESS;
 }
 
 static bool process_private_ws_is_over_threshold(const PROCESS_INFORMATION& pi_enc, const int reinit_process_MB) {
@@ -802,6 +740,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     set_auto_colormatrix(&enc, oip->h);
 
     int *jitter = NULL;
+    int rp_ret = 0;
 
     //svt-av1優先度関連の初期化
     DWORD set_priority = (pe->h_p_aviutl || conf->vid.priority != AVIUTLSYNC_PRIORITY_CLASS) ? priority_table[conf->vid.priority].value : NORMAL_PRIORITY_CLASS;
@@ -844,6 +783,12 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     //Aviutl(afs)からのフレーム読み込み
     } else if (!setup_afsvideo(oip, sys_dat, conf, pe)) {
         ret |= AUO_RESULT_ERROR; //Aviutl(afs)からのフレーム読み込みに失敗
+    //svt-av1プロセス開始
+    } else if ((rp_ret = RunProcess(x264args, x264dir, &pi_enc, &pipes, (set_priority == AVIUTLSYNC_PRIORITY_CLASS) ? GetPriorityClass(pe->h_p_aviutl) : set_priority, TRUE, FALSE)) != RP_SUCCESS) {
+        ret |= AUO_RESULT_ERROR; error_run_process("svt-av1", rp_ret);
+        //書き込みスレッドを開始
+    } else if (video_output_create_thread(&thread_data, &pixel_data, pipes.f_stdin)) {
+        ret |= AUO_RESULT_ERROR; error_video_output_thread_start();
     } else {
         //全て正常
         int i = 0;
@@ -863,21 +808,16 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         PROCESS_TIME time_aviutl;
         GetProcessTime(pe->h_p_aviutl, &time_aviutl);
 
+        //svt-av1が待機に入るまでこちらも待機
+        while (WaitForInputIdle(pi_enc.hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
+            log_process_events();
+
         //ログウィンドウ側から制御を可能に
         DWORD tm_vid_enc_start = timeGetTime();
         enable_x264_control(&set_priority, &enc_pause, afs, TRUE, tm_vid_enc_start, oip->n);
 
         //------------メインループ------------
-        pe->reinit_cycle_idx = (conf->vid.reinit_process_MB > 0) ? 0 : -1;
         for (i = 0, next_jitter = jitter + 1, pe->drop_count = 0; i < oip->n; i++, next_jitter++) {
-            if (i == 0 //初回は必ず起動が必要
-                || (conf->vid.reinit_process_MB > 0
-                    && (i % 300) == 0
-                    && process_private_ws_is_over_threshold(pi_enc, conf->vid.reinit_process_MB))) { // reinit_cycleが指定されていれば周期的に再起動を行う
-                if (run_new_process(x264args, x264dir, &thread_data, &pi_enc, &pipes, &pixel_data, pe, i, oip->n, set_priority) != AUO_RESULT_SUCCESS) {
-                    ret |= AUO_RESULT_ERROR;
-                }
-            }
             //中断を確認
             ret |= (oip->func_is_abort()) ? AUO_RESULT_ABORT : AUO_RESULT_SUCCESS;
 

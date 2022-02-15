@@ -202,19 +202,6 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, c
     //自動マルチパス設定
     check &= check_amp(conf);
 #endif
-    if (conf->vid.reinit_process_MB > 0) {
-        if (pe->muxer_to_be_used == MUXER_DISABLED) {
-            write_log_auo_line(LOG_ERROR, "raw出力時はreinit cycleは使用できません。");
-            check = FALSE;
-        } else if (!str_has_char(exstg->s_mux[pe->muxer_to_be_used].vid_cat_cmd)) {
-            write_log_auo_line(LOG_INFO, "muxer設定がreinit cycleに対応していません。");
-            check = FALSE;
-        }
-        if (conf->vid.afs && !conf->vid.afs_24fps) {
-            write_log_auo_line(LOG_INFO, "reinit cycleは自動フィールドシフトに対応していません。");
-            check = FALSE;
-        }
-    }
 
     //オーディオディレイカット
     if (conf->vid.afs && AUDIO_DELAY_CUT_ADD_VIDEO == conf->aud.delay_cut) {
@@ -690,17 +677,6 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
     if (!conf->oth.out_audio_only) {
         if (!move_temp_file(PathFindExtension((pe->muxer_to_be_used >= 0) ? oip->savefile : pe->temp_filename), pe->temp_filename, oip->savefile, ret, FALSE, "出力", !ret)) {
             ret |= AUO_RESULT_ERROR;
-        }
-        //分割エンコード時の一時ファイルを削除
-        //icycle=0はpe->temp_filenameそのものなので対象外
-        for (int icycle = 1; icycle < pe->reinit_cycle_idx; icycle++) {
-            char srcfile[MAX_PATH_LEN] = { 0 };
-            strcpy_s(srcfile, pe->temp_filename);
-            change_ext(srcfile, _countof(srcfile), ".av1");
-            sprintf_s(srcfile + strlen(srcfile), _countof(srcfile) - strlen(srcfile), ".%d", icycle);
-            if (PathFileExists(srcfile)) {
-                remove(srcfile);
-            }
         }
     }
     //動画のみファイル

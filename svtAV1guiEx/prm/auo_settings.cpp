@@ -403,7 +403,6 @@ void guiEx_settings::load_mux() {
         strcpy_s(s_mux[i].out_ext, s_mux_mc.GetRemain(), MUXER_OUT_EXT[i]);
         s_mux_mc.CutString(sizeof(s_mux[i].out_ext[0]));
         s_mux[i].vid_cmd   = s_mux_mc.SetPrivateProfileString(muxer_section, "vd_cmd",    "", ini_fileName);
-        s_mux[i].vid_cat_cmd = s_mux_mc.SetPrivateProfileString(muxer_section, "vd_cat_cmd","", ini_fileName);
         s_mux[i].aud_cmd   = s_mux_mc.SetPrivateProfileString(muxer_section, "au_cmd",    "", ini_fileName);
         s_mux[i].tc_cmd    = s_mux_mc.SetPrivateProfileString(muxer_section, "tc_cmd",    "", ini_fileName);
         s_mux[i].delay_cmd = s_mux_mc.SetPrivateProfileString(muxer_section, "delay_cmd", "", ini_fileName);

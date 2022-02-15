@@ -36,7 +36,7 @@
 
 static const BOOL   DEFAULT_LARGE_CMD_BOX         = 0;
 static const BOOL   DEFAULT_AUTO_AFS_DISABLE      = 0;
-static const int    DEFAULT_OUTPUT_EXT            = 1;
+static const int    DEFAULT_OUTPUT_EXT            = 0;
 static const BOOL   DEFAULT_AUTO_DEL_STATS        = 1;
 static const BOOL   DEFAULT_AUTO_DEL_CHAP         = 1;
 static const BOOL   DEFAULT_KEEP_QP_FILE          = 0;
@@ -48,7 +48,7 @@ static const BOOL   DEFAULT_UPDATE_OVERWRITE      = 0;
 static const BOOL   DEFAULT_UPDATE_CHECK_AUTO     = 1;
 static const BOOL   DEFAULT_SAVE_RELATIVE_PATH    = 0;
 static const BOOL   DEFAULT_CHAP_NERO_TO_UTF8     = 0;
-static const BOOL   DEFAULT_AUDIO_ENCODER         = 8;
+static const BOOL   DEFAULT_AUDIO_ENCODER         = 15;
 static const int    DEFAULT_AMP_RETRY_LIMIT       = 2;
 static const double DEFAULT_AMP_MARGIN            = 0.05;
 static const double DEFAULT_AMP_REENC_AUDIO_MULTI = 0.15;
@@ -209,7 +209,6 @@ typedef struct {
     char *out_ext;                //mux後ファイルの拡張子
     char *base_cmd;               //もととなるコマンドライン
     char *vid_cmd;                //映像mux用のコマンドライン
-    char *vid_cat_cmd;            //映像mux結合用のコマンドライン
     char *aud_cmd;                //音声mux用のコマンドライン
     char *tc_cmd;                 //タイムコードmux用のコマンドライン
     char *tmp_cmd;                //一時フォルダ指定用コマンドライン

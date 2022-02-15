@@ -61,7 +61,6 @@ typedef struct {
     int amp_reset_pass_count;              //下限ビットレート指定で再設定をやり直した回数
     int amp_reset_pass_limit;              //下限ビットレート指定で再設定をやり直す上限
     int drop_count;                        //ドロップ数
-    int reinit_cycle_idx;                  //reinit_cycleによる分割エンコード回数
     BOOL afs_init;                         //動画入力の準備ができているか
     HANDLE h_p_aviutl;                     //優先度取得用のAviutlのハンドル
     char **opened_aviutl_files;            //Aviutlの開いているファイルリスト
