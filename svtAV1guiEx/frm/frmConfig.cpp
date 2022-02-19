@@ -457,9 +457,12 @@ System::Void frmConfig::fcgCBAFS_CheckedChanged(System::Object^  sender, System:
     //fcgCBMP4MuxerExt->Enabled          = !fcgCBAFS->Checked;
     //fcgCBMKVMuxerExt->Enabled          = !fcgCBAFS->Checked;
 
-    int muxer_cmdex = fcgCXMP4CmdEx->SelectedIndex;
-    setMuxerCmdExNames(fcgCXMP4CmdEx, (fcgCBAFS->Checked) ? MUXER_TC2MP4 : MUXER_MP4);
-    fcgCXMP4CmdEx->SelectedIndex = muxer_cmdex;
+    const bool enable_tc2mp4_muxer = (0 != str_has_char(sys_dat->exstg->s_mux[MUXER_TC2MP4].base_cmd));
+    if (enable_tc2mp4_muxer) {
+        int muxer_cmdex = fcgCXMP4CmdEx->SelectedIndex;
+        setMuxerCmdExNames(fcgCXMP4CmdEx, (fcgCBAFS->Checked) ? MUXER_TC2MP4 : MUXER_MP4);
+        fcgCXMP4CmdEx->SelectedIndex = muxer_cmdex;
+    }
 }
 
 System::Boolean frmConfig::EnableSettingsNoteChange(bool Enable) {
