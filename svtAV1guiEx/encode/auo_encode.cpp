@@ -188,10 +188,15 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, c
     //muxer
     switch (pe->muxer_to_be_used) {
         case MUXER_TC2MP4:
+            if (!str_has_char(exstg->s_mux[pe->muxer_to_be_used].base_cmd)) {
+                error_tc2mp4_afs_not_supported();
+                check = FALSE;
+            }
             check &= check_muxer_exist(&exstg->s_mux[MUXER_MP4]); //tc2mp4使用時は追加でmp4boxも必要
             //下へフォールスルー
         case MUXER_MP4:
             check &= check_muxer_matched_with_ini(exstg->s_mux);
+            //下へフォールスルー
         case MUXER_MKV:
             check &= check_muxer_exist(&exstg->s_mux[pe->muxer_to_be_used]);
             break;
