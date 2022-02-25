@@ -1096,7 +1096,7 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
             switch (pe->current_x264_pass) {
                 case 1: {
                     enc.pass = 1;
-                    enc.preset = 8;
+                    enc.preset = max(enc.preset, 8);
                     break;
                 }
                 case 2:
