@@ -846,6 +846,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXRC,             list_rc);
     setComboBox(fcgCXEncMode,        list_enc_mode);
     setComboBox(fcgCXSCM,            list_scm);
+    setComboBox(fcgCXTune,           list_tune);
 
     setComboBox(fcgCXAQ,             list_aq);
     setComboBox(fcgCXColorFormat,    list_color_format);
@@ -1109,6 +1110,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
+    SetCXIndex(fcgCXTune, get_cx_index(list_tune, enc.tune));
     SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
     SetNUValue(fcgNUUnderShootPct, enc.undershoot_pct);
     SetNUValue(fcgNUVBVBufSize, enc.vbv_bufsize);
@@ -1223,6 +1225,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
     enc.transfer_characteristics = list_transfer[fcgCXTransfer->SelectedIndex].value;
+    enc.tune = list_tune[fcgCXTune->SelectedIndex].value;
     enc.undershoot_pct = (int)fcgNUUnderShootPct->Value;
     enc.vbv_bufsize = (int)fcgNUVBVBufSize->Value;
 

@@ -249,6 +249,7 @@ typedef struct {
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     transfer_characteristics; // --transfer-characteristics
+    int     tune; //tune
     int     undershoot_pct; //--undershoot-pct
     int     vbv_bufsize;  //vbv-bufsize
 } CONF_ENCODER;
@@ -442,6 +443,11 @@ const CX_DESC list_aq[] = {
     { "0: off",  0 },
     { "1: variance base",  1 },
     { "2: deltaq pred efficiency",  2 },
+    { NULL, NULL }
+};
+const CX_DESC list_tune[] = {
+    { "0: VQ",    0 },
+    { "1: ssim",  1 },
     { NULL, NULL }
 };
 

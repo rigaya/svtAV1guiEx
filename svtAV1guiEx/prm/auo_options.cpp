@@ -191,6 +191,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
     OPT_NUM("transfer-characteristics", transfer_characteristics);
+    OPT_NUM("tune", tune);
     OPT_NUM("undershoot-pct", undershoot_pct);
     OPT_NUM("vbv-bufsize", vbv_bufsize);
     return 1;
@@ -282,6 +283,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
     OPT_NUM("transfer-characteristics", transfer_characteristics);
+    OPT_NUM("tune", tune);
     OPT_NUM("undershoot-pct", undershoot_pct);
     OPT_NUM("vbv-bufsize", vbv_bufsize);
 

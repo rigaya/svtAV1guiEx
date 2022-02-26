@@ -1115,6 +1115,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBEnableStatReport;
 private: System::Windows::Forms::Label^  fcgLBSTATUS;
 private: System::Windows::Forms::TextBox^  fcgTXStatusFile;
 private: System::Windows::Forms::Button^  fcgBTStatusFile;
+private: System::Windows::Forms::Label^  fcgLBTune;
+private: System::Windows::Forms::ComboBox^  fcgCXTune;
 
 
 
@@ -1470,6 +1472,8 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgLBTune = (gcnew System::Windows::Forms::Label());
+            this->fcgCXTune = (gcnew System::Windows::Forms::ComboBox());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
@@ -1526,6 +1530,8 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBTune);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXTune);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBBiasPct);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUBiasPct);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBOverShootPct);
@@ -1600,7 +1606,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBBiasPct
             // 
             this->fcgLBBiasPct->AutoSize = true;
-            this->fcgLBBiasPct->Location = System::Drawing::Point(15, 366);
+            this->fcgLBBiasPct->Location = System::Drawing::Point(15, 391);
             this->fcgLBBiasPct->Name = L"fcgLBBiasPct";
             this->fcgLBBiasPct->Size = System::Drawing::Size(76, 14);
             this->fcgLBBiasPct->TabIndex = 270;
@@ -1609,7 +1615,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgNUBiasPct
             // 
             this->fcgNUBiasPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
-            this->fcgNUBiasPct->Location = System::Drawing::Point(165, 364);
+            this->fcgNUBiasPct->Location = System::Drawing::Point(165, 389);
             this->fcgNUBiasPct->Name = L"fcgNUBiasPct";
             this->fcgNUBiasPct->Size = System::Drawing::Size(64, 21);
             this->fcgNUBiasPct->TabIndex = 261;
@@ -1619,7 +1625,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBOverShootPct
             // 
             this->fcgLBOverShootPct->AutoSize = true;
-            this->fcgLBOverShootPct->Location = System::Drawing::Point(15, 469);
+            this->fcgLBOverShootPct->Location = System::Drawing::Point(15, 494);
             this->fcgLBOverShootPct->Name = L"fcgLBOverShootPct";
             this->fcgLBOverShootPct->Size = System::Drawing::Size(81, 14);
             this->fcgLBOverShootPct->TabIndex = 269;
@@ -1628,7 +1634,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgNUOverShootPct
             // 
             this->fcgNUOverShootPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
-            this->fcgNUOverShootPct->Location = System::Drawing::Point(165, 467);
+            this->fcgNUOverShootPct->Location = System::Drawing::Point(165, 492);
             this->fcgNUOverShootPct->Name = L"fcgNUOverShootPct";
             this->fcgNUOverShootPct->Size = System::Drawing::Size(64, 21);
             this->fcgNUOverShootPct->TabIndex = 265;
@@ -1638,7 +1644,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBUnderShootPct
             // 
             this->fcgLBUnderShootPct->AutoSize = true;
-            this->fcgLBUnderShootPct->Location = System::Drawing::Point(15, 443);
+            this->fcgLBUnderShootPct->Location = System::Drawing::Point(15, 468);
             this->fcgLBUnderShootPct->Name = L"fcgLBUnderShootPct";
             this->fcgLBUnderShootPct->Size = System::Drawing::Size(89, 14);
             this->fcgLBUnderShootPct->TabIndex = 268;
@@ -1647,7 +1653,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgNUUnderShootPct
             // 
             this->fcgNUUnderShootPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
-            this->fcgNUUnderShootPct->Location = System::Drawing::Point(165, 441);
+            this->fcgNUUnderShootPct->Location = System::Drawing::Point(165, 466);
             this->fcgNUUnderShootPct->Name = L"fcgNUUnderShootPct";
             this->fcgNUUnderShootPct->Size = System::Drawing::Size(64, 21);
             this->fcgNUUnderShootPct->TabIndex = 264;
@@ -1657,7 +1663,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBMaxSectionPct
             // 
             this->fcgLBMaxSectionPct->AutoSize = true;
-            this->fcgLBMaxSectionPct->Location = System::Drawing::Point(15, 417);
+            this->fcgLBMaxSectionPct->Location = System::Drawing::Point(15, 442);
             this->fcgLBMaxSectionPct->Name = L"fcgLBMaxSectionPct";
             this->fcgLBMaxSectionPct->Size = System::Drawing::Size(85, 14);
             this->fcgLBMaxSectionPct->TabIndex = 267;
@@ -1666,7 +1672,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgNUMaxSectionPct
             // 
             this->fcgNUMaxSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
-            this->fcgNUMaxSectionPct->Location = System::Drawing::Point(165, 415);
+            this->fcgNUMaxSectionPct->Location = System::Drawing::Point(165, 440);
             this->fcgNUMaxSectionPct->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
             this->fcgNUMaxSectionPct->Name = L"fcgNUMaxSectionPct";
             this->fcgNUMaxSectionPct->Size = System::Drawing::Size(64, 21);
@@ -1677,7 +1683,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBMinSectionPct
             // 
             this->fcgLBMinSectionPct->AutoSize = true;
-            this->fcgLBMinSectionPct->Location = System::Drawing::Point(15, 391);
+            this->fcgLBMinSectionPct->Location = System::Drawing::Point(15, 416);
             this->fcgLBMinSectionPct->Name = L"fcgLBMinSectionPct";
             this->fcgLBMinSectionPct->Size = System::Drawing::Size(83, 14);
             this->fcgLBMinSectionPct->TabIndex = 266;
@@ -1686,7 +1692,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgNUMinSectionPct
             // 
             this->fcgNUMinSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
-            this->fcgNUMinSectionPct->Location = System::Drawing::Point(165, 389);
+            this->fcgNUMinSectionPct->Location = System::Drawing::Point(165, 414);
             this->fcgNUMinSectionPct->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
             this->fcgNUMinSectionPct->Name = L"fcgNUMinSectionPct";
             this->fcgNUMinSectionPct->Size = System::Drawing::Size(64, 21);
@@ -1698,7 +1704,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             this->fcgCXSCM->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXSCM->FormattingEnabled = true;
-            this->fcgCXSCM->Location = System::Drawing::Point(166, 226);
+            this->fcgCXSCM->Location = System::Drawing::Point(166, 251);
             this->fcgCXSCM->Name = L"fcgCXSCM";
             this->fcgCXSCM->Size = System::Drawing::Size(118, 22);
             this->fcgCXSCM->TabIndex = 259;
@@ -1707,7 +1713,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBScm
             // 
             this->fcgLBScm->AutoSize = true;
-            this->fcgLBScm->Location = System::Drawing::Point(15, 229);
+            this->fcgLBScm->Location = System::Drawing::Point(15, 254);
             this->fcgLBScm->Name = L"fcgLBScm";
             this->fcgLBScm->Size = System::Drawing::Size(115, 14);
             this->fcgLBScm->TabIndex = 260;
@@ -1716,7 +1722,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBEnableCDEF
             // 
             this->fcgCBEnableCDEF->AutoSize = true;
-            this->fcgCBEnableCDEF->Location = System::Drawing::Point(285, 285);
+            this->fcgCBEnableCDEF->Location = System::Drawing::Point(285, 310);
             this->fcgCBEnableCDEF->Name = L"fcgCBEnableCDEF";
             this->fcgCBEnableCDEF->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableCDEF->TabIndex = 258;
@@ -1726,7 +1732,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBEnableCDEF
             // 
             this->fcgLBEnableCDEF->AutoSize = true;
-            this->fcgLBEnableCDEF->Location = System::Drawing::Point(166, 286);
+            this->fcgLBEnableCDEF->Location = System::Drawing::Point(166, 311);
             this->fcgLBEnableCDEF->Name = L"fcgLBEnableCDEF";
             this->fcgLBEnableCDEF->Size = System::Drawing::Size(71, 14);
             this->fcgLBEnableCDEF->TabIndex = 257;
@@ -1735,7 +1741,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBFilmGrain
             // 
             this->fcgLBFilmGrain->AutoSize = true;
-            this->fcgLBFilmGrain->Location = System::Drawing::Point(15, 340);
+            this->fcgLBFilmGrain->Location = System::Drawing::Point(15, 365);
             this->fcgLBFilmGrain->Name = L"fcgLBFilmGrain";
             this->fcgLBFilmGrain->Size = System::Drawing::Size(59, 14);
             this->fcgLBFilmGrain->TabIndex = 256;
@@ -1743,7 +1749,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             // fcgNUFilmGrain
             // 
-            this->fcgNUFilmGrain->Location = System::Drawing::Point(165, 338);
+            this->fcgNUFilmGrain->Location = System::Drawing::Point(165, 363);
             this->fcgNUFilmGrain->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 6, 0, 0, 0 });
             this->fcgNUFilmGrain->Name = L"fcgNUFilmGrain";
             this->fcgNUFilmGrain->Size = System::Drawing::Size(64, 21);
@@ -1754,7 +1760,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBRestrictedMV
             // 
             this->fcgCBRestrictedMV->AutoSize = true;
-            this->fcgCBRestrictedMV->Location = System::Drawing::Point(115, 311);
+            this->fcgCBRestrictedMV->Location = System::Drawing::Point(115, 336);
             this->fcgCBRestrictedMV->Name = L"fcgCBRestrictedMV";
             this->fcgCBRestrictedMV->Size = System::Drawing::Size(15, 14);
             this->fcgCBRestrictedMV->TabIndex = 238;
@@ -1764,7 +1770,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBRestrictedMV
             // 
             this->fcgLBRestrictedMV->AutoSize = true;
-            this->fcgLBRestrictedMV->Location = System::Drawing::Point(15, 312);
+            this->fcgLBRestrictedMV->Location = System::Drawing::Point(15, 337);
             this->fcgLBRestrictedMV->Name = L"fcgLBRestrictedMV";
             this->fcgLBRestrictedMV->Size = System::Drawing::Size(78, 14);
             this->fcgLBRestrictedMV->TabIndex = 237;
@@ -1773,7 +1779,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBEnableTF
             // 
             this->fcgCBEnableTF->AutoSize = true;
-            this->fcgCBEnableTF->Location = System::Drawing::Point(115, 263);
+            this->fcgCBEnableTF->Location = System::Drawing::Point(115, 288);
             this->fcgCBEnableTF->Name = L"fcgCBEnableTF";
             this->fcgCBEnableTF->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableTF->TabIndex = 236;
@@ -1783,7 +1789,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBEnableTF
             // 
             this->fcgLBEnableTF->AutoSize = true;
-            this->fcgLBEnableTF->Location = System::Drawing::Point(15, 261);
+            this->fcgLBEnableTF->Location = System::Drawing::Point(15, 286);
             this->fcgLBEnableTF->Name = L"fcgLBEnableTF";
             this->fcgLBEnableTF->Size = System::Drawing::Size(55, 14);
             this->fcgLBEnableTF->TabIndex = 235;
@@ -1792,7 +1798,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBEnableOverlay
             // 
             this->fcgCBEnableOverlay->AutoSize = true;
-            this->fcgCBEnableOverlay->Location = System::Drawing::Point(115, 287);
+            this->fcgCBEnableOverlay->Location = System::Drawing::Point(115, 312);
             this->fcgCBEnableOverlay->Name = L"fcgCBEnableOverlay";
             this->fcgCBEnableOverlay->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableOverlay->TabIndex = 234;
@@ -1802,7 +1808,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBEnableOverlay
             // 
             this->fcgLBEnableOverlay->AutoSize = true;
-            this->fcgLBEnableOverlay->Location = System::Drawing::Point(15, 285);
+            this->fcgLBEnableOverlay->Location = System::Drawing::Point(15, 310);
             this->fcgLBEnableOverlay->Name = L"fcgLBEnableOverlay";
             this->fcgLBEnableOverlay->Size = System::Drawing::Size(83, 14);
             this->fcgLBEnableOverlay->TabIndex = 233;
@@ -1811,7 +1817,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBEnableDLF
             // 
             this->fcgCBEnableDLF->AutoSize = true;
-            this->fcgCBEnableDLF->Location = System::Drawing::Point(285, 261);
+            this->fcgCBEnableDLF->Location = System::Drawing::Point(285, 286);
             this->fcgCBEnableDLF->Name = L"fcgCBEnableDLF";
             this->fcgCBEnableDLF->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableDLF->TabIndex = 232;
@@ -1821,7 +1827,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBEnableDLF
             // 
             this->fcgLBEnableDLF->AutoSize = true;
-            this->fcgLBEnableDLF->Location = System::Drawing::Point(166, 261);
+            this->fcgLBEnableDLF->Location = System::Drawing::Point(166, 286);
             this->fcgLBEnableDLF->Name = L"fcgLBEnableDLF";
             this->fcgLBEnableDLF->Size = System::Drawing::Size(63, 14);
             this->fcgLBEnableDLF->TabIndex = 231;
@@ -1830,7 +1836,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgCBEnableRestorationFilter
             // 
             this->fcgCBEnableRestorationFilter->AutoSize = true;
-            this->fcgCBEnableRestorationFilter->Location = System::Drawing::Point(285, 310);
+            this->fcgCBEnableRestorationFilter->Location = System::Drawing::Point(285, 335);
             this->fcgCBEnableRestorationFilter->Name = L"fcgCBEnableRestorationFilter";
             this->fcgCBEnableRestorationFilter->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableRestorationFilter->TabIndex = 230;
@@ -2005,7 +2011,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             this->fcgCXHierarchicalLevels->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXHierarchicalLevels->FormattingEnabled = true;
-            this->fcgCXHierarchicalLevels->Location = System::Drawing::Point(165, 170);
+            this->fcgCXHierarchicalLevels->Location = System::Drawing::Point(165, 195);
             this->fcgCXHierarchicalLevels->Name = L"fcgCXHierarchicalLevels";
             this->fcgCXHierarchicalLevels->Size = System::Drawing::Size(118, 22);
             this->fcgCXHierarchicalLevels->TabIndex = 21;
@@ -2156,7 +2162,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBEnableRestortionFiltering
             // 
             this->fcgLBEnableRestortionFiltering->AutoSize = true;
-            this->fcgLBEnableRestortionFiltering->Location = System::Drawing::Point(166, 310);
+            this->fcgLBEnableRestortionFiltering->Location = System::Drawing::Point(166, 335);
             this->fcgLBEnableRestortionFiltering->Name = L"fcgLBEnableRestortionFiltering";
             this->fcgLBEnableRestortionFiltering->Size = System::Drawing::Size(99, 14);
             this->fcgLBEnableRestortionFiltering->TabIndex = 189;
@@ -2225,7 +2231,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             this->fcgCXEnableMfmv->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXEnableMfmv->FormattingEnabled = true;
-            this->fcgCXEnableMfmv->Location = System::Drawing::Point(165, 198);
+            this->fcgCXEnableMfmv->Location = System::Drawing::Point(165, 223);
             this->fcgCXEnableMfmv->Name = L"fcgCXEnableMfmv";
             this->fcgCXEnableMfmv->Size = System::Drawing::Size(118, 22);
             this->fcgCXEnableMfmv->TabIndex = 25;
@@ -2234,7 +2240,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBMfmv
             // 
             this->fcgLBMfmv->AutoSize = true;
-            this->fcgLBMfmv->Location = System::Drawing::Point(15, 201);
+            this->fcgLBMfmv->Location = System::Drawing::Point(15, 226);
             this->fcgLBMfmv->Name = L"fcgLBMfmv";
             this->fcgLBMfmv->Size = System::Drawing::Size(86, 14);
             this->fcgLBMfmv->TabIndex = 104;
@@ -2243,7 +2249,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBAQ
             // 
             this->fcgLBAQ->AutoSize = true;
-            this->fcgLBAQ->Location = System::Drawing::Point(15, 147);
+            this->fcgLBAQ->Location = System::Drawing::Point(15, 172);
             this->fcgLBAQ->Name = L"fcgLBAQ";
             this->fcgLBAQ->Size = System::Drawing::Size(22, 14);
             this->fcgLBAQ->TabIndex = 88;
@@ -2253,7 +2259,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // 
             this->fcgCXAQ->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXAQ->FormattingEnabled = true;
-            this->fcgCXAQ->Location = System::Drawing::Point(165, 144);
+            this->fcgCXAQ->Location = System::Drawing::Point(165, 169);
             this->fcgCXAQ->Name = L"fcgCXAQ";
             this->fcgCXAQ->Size = System::Drawing::Size(118, 22);
             this->fcgCXAQ->TabIndex = 20;
@@ -2262,7 +2268,7 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             // fcgLBHierarchicalLevels
             // 
             this->fcgLBHierarchicalLevels->AutoSize = true;
-            this->fcgLBHierarchicalLevels->Location = System::Drawing::Point(15, 173);
+            this->fcgLBHierarchicalLevels->Location = System::Drawing::Point(15, 198);
             this->fcgLBHierarchicalLevels->Name = L"fcgLBHierarchicalLevels";
             this->fcgLBHierarchicalLevels->Size = System::Drawing::Size(103, 14);
             this->fcgLBHierarchicalLevels->TabIndex = 85;
@@ -3967,6 +3973,25 @@ private: System::Windows::Forms::Button^  fcgBTStatusFile;
             this->fcgLBAudioPriority->Size = System::Drawing::Size(62, 14);
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
+            // 
+            // fcgLBTune
+            // 
+            this->fcgLBTune->AutoSize = true;
+            this->fcgLBTune->Location = System::Drawing::Point(15, 146);
+            this->fcgLBTune->Name = L"fcgLBTune";
+            this->fcgLBTune->Size = System::Drawing::Size(31, 14);
+            this->fcgLBTune->TabIndex = 272;
+            this->fcgLBTune->Text = L"tune";
+            // 
+            // fcgCXTune
+            // 
+            this->fcgCXTune->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXTune->FormattingEnabled = true;
+            this->fcgCXTune->Location = System::Drawing::Point(165, 143);
+            this->fcgCXTune->Name = L"fcgCXTune";
+            this->fcgCXTune->Size = System::Drawing::Size(118, 22);
+            this->fcgCXTune->TabIndex = 271;
+            this->fcgCXTune->Tag = L"reCmd";
             // 
             // frmConfig
             // 
