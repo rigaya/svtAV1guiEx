@@ -28,8 +28,8 @@
 #ifndef _AUO_VERSION_H_
 #define _AUO_VERSION_H_
 
-#define AUO_VERSION          0,0,11,0
-#define AUO_VERSION_STR      "0.11"
+#define AUO_VERSION          0,0,12,0
+#define AUO_VERSION_STR      "0.12"
 #define AUO_NAME_WITHOUT_EXT "svtAV1guiEx"
 #define AUO_NAME             "svtAV1guiEx.auo"
 #define AUO_NAME_W          L"svtAV1guiEx.auo"
