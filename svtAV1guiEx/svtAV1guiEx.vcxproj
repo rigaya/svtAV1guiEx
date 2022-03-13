@@ -14,7 +14,7 @@
     <ProjectGuid>{1C2815CC-4078-4EBE-B7BA-FA807D246200}</ProjectGuid>
     <RootNamespace>svtAV1guiEx</RootNamespace>
     <Keyword>ManagedCProj</Keyword>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ProjectName>svtAV1guiEx</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
