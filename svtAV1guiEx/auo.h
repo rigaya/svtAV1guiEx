@@ -38,6 +38,8 @@ const int   MAX_CMD_LEN           = 16 * 1024; //コマンドラインの最大�
 const DWORD AUDIO_BUFFER_DEFAULT  = 48000;
 const DWORD AUDIO_BUFFER_MAX      = AUDIO_BUFFER_DEFAULT * 30;
 
+static const char *ENCODER_NAME   = "svt-av1";
+
 enum {
     VIDEO_OUTPUT_DISABLED = -2,
     VIDEO_OUTPUT_RAW      = -1,
