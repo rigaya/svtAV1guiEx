@@ -34,6 +34,8 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <memory>
+#include <functional>
 
 #include "auo.h"
 #include "auo_version.h"
@@ -51,6 +53,8 @@
 #include "auo_faw2aac.h"
 #include "cpu_info.h"
 #include "exe_version.h"
+
+using unique_handle = std::unique_ptr<std::remove_pointer<HANDLE>::type, std::function<void(HANDLE)>>;
 
 static void create_aviutl_opened_file_list(PRM_ENC *pe);
 static bool check_file_is_aviutl_opened_file(const char *filepath, const PRM_ENC *pe);
@@ -183,6 +187,61 @@ static BOOL check_muxer_exist(MUXER_SETTINGS *muxer_stg, const char *aviutl_dir,
     return FALSE;
 }
 
+static BOOL check_temp_file_open(const char *temp_filename, const char *defaultExeDir) {
+    DWORD err = ERROR_SUCCESS;
+
+    char exe_path[MAX_PATH_LEN] = { 0 };
+    PathCombine(exe_path, defaultExeDir, AUO_CHECK_FILEOPEN_NAME);
+
+    if (is_64bit_os() && !PathFileExists(exe_path)) {
+        warning_no_auo_check_fileopen();
+    }
+
+    if (is_64bit_os() && PathFileExists(exe_path)) {
+        //64bit OSでは、32bitアプリに対してはVirtualStoreが働く一方、
+        //64bitアプリに対してはVirtualStoreが働かない
+        //x264を64bitで実行することを考慮すると、
+        //Aviutl(32bit)からチェックしても意味がないので、64bitプロセスからのチェックを行う
+        PROCESS_INFORMATION pi;
+        PIPE_SET pipes;
+        InitPipes(&pipes);
+
+        char fullargs[4096] = { 0 };
+        sprintf_s(fullargs, "\"%s\" \"%s\"", exe_path, temp_filename);
+
+        int ret = 0;
+        if ((ret = RunProcess(fullargs, defaultExeDir, &pi, &pipes, NORMAL_PRIORITY_CLASS, TRUE, FALSE)) == RP_SUCCESS) {
+            WaitForSingleObject(pi.hProcess, INFINITE);
+            GetExitCodeProcess(pi.hProcess, &err);
+            CloseHandle(pi.hProcess);
+        }
+        if (err == ERROR_SUCCESS) {
+            return TRUE;
+        }
+    } else {
+        auto handle = unique_handle(CreateFile(temp_filename, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL),
+            [](HANDLE h) { if (h != INVALID_HANDLE_VALUE) CloseHandle(h); });
+        if (handle.get() != INVALID_HANDLE_VALUE) {
+            handle.reset();
+            DeleteFile(temp_filename);
+            return TRUE;
+        }
+        err = GetLastError();
+    }
+    if (err != ERROR_ALREADY_EXISTS) {
+        char *mesBuffer = nullptr;
+        FormatMessage(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPSTR)&mesBuffer, 0, NULL);
+        error_failed_to_open_tempfile(temp_filename, mesBuffer, err);
+        if (mesBuffer != nullptr) {
+            LocalFree(mesBuffer);
+        }
+    }
+    return FALSE;
+}
+
 static BOOL check_if_exe_is_mp4box(const char *exe_path, const char *version_arg) {
     BOOL ret = FALSE;
     char exe_message[8192] = { 0 };
@@ -252,6 +311,29 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, g
         check = FALSE;
     }
 
+    char aviutl_dir[MAX_PATH_LEN] = { 0 };
+    get_aviutl_dir(aviutl_dir, _countof(aviutl_dir));
+
+    char defaultExeDir[MAX_PATH_LEN] = { 0 };
+    PathCombineLong(defaultExeDir, _countof(defaultExeDir), aviutl_dir, DEFAULT_EXE_DIR);
+
+    //ダメ文字・環境依存文字チェック
+    char savedir[MAX_PATH_LEN] = { 0 };
+    strcpy_s(savedir, oip->savefile);
+    PathRemoveFileSpecFixed(savedir);
+    if (!PathIsDirectory(savedir)) {
+        error_savdir_do_not_exist(oip->savefile, savedir);
+        check = FALSE;
+        //一時ファイルを開けるかどうか
+    } else if (!check_temp_file_open(pe->temp_filename, defaultExeDir)) {
+        check = FALSE;
+    }
+
+    if (check_file_is_aviutl_opened_file(oip->savefile, pe)) {
+        error_file_is_already_opened_by_aviutl();
+        check = FALSE;
+    }
+
     //解像度
 #if 0
     int w_mul = 1, h_mul = 1;
@@ -286,12 +368,6 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, g
 
     if (conf->oth.out_audio_only)
         write_log_auo_line(LOG_INFO, "音声のみ出力を行います。");
-
-    char aviutl_dir[MAX_PATH_LEN];
-    get_aviutl_dir(aviutl_dir, _countof(aviutl_dir));
-
-    char defaultExeDir[MAX_PATH_LEN];
-    PathCombineLong(defaultExeDir, _countof(defaultExeDir), aviutl_dir, DEFAULT_EXE_DIR);
 
     const auto exeFiles = find_exe_files(defaultExeDir);
 
@@ -1473,11 +1549,6 @@ void write_cached_lines(int log_level, const char *exename, LOG_CACHE *log_line_
 }
 
 #include <tlhelp32.h>
-#include <unordered_map>
-#include <memory>
-#include <functional>
-
-using unique_handle = std::unique_ptr<std::remove_pointer<HANDLE>::type, std::function<void(HANDLE)>>;
 
 static bool check_parent(size_t check_pid, const size_t target_pid, const std::unordered_map<size_t, size_t>& map_pid) {
     for (size_t i = 0; i < map_pid.size(); i++) { // 最大でもmap_pid.size()を超えてチェックする必要はないはず
