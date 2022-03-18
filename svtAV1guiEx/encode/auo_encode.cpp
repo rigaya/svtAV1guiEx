@@ -303,6 +303,15 @@ static BOOL check_amp(CONF_GUIEX *conf) {
 }
 #endif
 
+BOOL check_if_exedit_is_used() {
+    char name[256];
+    wsprintf(name, "exedit_%d_%d", '01', GetCurrentProcessId());
+    auto handle = unique_handle(OpenFileMapping(FILE_MAP_WRITE, FALSE, name),
+        [](HANDLE h) { if (h != INVALID_HANDLE_VALUE) CloseHandle(h); });
+
+    return handle != nullptr;
+}
+
 BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_settings *exstg) {
     BOOL check = TRUE;
     //ファイル名長さ
