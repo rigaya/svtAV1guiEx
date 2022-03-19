@@ -417,7 +417,7 @@ BOOL check_output(CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, g
                 check = FALSE;
             }
         }
-        info_use_exe_found("svt-av1エンコーダ", exstg->s_enc.fullpath);
+        info_use_exe_found(ENCODER_NAME, exstg->s_enc.fullpath);
     }
     if (!conf->oth.disable_guicmd) {
         if (pe->video_out_type != VIDEO_OUTPUT_DISABLED && !PathFileExists(exstg->s_enc.fullpath)) {
