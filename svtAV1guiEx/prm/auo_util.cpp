@@ -36,6 +36,7 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include <filesystem>
 #include <tchar.h>
 
 #include "auo_util.h"
@@ -227,6 +228,24 @@ std::string conv_cp_part_to_utf8(const std::string& string_utf8_with_cp) {
         string_utf8 = str_next;
     }
     return string_utf8;
+}
+
+std::string GetFullPathFrom(const char *path, const char *baseDir) {
+    if (auto p = std::filesystem::path(path); p.is_absolute()) {
+        return path;
+    }
+    path = (path && strlen(path)) ? path : ".";
+    const auto p = (baseDir) ? std::filesystem::path(baseDir).append(path) : std::filesystem::absolute(std::filesystem::path(path));
+    return p.lexically_normal().string();
+}
+
+std::wstring GetFullPathFrom(const wchar_t *path, const wchar_t *baseDir) {
+    if (auto p = std::filesystem::path(path); p.is_absolute()) {
+        return path;
+    }
+    path = (path && wcslen(path)) ? path : L".";
+    const auto p = (baseDir) ? std::filesystem::path(baseDir).append(path) : std::filesystem::absolute(std::filesystem::path(path));
+    return p.lexically_normal().wstring();
 }
 
 
