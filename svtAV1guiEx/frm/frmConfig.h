@@ -1245,6 +1245,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
+            this->fcgLBTune = (gcnew System::Windows::Forms::Label());
+            this->fcgCXTune = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBBiasPct = (gcnew System::Windows::Forms::Label());
             this->fcgNUBiasPct = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBOverShootPct = (gcnew System::Windows::Forms::Label());
@@ -1472,8 +1474,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
-            this->fcgLBTune = (gcnew System::Windows::Forms::Label());
-            this->fcgCXTune = (gcnew System::Windows::Forms::ComboBox());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
@@ -1603,6 +1603,25 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgtabPageSVTAV1_1->Text = L"SVT-AV1 (1)";
             this->fcgtabPageSVTAV1_1->UseVisualStyleBackColor = true;
             // 
+            // fcgLBTune
+            // 
+            this->fcgLBTune->AutoSize = true;
+            this->fcgLBTune->Location = System::Drawing::Point(15, 146);
+            this->fcgLBTune->Name = L"fcgLBTune";
+            this->fcgLBTune->Size = System::Drawing::Size(31, 14);
+            this->fcgLBTune->TabIndex = 272;
+            this->fcgLBTune->Text = L"tune";
+            // 
+            // fcgCXTune
+            // 
+            this->fcgCXTune->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fcgCXTune->FormattingEnabled = true;
+            this->fcgCXTune->Location = System::Drawing::Point(165, 143);
+            this->fcgCXTune->Name = L"fcgCXTune";
+            this->fcgCXTune->Size = System::Drawing::Size(118, 22);
+            this->fcgCXTune->TabIndex = 271;
+            this->fcgCXTune->Tag = L"reCmd";
+            // 
             // fcgLBBiasPct
             // 
             this->fcgLBBiasPct->AutoSize = true;
@@ -1671,9 +1690,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             // fcgNUMaxSectionPct
             // 
-            this->fcgNUMaxSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
+            this->fcgNUMaxSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
             this->fcgNUMaxSectionPct->Location = System::Drawing::Point(165, 440);
-            this->fcgNUMaxSectionPct->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
             this->fcgNUMaxSectionPct->Name = L"fcgNUMaxSectionPct";
             this->fcgNUMaxSectionPct->Size = System::Drawing::Size(64, 21);
             this->fcgNUMaxSectionPct->TabIndex = 263;
@@ -1691,9 +1709,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             // fcgNUMinSectionPct
             // 
-            this->fcgNUMinSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
+            this->fcgNUMinSectionPct->Increment = System::Decimal(gcnew cli::array< System::Int32 >(4) { 5, 0, 0, 0 });
             this->fcgNUMinSectionPct->Location = System::Drawing::Point(165, 414);
-            this->fcgNUMinSectionPct->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1000000, 0, 0, 0 });
             this->fcgNUMinSectionPct->Name = L"fcgNUMinSectionPct";
             this->fcgNUMinSectionPct->Size = System::Drawing::Size(64, 21);
             this->fcgNUMinSectionPct->TabIndex = 262;
@@ -2941,10 +2958,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXTC2MP4Path->Size = System::Drawing::Size(202, 21);
             this->fcgTXTC2MP4Path->TabIndex = 5;
             this->fcgTXTC2MP4Path->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_TextChanged);
-            this->fcgTXTC2MP4Path->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_Enter);
-            this->fcgTXTC2MP4Path->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_Leave);
             this->fcgTXTC2MP4Path->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXTC2MP4Path->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXTC2MP4Path->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_Enter);
+            this->fcgTXTC2MP4Path->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_Leave);
             // 
             // fcgBTMP4MuxerPath
             // 
@@ -2965,10 +2982,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXMP4MuxerPath->TabIndex = 3;
             this->fcgTXMP4MuxerPath->Tag = L"";
             this->fcgTXMP4MuxerPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_TextChanged);
-            this->fcgTXMP4MuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_Enter);
-            this->fcgTXMP4MuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_Leave);
             this->fcgTXMP4MuxerPath->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXMP4MuxerPath->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXMP4MuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_Enter);
+            this->fcgTXMP4MuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_Leave);
             // 
             // fcgLBTC2MP4Path
             // 
@@ -3036,10 +3053,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXMP4RawPath->Size = System::Drawing::Size(202, 21);
             this->fcgTXMP4RawPath->TabIndex = 7;
             this->fcgTXMP4RawPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4RawMuxerPath_TextChanged);
-            this->fcgTXMP4RawPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4RawPath_Enter);
-            this->fcgTXMP4RawPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4RawPath_Leave);
             this->fcgTXMP4RawPath->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXMP4RawPath->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXMP4RawPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4RawPath_Enter);
+            this->fcgTXMP4RawPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4RawPath_Leave);
             // 
             // fcgLBMP4RawPath
             // 
@@ -3120,10 +3137,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXMKVMuxerPath->Size = System::Drawing::Size(207, 21);
             this->fcgTXMKVMuxerPath->TabIndex = 2;
             this->fcgTXMKVMuxerPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXMKVMuxerPath_TextChanged);
-            this->fcgTXMKVMuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMKVMuxerPath_Enter);
-            this->fcgTXMKVMuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMKVMuxerPath_Leave);
             this->fcgTXMKVMuxerPath->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXMKVMuxerPath->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXMKVMuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMKVMuxerPath_Enter);
+            this->fcgTXMKVMuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMKVMuxerPath_Leave);
             // 
             // fcgLBMKVMuxerPath
             // 
@@ -3196,10 +3213,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXMPGMuxerPath->Size = System::Drawing::Size(207, 21);
             this->fcgTXMPGMuxerPath->TabIndex = 22;
             this->fcgTXMPGMuxerPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXMPGMuxerPath_TextChanged);
-            this->fcgTXMPGMuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMPGMuxerPath_Enter);
-            this->fcgTXMPGMuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMPGMuxerPath_Leave);
             this->fcgTXMPGMuxerPath->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXMPGMuxerPath->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXMPGMuxerPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXMPGMuxerPath_Enter);
+            this->fcgTXMPGMuxerPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXMPGMuxerPath_Leave);
             // 
             // fcgLBMPGMuxerPath
             // 
@@ -3753,10 +3770,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgTXAudioEncoderPath->Size = System::Drawing::Size(303, 21);
             this->fcgTXAudioEncoderPath->TabIndex = 37;
             this->fcgTXAudioEncoderPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXAudioEncoderPath_TextChanged);
-            this->fcgTXAudioEncoderPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXAudioEncoderPath_Enter);
-            this->fcgTXAudioEncoderPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXAudioEncoderPath_Leave);
             this->fcgTXAudioEncoderPath->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
             this->fcgTXAudioEncoderPath->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_Enter);
+            this->fcgTXAudioEncoderPath->Enter += gcnew System::EventHandler(this, &frmConfig::fcgTXAudioEncoderPath_Enter);
+            this->fcgTXAudioEncoderPath->Leave += gcnew System::EventHandler(this, &frmConfig::fcgTXAudioEncoderPath_Leave);
             // 
             // fcgLBAudioEncoderPath
             // 
@@ -3987,25 +4004,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBAudioPriority->Size = System::Drawing::Size(62, 14);
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
-            // 
-            // fcgLBTune
-            // 
-            this->fcgLBTune->AutoSize = true;
-            this->fcgLBTune->Location = System::Drawing::Point(15, 146);
-            this->fcgLBTune->Name = L"fcgLBTune";
-            this->fcgLBTune->Size = System::Drawing::Size(31, 14);
-            this->fcgLBTune->TabIndex = 272;
-            this->fcgLBTune->Text = L"tune";
-            // 
-            // fcgCXTune
-            // 
-            this->fcgCXTune->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-            this->fcgCXTune->FormattingEnabled = true;
-            this->fcgCXTune->Location = System::Drawing::Point(165, 143);
-            this->fcgCXTune->Name = L"fcgCXTune";
-            this->fcgCXTune->Size = System::Drawing::Size(118, 22);
-            this->fcgCXTune->TabIndex = 271;
-            this->fcgCXTune->Tag = L"reCmd";
             // 
             // frmConfig
             // 
