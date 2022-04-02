@@ -1,21 +1,17 @@
 
 # 拡張 SVT-AV1 出力(GUI) Ex  
 by rigaya  
-[![Build status](https://ci.appveyor.com/api/projects/status/9qd44m7iafjecxfc?svg=true)](https://ci.appveyor.com/project/rigaya/svtav1guiex)
 
 拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) は、[SVT-AV1](https://gitlab.com/AOMediaCodec/SVT-AV1)を使用してエンコードを行うAviutlの出力プラグインです。
 
 ## ダウンロード & 更新履歴
-[rigayaの日記兼メモ帳＞＞](http://rigaya34589.blog135.fc2.com/blog-category-28.html)
+[こちら＞＞](https://github.com/rigaya/svtAV1guiEx/releases)
 
 ## 想定動作環境
-Windows 10/11 (x64)  
+Windows 8.1/10/11 (x64)  
 Aviutl 1.00 以降 推奨
 
 x86(32bit)環境では動作しません。
-
-## svtAV1guiExの使用方法
-同梱のSvtAv1EncApp.exeとともに、[mp4box](https://gpac.wp.imt.fr/downloads/)/[mkvmerge](https://mkvtoolnix.download/downloads.html#windows)、さらに追加で音声エンコーダが必要です。
 
 ## svtAV1guiEx 使用にあたっての注意事項
 無保証です。自己責任で使用してください。  
@@ -68,6 +64,32 @@ OKをクリックすると使用準備が開始されます。
 ![auo_setup](./data/svtAV1guiEx_1_00_install_11.png)
 
 これで使用準備は完了です。
+
+### 確認
+
+svtAV1guiExがAviutlに認識されているか確認します。
+
+Aviutlの [その他] > [出力プラグイン情報]を選択します。
+
+![出力プラグイン情報](./data/svtAV1guiEx_1_00_install_07.png)
+
+
+svtAV1guiEx 1.xxが表示されていれば成功です。
+
+![確認](./data/svtAV1guiEx_1_00_install_09.png)
+
+
+### エンコード
+[ ファイル ] > [ プラグイン出力 ] > [ 拡張 SVT-AV1 出力 (GUI) Ex ] を選択し、出力ファイル名を入力して、「保存」をクリックしてください。
+
+![プラグイン出力](./data/svtAV1guiEx_1_00_install_14.png)
+
+エンコードが開始されます。
+
+![エンコード](./data/svtAV1guiEx_1_00_install_10.png)
+
+エンコードが完了するまで待ちます。お疲れ様でした。
+
 
 ## iniファイルによる拡張
 svtAV1guiEx.iniを書き換えることにより、音声エンコーダやmuxerのコマンドラインを変更できます。また音声エンコーダを追加することもできます。
