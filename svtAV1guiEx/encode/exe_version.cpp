@@ -6,6 +6,9 @@
 #include "auo_util.h"
 #include "exe_version.h"
 
+static const int RC_VER_ADD = -1000000;
+static const int RC_VER_MUL =    10000;
+
 int version_a_larger_than_b(const int a[4], const int b[4]) {
     for (int i = 0; i < 4; i++) {
         if (a[i] > b[i]) return +1;
@@ -64,7 +67,6 @@ int get_x265_version_from_filename(const char *exe_path, int version[4]) {
     int value[4] = { 0 };
     memset(version, 0, sizeof(value));
 
-    int rev = 0;
     if (   sscanf_s(filename, "x265_%d.%d+%d_x64.exe", &value[0], &value[1], &value[3]) == 3
         || sscanf_s(filename, "x265_%d.%d+%d_x86.exe", &value[0], &value[1], &value[3]) == 3
         || sscanf_s(filename, "x265_%d.%d_x64.exe",    &value[0], &value[1]) == 2
@@ -80,14 +82,38 @@ int get_svtav1_version_from_filename(const char *exe_path, int version[4]) {
 
     int value[4] = { 0 };
     memset(version, 0, sizeof(value));
-
-    int rev = 0;
-    if (   sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-%d_x64.exe", &value[0], &value[1], &value[2], &value[3]) == 3
-        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-%d_x86.exe", &value[0], &value[1], &value[2], &value[3]) == 3
-        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d+%d_x64.exe", &value[0], &value[1], &value[2], &value[3]) == 3
-        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d+%d_x86.exe", &value[0], &value[1], &value[2], &value[3]) == 3
-        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d_x64.exe",    &value[0], &value[1], &value[2]) == 2
-        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d_x86.exe",    &value[0], &value[1], &value[2]) == 2) {
+    
+    int value4 = 0;
+    if (   sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d-%d_x64.exe", &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d-%d_x86.exe", &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d+%d_x64.exe", &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d+%d_x86.exe", &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d-%d_x64.exe",  &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d-%d_x86.exe",  &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d+%d_x64.exe",  &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d+%d_x86.exe",  &value[0], &value[1], &value[2], &value[3], &value4) == 5
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d_x64.exe",    &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-rc%d_x86.exe",    &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d_x64.exe",     &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-rc%d_x86.exe",     &value[0], &value[1], &value[2], &value[3]) == 4) {
+        value[3] *= RC_VER_MUL;
+        value[3] += RC_VER_ADD;
+        value[3] += value4;
+        memcpy(version, value, sizeof(value));
+        return 0;
+    }
+    if (   sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-%d_x64.exe", &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d-%d_x86.exe", &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d+%d_x64.exe", &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d+%d_x86.exe", &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-%d_x64.exe",  &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d-%d_x86.exe",  &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d+%d_x64.exe",  &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d+%d_x86.exe",  &value[0], &value[1], &value[2], &value[3]) == 4
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d_x64.exe",    &value[0], &value[1], &value[2]) == 3
+        || sscanf_s(filename, "SvtAv1EncApp_v%d.%d.%d_x86.exe",    &value[0], &value[1], &value[2]) == 3
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d_x64.exe",     &value[0], &value[1], &value[2]) == 3
+        || sscanf_s(filename, "SvtAv1EncApp_%d.%d.%d_x86.exe",     &value[0], &value[1], &value[2]) == 3) {
         memcpy(version, value, sizeof(value));
         return 0;
     }
@@ -202,6 +228,17 @@ int get_exe_version_from_cmd(const char *exe_path, const char *cmd_ver, int vers
                         ptr++;
 
                     int ver[4] = { 0 };
+                    int value4 = 0;
+                    if (   5 == sscanf_s(ptr, "%d.%d.%d-rc%d-%d", &ver[0], &ver[1], &ver[2], &ver[3], &value4)
+                        || 5 == sscanf_s(ptr, "%d.%d.%d-rc%d+%d", &ver[0], &ver[1], &ver[2], &ver[3], &value4)
+                        || 4 == sscanf_s(ptr, "%d.%d.%d-rc%d",    &ver[0], &ver[1], &ver[2], &ver[3])) {
+                        ver[3] *= RC_VER_MUL;
+                        ver[3] += RC_VER_ADD;
+                        ver[3] += value4;
+                        memcpy(version, ver, sizeof(int) * 4);
+                        ret = 0;
+                        break;
+                    }
                     if (   4 == sscanf_s(ptr, "%d.%d.%d.%d", &ver[0], &ver[1], &ver[2], &ver[3])
                         || 4 == sscanf_s(ptr, "%d.%d.%d-%d", &ver[0], &ver[1], &ver[2], &ver[3])
                         || 4 == sscanf_s(ptr, "%d.%d.%d+%d", &ver[0], &ver[1], &ver[2], &ver[3])
@@ -261,7 +298,7 @@ int get_svtav1_rev(const char *svtav1fullpath, int version[4]) {
 
     int value[4] = { 0 };
     if (   ((ret = get_svtav1_version_from_filename(svtav1fullpath, value))      != -1 && memcmp(version, value, sizeof(value)) != 0)
-        || ((ret = get_exe_version_info(svtav1fullpath, value))                  != -1 && memcmp(version, value, sizeof(value)) != 0)
+        //|| ((ret = get_exe_version_info(svtav1fullpath, value))                  != -1 && memcmp(version, value, sizeof(value)) != 0)
         || ((ret = get_exe_version_from_cmd(svtav1fullpath, "--version", value)) != -1 && memcmp(version, value, sizeof(value)) != 0)) {
         memcpy(version, value, sizeof(value));
         return 0;
