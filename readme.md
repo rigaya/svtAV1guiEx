@@ -102,6 +102,7 @@ svtAV1guiEx の Aviutl から削除するには、"plugins" フォルダ内の�
 
 - [フォルダ] svtAV1guiEx_stg
 - [ファイル] svtAV1guiEx.auo
+- [ファイル] svtAV1guiEx.conf (存在する場合のみ)
 - [ファイル] svtAV1guiEx(.ini)
 - [ファイル] auo_setup.auf
 
