@@ -1123,7 +1123,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXTune, get_cx_index(list_tune, enc.tune));
     SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
     SetNUValue(fcgNUUnderShootPct, enc.undershoot_pct);
-    SetNUValue(fcgNUVBVBufSize, enc.vbv_bufsize);
 
     if (cnf->vid.sar_x * cnf->vid.sar_y < 0)
         cnf->vid.sar_x = cnf->vid.sar_y = 0;
@@ -1237,7 +1236,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.transfer_characteristics = list_transfer[fcgCXTransfer->SelectedIndex].value;
     enc.tune = list_tune[fcgCXTune->SelectedIndex].value;
     enc.undershoot_pct = (int)fcgNUUnderShootPct->Value;
-    enc.vbv_bufsize = (int)fcgNUVBVBufSize->Value;
 
     cnf->vid.sar_x = (int)fcgNUAspectRatioX->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);
     cnf->vid.sar_y = (int)fcgNUAspectRatioY->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);

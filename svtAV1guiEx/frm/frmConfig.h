@@ -900,8 +900,8 @@ private: System::Windows::Forms::TabPage ^fcgtabPageSVTAV1_2;
 
 
 
-private: System::Windows::Forms::Label ^fcgLBVBVBufSize;
-private: System::Windows::Forms::NumericUpDown ^fcgNUVBVBufSize;
+
+
 private: System::Windows::Forms::Label ^fcgLBMaxQP;
 private: System::Windows::Forms::NumericUpDown ^fcgNUMaxQP;
 private: System::Windows::Forms::Label ^fcgLBMinQP;
@@ -1304,8 +1304,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgCXColorFormat = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBColorFormat = (gcnew System::Windows::Forms::Label());
             this->fcgLBEnableRestortionFiltering = (gcnew System::Windows::Forms::Label());
-            this->fcgLBVBVBufSize = (gcnew System::Windows::Forms::Label());
-            this->fcgNUVBVBufSize = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBMaxQP = (gcnew System::Windows::Forms::Label());
             this->fcgNUMaxQP = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBMinQP = (gcnew System::Windows::Forms::Label());
@@ -1489,7 +1487,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgPNX264Mode->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBitrate))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUQP))->BeginInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUVBVBufSize))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUMaxQP))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUMinQP))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUTileColumns))->BeginInit();
@@ -1570,8 +1567,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXColorFormat);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBColorFormat);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBEnableRestortionFiltering);
-            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBVBVBufSize);
-            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUVBVBufSize);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBMaxQP);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNUMaxQP);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBMinQP);
@@ -2184,25 +2179,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBEnableRestortionFiltering->Size = System::Drawing::Size(99, 14);
             this->fcgLBEnableRestortionFiltering->TabIndex = 189;
             this->fcgLBEnableRestortionFiltering->Text = L"EnableRestortion";
-            // 
-            // fcgLBVBVBufSize
-            // 
-            this->fcgLBVBVBufSize->AutoSize = true;
-            this->fcgLBVBVBufSize->Location = System::Drawing::Point(415, 201);
-            this->fcgLBVBVBufSize->Name = L"fcgLBVBVBufSize";
-            this->fcgLBVBVBufSize->Size = System::Drawing::Size(70, 14);
-            this->fcgLBVBVBufSize->TabIndex = 174;
-            this->fcgLBVBVBufSize->Text = L"VBVBufSize";
-            // 
-            // fcgNUVBVBufSize
-            // 
-            this->fcgNUVBVBufSize->Location = System::Drawing::Point(526, 199);
-            this->fcgNUVBVBufSize->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10000000, 0, 0, 0 });
-            this->fcgNUVBVBufSize->Name = L"fcgNUVBVBufSize";
-            this->fcgNUVBVBufSize->Size = System::Drawing::Size(64, 21);
-            this->fcgNUVBVBufSize->TabIndex = 55;
-            this->fcgNUVBVBufSize->Tag = L"reCmd";
-            this->fcgNUVBVBufSize->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
             // 
             // fcgLBMaxQP
             // 
@@ -4049,7 +4025,6 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgPNX264Mode->PerformLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBitrate))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUQP))->EndInit();
-            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUVBVBufSize))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUMaxQP))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUMinQP))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUTileColumns))->EndInit();

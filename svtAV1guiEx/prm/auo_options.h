@@ -251,7 +251,6 @@ typedef struct {
     int     transfer_characteristics; // --transfer-characteristics
     int     tune; //tune
     int     undershoot_pct; //--undershoot-pct
-    int     vbv_bufsize;  //vbv-bufsize
 } CONF_ENCODER;
 #pragma pack(pop)
 
