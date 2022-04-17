@@ -151,7 +151,6 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
         i++;
         int ret = to_int(&cx->qp, argv[i]);
         cx->rc = get_cx_value(list_rc, "CRF");
-        cx->enable_tpl_la = 1;
         return ret;
     }
     OPT_NUM("rc", rc);
@@ -241,7 +240,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
 
     OPT_NUM("preset", preset);
     OPT_NUM("input-depth", bit_depth);
-    if (cx->rc == get_cx_value(list_rc, "CRF") && cx->enable_tpl_la != 0) {
+    if (cx->rc == get_cx_value(list_rc, "CRF")) {
         cmd << " --crf " << (int)(cx->qp);
     } else {
         OPT_NUM("rc", rc);
@@ -253,7 +252,13 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("tbr", bitrate);
     OPT_NUM("lp", lp);
 
-    OPT_NUM("aq-mode", aq);
+    if (cx->rc == get_cx_value(list_rc, "CQP")) {
+        cmd << " --aq-mode " << 0;
+    } else if (cx->rc == get_cx_value(list_rc, "CRF")) {
+        if (cx->aq != 0) OPT_NUM("aq-mode", aq);
+    } else {
+        OPT_NUM("aq-mode", aq);
+    }
     OPT_NUM("bias-pct", bias_pct);
     OPT_NUM("color-primaries", color_primaries);
     OPT_NUM("color-range", color_range);
