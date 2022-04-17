@@ -2236,7 +2236,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgNUMinQP
             // 
             this->fcgNUMinQP->Location = System::Drawing::Point(451, 338);
-            this->fcgNUMinQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 63, 0, 0, 0 });
+            this->fcgNUMinQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 62, 0, 0, 0 });
             this->fcgNUMinQP->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
             this->fcgNUMinQP->Name = L"fcgNUMinQP";
             this->fcgNUMinQP->Size = System::Drawing::Size(64, 21);
