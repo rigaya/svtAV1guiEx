@@ -1117,6 +1117,8 @@ private: System::Windows::Forms::TextBox^  fcgTXStatusFile;
 private: System::Windows::Forms::Button^  fcgBTStatusFile;
 private: System::Windows::Forms::Label^  fcgLBTune;
 private: System::Windows::Forms::ComboBox^  fcgCXTune;
+private: System::Windows::Forms::Label^  fcgLBFastDecode;
+private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
 
 
 
@@ -1472,6 +1474,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
+            this->fcgLBFastDecode = (gcnew System::Windows::Forms::Label());
+            this->fcgCBFastDecode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
@@ -1518,7 +1522,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgtabControlVideo->Controls->Add(this->fcgtabPageSVTAV1_2);
             this->fcgtabControlVideo->Controls->Add(this->fcgtabPageExSettings);
             this->fcgtabControlVideo->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                          static_cast<System::Byte>(128)));
             this->fcgtabControlVideo->Location = System::Drawing::Point(0, 25);
             this->fcgtabControlVideo->Name = L"fcgtabControlVideo";
             this->fcgtabControlVideo->SelectedIndex = 0;
@@ -1527,6 +1531,8 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBFastDecode);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBFastDecode);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBTune);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCXTune);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBBiasPct);
@@ -1867,7 +1873,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgCBSceneChangeDetection
             // 
             this->fcgCBSceneChangeDetection->AutoSize = true;
-            this->fcgCBSceneChangeDetection->Location = System::Drawing::Point(526, 179);
+            this->fcgCBSceneChangeDetection->Location = System::Drawing::Point(526, 180);
             this->fcgCBSceneChangeDetection->Name = L"fcgCBSceneChangeDetection";
             this->fcgCBSceneChangeDetection->Size = System::Drawing::Size(15, 14);
             this->fcgCBSceneChangeDetection->TabIndex = 227;
@@ -2136,7 +2142,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgCXProfileAV1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXProfileAV1->FormattingEnabled = true;
-            this->fcgCXProfileAV1->Location = System::Drawing::Point(481, 226);
+            this->fcgCXProfileAV1->Location = System::Drawing::Point(481, 251);
             this->fcgCXProfileAV1->Name = L"fcgCXProfileAV1";
             this->fcgCXProfileAV1->Size = System::Drawing::Size(118, 22);
             this->fcgCXProfileAV1->TabIndex = 60;
@@ -2145,7 +2151,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgLBProfileAV1
             // 
             this->fcgLBProfileAV1->AutoSize = true;
-            this->fcgLBProfileAV1->Location = System::Drawing::Point(374, 229);
+            this->fcgLBProfileAV1->Location = System::Drawing::Point(374, 254);
             this->fcgLBProfileAV1->Name = L"fcgLBProfileAV1";
             this->fcgLBProfileAV1->Size = System::Drawing::Size(42, 14);
             this->fcgLBProfileAV1->TabIndex = 222;
@@ -2156,7 +2162,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgCXColorFormat->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fcgCXColorFormat->Enabled = false;
             this->fcgCXColorFormat->FormattingEnabled = true;
-            this->fcgCXColorFormat->Location = System::Drawing::Point(481, 253);
+            this->fcgCXColorFormat->Location = System::Drawing::Point(481, 278);
             this->fcgCXColorFormat->Name = L"fcgCXColorFormat";
             this->fcgCXColorFormat->Size = System::Drawing::Size(118, 22);
             this->fcgCXColorFormat->TabIndex = 61;
@@ -2165,7 +2171,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgLBColorFormat
             // 
             this->fcgLBColorFormat->AutoSize = true;
-            this->fcgLBColorFormat->Location = System::Drawing::Point(373, 256);
+            this->fcgLBColorFormat->Location = System::Drawing::Point(373, 281);
             this->fcgLBColorFormat->Name = L"fcgLBColorFormat";
             this->fcgLBColorFormat->Size = System::Drawing::Size(79, 14);
             this->fcgLBColorFormat->TabIndex = 220;
@@ -2585,7 +2591,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgTXCmdEx->AllowDrop = true;
             this->fcgTXCmdEx->Font = (gcnew System::Drawing::Font(L"ＭＳ ゴシック", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                  static_cast<System::Byte>(128)));
             this->fcgTXCmdEx->Location = System::Drawing::Point(6, 20);
             this->fcgTXCmdEx->Multiline = true;
             this->fcgTXCmdEx->Name = L"fcgTXCmdEx";
@@ -2709,7 +2715,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgtoolStripSettings
             // 
             this->fcgtoolStripSettings->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                            static_cast<System::Byte>(128)));
             this->fcgtoolStripSettings->ImageScalingSize = System::Drawing::Size(18, 18);
             this->fcgtoolStripSettings->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(15) {
                 this->fcgTSBSave,
@@ -2835,7 +2841,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgTSLSettingsNotes->DoubleClickEnabled = true;
             this->fcgTSLSettingsNotes->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                           static_cast<System::Byte>(128)));
             this->fcgTSLSettingsNotes->Margin = System::Windows::Forms::Padding(3, 1, 0, 2);
             this->fcgTSLSettingsNotes->Name = L"fcgTSLSettingsNotes";
             this->fcgTSLSettingsNotes->Overflow = System::Windows::Forms::ToolStripItemOverflow::Never;
@@ -2847,7 +2853,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgTSTSettingsNotes->BackColor = System::Drawing::SystemColors::Window;
             this->fcgTSTSettingsNotes->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                           static_cast<System::Byte>(128)));
             this->fcgTSTSettingsNotes->Margin = System::Windows::Forms::Padding(3, 0, 1, 0);
             this->fcgTSTSettingsNotes->Name = L"fcgTSTSettingsNotes";
             this->fcgTSTSettingsNotes->Size = System::Drawing::Size(200, 25);
@@ -2871,7 +2877,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgtabControlMux->Controls->Add(this->fcgtabPageMux);
             this->fcgtabControlMux->Controls->Add(this->fcgtabPageBat);
             this->fcgtabControlMux->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                        static_cast<System::Byte>(128)));
             this->fcgtabControlMux->Location = System::Drawing::Point(622, 331);
             this->fcgtabControlMux->Name = L"fcgtabControlMux";
             this->fcgtabControlMux->SelectedIndex = 0;
@@ -3289,7 +3295,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgLBBatAfterString->AutoSize = true;
             this->fcgLBBatAfterString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                                                                           System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatAfterString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatAfterString->Location = System::Drawing::Point(304, 113);
             this->fcgLBBatAfterString->Name = L"fcgLBBatAfterString";
@@ -3302,7 +3308,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgLBBatBeforeString->AutoSize = true;
             this->fcgLBBatBeforeString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                                                                            System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatBeforeString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatBeforeString->Location = System::Drawing::Point(304, 20);
             this->fcgLBBatBeforeString->Name = L"fcgLBBatBeforeString";
@@ -3428,10 +3434,10 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // fcgTXCmd
             // 
             this->fcgTXCmd->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-                | System::Windows::Forms::AnchorStyles::Left)
-                | System::Windows::Forms::AnchorStyles::Right));
+                                                                                         | System::Windows::Forms::AnchorStyles::Left)
+                                                                                        | System::Windows::Forms::AnchorStyles::Right));
             this->fcgTXCmd->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                static_cast<System::Byte>(128)));
             this->fcgTXCmd->Location = System::Drawing::Point(9, 573);
             this->fcgTXCmd->Name = L"fcgTXCmd";
             this->fcgTXCmd->ReadOnly = true;
@@ -3477,7 +3483,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBVersionDate->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBVersionDate->AutoSize = true;
             this->fcgLBVersionDate->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                        static_cast<System::Byte>(128)));
             this->fcgLBVersionDate->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBVersionDate->Location = System::Drawing::Point(416, 607);
             this->fcgLBVersionDate->Name = L"fcgLBVersionDate";
@@ -3490,7 +3496,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBVersion->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBVersion->AutoSize = true;
             this->fcgLBVersion->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                    static_cast<System::Byte>(128)));
             this->fcgLBVersion->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBVersion->Location = System::Drawing::Point(180, 607);
             this->fcgLBVersion->Name = L"fcgLBVersion";
@@ -3547,7 +3553,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBguiExBlog->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBguiExBlog->AutoSize = true;
             this->fcgLBguiExBlog->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                                      static_cast<System::Byte>(128)));
             this->fcgLBguiExBlog->LinkColor = System::Drawing::Color::Gray;
             this->fcgLBguiExBlog->Location = System::Drawing::Point(623, 607);
             this->fcgLBguiExBlog->Name = L"fcgLBguiExBlog";
@@ -3848,7 +3854,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgLBBatAfterAudioString->AutoSize = true;
             this->fcgLBBatAfterAudioString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                                                                                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatAfterAudioString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatAfterAudioString->Location = System::Drawing::Point(304, 208);
             this->fcgLBBatAfterAudioString->Name = L"fcgLBBatAfterAudioString";
@@ -3861,7 +3867,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             // 
             this->fcgLBBatBeforeAudioString->AutoSize = true;
             this->fcgLBBatBeforeAudioString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                                                                                 System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatBeforeAudioString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatBeforeAudioString->Location = System::Drawing::Point(304, 139);
             this->fcgLBBatBeforeAudioString->Name = L"fcgLBBatBeforeAudioString";
@@ -3981,6 +3987,25 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
+            // fcgLBFastDecode
+            // 
+            this->fcgLBFastDecode->AutoSize = true;
+            this->fcgLBFastDecode->Location = System::Drawing::Point(416, 199);
+            this->fcgLBFastDecode->Name = L"fcgLBFastDecode";
+            this->fcgLBFastDecode->Size = System::Drawing::Size(72, 14);
+            this->fcgLBFastDecode->TabIndex = 274;
+            this->fcgLBFastDecode->Text = L"Fast Decode";
+            // 
+            // fcgCBFastDecode
+            // 
+            this->fcgCBFastDecode->AutoSize = true;
+            this->fcgCBFastDecode->Location = System::Drawing::Point(526, 201);
+            this->fcgCBFastDecode->Name = L"fcgCBFastDecode";
+            this->fcgCBFastDecode->Size = System::Drawing::Size(15, 14);
+            this->fcgCBFastDecode->TabIndex = 273;
+            this->fcgCBFastDecode->Tag = L"reCmd";
+            this->fcgCBFastDecode->UseVisualStyleBackColor = true;
+            // 
             // frmConfig
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
@@ -3998,7 +4023,7 @@ private: System::Windows::Forms::ComboBox^  fcgCXTune;
             this->Controls->Add(this->fcgtoolStripSettings);
             this->Controls->Add(this->fcgtabControlVideo);
             this->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(128)));
+                                                      static_cast<System::Byte>(128)));
             this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
             this->MaximizeBox = false;
             this->Name = L"frmConfig";

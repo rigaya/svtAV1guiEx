@@ -233,6 +233,7 @@ typedef struct {
     int     enable_stat_report;
     int     enable_tf;
     int     enable_tpl_la;
+    int     fast_decode;
     int     film_grain; //--film-grain
     int     hierarchical_levels; //hierarchical-levels
     int     intra_refresh_type;  //irefresh-type

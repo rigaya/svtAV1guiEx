@@ -174,6 +174,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("enable-tf", enable_tf);
     OPT_NUM("enable-tpl-la", enable_tpl_la);
+    OPT_NUM("fast-decode", fast_decode);
     OPT_NUM("film-grain", film_grain);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("irefresh-type", intra_refresh_type);
@@ -271,6 +272,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("enable-tf", enable_tf);
     OPT_NUM("enable-tpl-la", enable_tpl_la);
+    OPT_NUM("fast-decode", fast_decode);
     OPT_NUM("film-grain", film_grain);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("irefresh-type", intra_refresh_type);

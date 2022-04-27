@@ -1103,6 +1103,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBEnableRestorationFilter->Checked = enc.enable_restoration != 0;
     fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
     fcgCBEnableTF->Checked = enc.enable_tf != 0;
+    fcgCBFastDecode->Checked = enc.fast_decode != 0;
     SetNUValue(fcgNUFilmGrain, enc.film_grain);
     SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
@@ -1214,6 +1215,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_stat_report = fcgCBEnableStatReport->Checked;
     enc.enable_tf = fcgCBEnableTF->Checked;
 
+    enc.fast_decode = fcgCBFastDecode->Checked;
     enc.film_grain = (int)fcgNUFilmGrain->Value;
     enc.hierarchical_levels = (int)list_hierarchical_levels[fcgCXHierarchicalLevels->SelectedIndex].value;
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
