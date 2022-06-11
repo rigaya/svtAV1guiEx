@@ -65,49 +65,6 @@ void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height) {
     }
 }
 
-unsigned int wstring_to_string(const wchar_t *wstr, std::string &str, uint32_t codepage) {
-    if (wstr == nullptr) {
-        str = "";
-        return 0;
-    }
-    uint32_t flags = (codepage == CP_UTF8) ? 0 : WC_NO_BEST_FIT_CHARS;
-    int multibyte_length = WideCharToMultiByte(codepage, flags, wstr, -1, nullptr, 0, nullptr, nullptr);
-    std::vector<char> tmp(multibyte_length, 0);
-    if (0 == WideCharToMultiByte(codepage, flags, wstr, -1, tmp.data(), (int)tmp.size(), nullptr, nullptr)) {
-        str.clear();
-        return 0;
-    }
-    str = tmp.data();
-    return multibyte_length;
-}
-
-std::string wstring_to_string(const std::wstring &wstr, uint32_t codepage = CP_THREAD_ACP) {
-    std::string str;
-    wstring_to_string(wstr.c_str(), str, codepage);
-    return str;
-}
-
-unsigned int char_to_wstring(std::wstring &wstr, const char *str, uint32_t codepage) {
-    if (str == nullptr) {
-        wstr = L"";
-        return 0;
-    }
-    int widechar_length = MultiByteToWideChar(codepage, 0, str, -1, nullptr, 0);
-    std::vector<wchar_t> tmp(widechar_length, 0);
-    if (0 == MultiByteToWideChar(codepage, 0, str, -1, tmp.data(), (int)tmp.size())) {
-        wstr.clear();
-        return 0;
-    }
-    wstr = tmp.data();
-    return widechar_length;
-}
-
-std::wstring char_to_wstring(const std::string &str, uint32_t codepage = CP_THREAD_ACP) {
-    std::wstring wstr;
-    char_to_wstring(wstr, str.c_str(), codepage);
-    return wstr;
-}
-
 std::vector<std::wstring> sep_cmd(const std::wstring &cmd) {
     std::vector<std::wstring> args;
     int argc = 0;

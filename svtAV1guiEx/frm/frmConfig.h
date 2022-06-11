@@ -71,6 +71,8 @@ namespace svtAV1guiEx {
         frmConfig(CONF_GUIEX *_conf, const SYSTEM_DATA *_sys_dat)
         {
             InitData(_conf, _sys_dat);
+            dwStgReader = nullptr;
+            themeMode = AuoTheme::DefaultLight;
             cnf_stgSelected = (CONF_GUIEX*)calloc(1, sizeof(CONF_GUIEX));
             InitializeComponent();
             //
@@ -96,6 +98,8 @@ namespace svtAV1guiEx {
             }
             CloseBitrateCalc();
             if (cnf_stgSelected) free(cnf_stgSelected); cnf_stgSelected = NULL;
+            if (dwStgReader != nullptr)
+                delete dwStgReader;
             if (qualityTimer != nullptr)
                 delete qualityTimer;
         }
@@ -1119,6 +1123,10 @@ private: System::Windows::Forms::Label^  fcgLBTune;
 private: System::Windows::Forms::ComboBox^  fcgCXTune;
 private: System::Windows::Forms::Label^  fcgLBFastDecode;
 private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
+private: System::Windows::Forms::Panel^  fcgPNHideTabControlVideo;
+private: System::Windows::Forms::Panel^  fcgPNHideTabControlAudio;
+private: System::Windows::Forms::Panel^  fcgPNHideTabControlMux;
+private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
 
 
 
@@ -1247,6 +1255,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
+            this->fcgLBFastDecode = (gcnew System::Windows::Forms::Label());
+            this->fcgCBFastDecode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgLBTune = (gcnew System::Windows::Forms::Label());
             this->fcgCXTune = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBBiasPct = (gcnew System::Windows::Forms::Label());
@@ -1474,8 +1484,10 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgCBRunBatBeforeAudio = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCXAudioPriority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBAudioPriority = (gcnew System::Windows::Forms::Label());
-            this->fcgLBFastDecode = (gcnew System::Windows::Forms::Label());
-            this->fcgCBFastDecode = (gcnew System::Windows::Forms::CheckBox());
+            this->fcgPNHideTabControlVideo = (gcnew System::Windows::Forms::Panel());
+            this->fcgPNHideTabControlAudio = (gcnew System::Windows::Forms::Panel());
+            this->fcgPNHideTabControlMux = (gcnew System::Windows::Forms::Panel());
+            this->fcgPNHideToolStripBorder = (gcnew System::Windows::Forms::Panel());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
@@ -1514,6 +1526,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgtabPageAudioMain->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUAudioBitrate))->BeginInit();
             this->fcgtabPageAudioOther->SuspendLayout();
+            this->fcgPNHideTabControlVideo->SuspendLayout();
+            this->fcgPNHideTabControlAudio->SuspendLayout();
+            this->fcgPNHideTabControlMux->SuspendLayout();
             this->SuspendLayout();
             // 
             // fcgtabControlVideo
@@ -1522,8 +1537,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgtabControlVideo->Controls->Add(this->fcgtabPageSVTAV1_2);
             this->fcgtabControlVideo->Controls->Add(this->fcgtabPageExSettings);
             this->fcgtabControlVideo->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                          static_cast<System::Byte>(128)));
-            this->fcgtabControlVideo->Location = System::Drawing::Point(0, 25);
+                static_cast<System::Byte>(128)));
+            this->fcgtabControlVideo->Location = System::Drawing::Point(2, 2);
             this->fcgtabControlVideo->Name = L"fcgtabControlVideo";
             this->fcgtabControlVideo->SelectedIndex = 0;
             this->fcgtabControlVideo->Size = System::Drawing::Size(616, 545);
@@ -1603,6 +1618,25 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgtabPageSVTAV1_1->TabIndex = 0;
             this->fcgtabPageSVTAV1_1->Text = L"SVT-AV1 (1)";
             this->fcgtabPageSVTAV1_1->UseVisualStyleBackColor = true;
+            // 
+            // fcgLBFastDecode
+            // 
+            this->fcgLBFastDecode->AutoSize = true;
+            this->fcgLBFastDecode->Location = System::Drawing::Point(416, 199);
+            this->fcgLBFastDecode->Name = L"fcgLBFastDecode";
+            this->fcgLBFastDecode->Size = System::Drawing::Size(72, 14);
+            this->fcgLBFastDecode->TabIndex = 274;
+            this->fcgLBFastDecode->Text = L"Fast Decode";
+            // 
+            // fcgCBFastDecode
+            // 
+            this->fcgCBFastDecode->AutoSize = true;
+            this->fcgCBFastDecode->Location = System::Drawing::Point(526, 201);
+            this->fcgCBFastDecode->Name = L"fcgCBFastDecode";
+            this->fcgCBFastDecode->Size = System::Drawing::Size(15, 14);
+            this->fcgCBFastDecode->TabIndex = 273;
+            this->fcgCBFastDecode->Tag = L"reCmd";
+            this->fcgCBFastDecode->UseVisualStyleBackColor = true;
             // 
             // fcgLBTune
             // 
@@ -2591,7 +2625,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgTXCmdEx->AllowDrop = true;
             this->fcgTXCmdEx->Font = (gcnew System::Drawing::Font(L"ＭＳ ゴシック", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                  static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgTXCmdEx->Location = System::Drawing::Point(6, 20);
             this->fcgTXCmdEx->Multiline = true;
             this->fcgTXCmdEx->Name = L"fcgTXCmdEx";
@@ -2715,7 +2749,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // fcgtoolStripSettings
             // 
             this->fcgtoolStripSettings->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                            static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgtoolStripSettings->ImageScalingSize = System::Drawing::Size(18, 18);
             this->fcgtoolStripSettings->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(15) {
                 this->fcgTSBSave,
@@ -2841,7 +2875,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgTSLSettingsNotes->DoubleClickEnabled = true;
             this->fcgTSLSettingsNotes->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                           static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgTSLSettingsNotes->Margin = System::Windows::Forms::Padding(3, 1, 0, 2);
             this->fcgTSLSettingsNotes->Name = L"fcgTSLSettingsNotes";
             this->fcgTSLSettingsNotes->Overflow = System::Windows::Forms::ToolStripItemOverflow::Never;
@@ -2853,7 +2887,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgTSTSettingsNotes->BackColor = System::Drawing::SystemColors::Window;
             this->fcgTSTSettingsNotes->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                           static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgTSTSettingsNotes->Margin = System::Windows::Forms::Padding(3, 0, 1, 0);
             this->fcgTSTSettingsNotes->Name = L"fcgTSTSettingsNotes";
             this->fcgTSTSettingsNotes->Size = System::Drawing::Size(200, 25);
@@ -2877,8 +2911,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgtabControlMux->Controls->Add(this->fcgtabPageMux);
             this->fcgtabControlMux->Controls->Add(this->fcgtabPageBat);
             this->fcgtabControlMux->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                        static_cast<System::Byte>(128)));
-            this->fcgtabControlMux->Location = System::Drawing::Point(622, 331);
+                static_cast<System::Byte>(128)));
+            this->fcgtabControlMux->Location = System::Drawing::Point(2, 2);
             this->fcgtabControlMux->Name = L"fcgtabControlMux";
             this->fcgtabControlMux->SelectedIndex = 0;
             this->fcgtabControlMux->Size = System::Drawing::Size(384, 239);
@@ -3295,7 +3329,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgLBBatAfterString->AutoSize = true;
             this->fcgLBBatAfterString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                                                                           System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatAfterString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatAfterString->Location = System::Drawing::Point(304, 113);
             this->fcgLBBatAfterString->Name = L"fcgLBBatAfterString";
@@ -3308,7 +3342,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgLBBatBeforeString->AutoSize = true;
             this->fcgLBBatBeforeString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                                                                            System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatBeforeString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatBeforeString->Location = System::Drawing::Point(304, 20);
             this->fcgLBBatBeforeString->Name = L"fcgLBBatBeforeString";
@@ -3434,10 +3468,10 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // fcgTXCmd
             // 
             this->fcgTXCmd->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-                                                                                         | System::Windows::Forms::AnchorStyles::Left)
-                                                                                        | System::Windows::Forms::AnchorStyles::Right));
+                | System::Windows::Forms::AnchorStyles::Left)
+                | System::Windows::Forms::AnchorStyles::Right));
             this->fcgTXCmd->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                                static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgTXCmd->Location = System::Drawing::Point(9, 573);
             this->fcgTXCmd->Name = L"fcgTXCmd";
             this->fcgTXCmd->ReadOnly = true;
@@ -3483,7 +3517,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgLBVersionDate->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBVersionDate->AutoSize = true;
             this->fcgLBVersionDate->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                                                                        static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgLBVersionDate->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBVersionDate->Location = System::Drawing::Point(416, 607);
             this->fcgLBVersionDate->Name = L"fcgLBVersionDate";
@@ -3496,7 +3530,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgLBVersion->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBVersion->AutoSize = true;
             this->fcgLBVersion->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                                                                    static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgLBVersion->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBVersion->Location = System::Drawing::Point(180, 607);
             this->fcgLBVersion->Name = L"fcgLBVersion";
@@ -3553,7 +3587,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgLBguiExBlog->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
             this->fcgLBguiExBlog->AutoSize = true;
             this->fcgLBguiExBlog->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Italic, System::Drawing::GraphicsUnit::Point,
-                                                                      static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->fcgLBguiExBlog->LinkColor = System::Drawing::Color::Gray;
             this->fcgLBguiExBlog->Location = System::Drawing::Point(623, 607);
             this->fcgLBguiExBlog->Name = L"fcgLBguiExBlog";
@@ -3569,7 +3603,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgtabControlAudio->Controls->Add(this->fcgtabPageAudioMain);
             this->fcgtabControlAudio->Controls->Add(this->fcgtabPageAudioOther);
             this->fcgtabControlAudio->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F));
-            this->fcgtabControlAudio->Location = System::Drawing::Point(622, 25);
+            this->fcgtabControlAudio->Location = System::Drawing::Point(2, 2);
             this->fcgtabControlAudio->Name = L"fcgtabControlAudio";
             this->fcgtabControlAudio->SelectedIndex = 0;
             this->fcgtabControlAudio->Size = System::Drawing::Size(384, 296);
@@ -3854,7 +3888,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgLBBatAfterAudioString->AutoSize = true;
             this->fcgLBBatAfterAudioString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                                                                                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatAfterAudioString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatAfterAudioString->Location = System::Drawing::Point(304, 208);
             this->fcgLBBatAfterAudioString->Name = L"fcgLBBatAfterAudioString";
@@ -3867,7 +3901,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             // 
             this->fcgLBBatBeforeAudioString->AutoSize = true;
             this->fcgLBBatBeforeAudioString->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Italic | System::Drawing::FontStyle::Underline)),
-                                                                                 System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
+                System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(128)));
             this->fcgLBBatBeforeAudioString->ForeColor = System::Drawing::SystemColors::ControlDarkDark;
             this->fcgLBBatBeforeAudioString->Location = System::Drawing::Point(304, 139);
             this->fcgLBBatBeforeAudioString->Name = L"fcgLBBatBeforeAudioString";
@@ -3987,31 +4021,47 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->fcgLBAudioPriority->TabIndex = 46;
             this->fcgLBAudioPriority->Text = L"音声優先度";
             // 
-            // fcgLBFastDecode
+            // fcgPNHideTabControlVideo
             // 
-            this->fcgLBFastDecode->AutoSize = true;
-            this->fcgLBFastDecode->Location = System::Drawing::Point(416, 199);
-            this->fcgLBFastDecode->Name = L"fcgLBFastDecode";
-            this->fcgLBFastDecode->Size = System::Drawing::Size(72, 14);
-            this->fcgLBFastDecode->TabIndex = 274;
-            this->fcgLBFastDecode->Text = L"Fast Decode";
+            this->fcgPNHideTabControlVideo->Controls->Add(this->fcgtabControlVideo);
+            this->fcgPNHideTabControlVideo->Location = System::Drawing::Point(0, 25);
+            this->fcgPNHideTabControlVideo->Name = L"fcgPNHideTabControlVideo";
+            this->fcgPNHideTabControlVideo->Size = System::Drawing::Size(620, 549);
+            this->fcgPNHideTabControlVideo->TabIndex = 12;
             // 
-            // fcgCBFastDecode
+            // fcgPNHideTabControlAudio
             // 
-            this->fcgCBFastDecode->AutoSize = true;
-            this->fcgCBFastDecode->Location = System::Drawing::Point(526, 201);
-            this->fcgCBFastDecode->Name = L"fcgCBFastDecode";
-            this->fcgCBFastDecode->Size = System::Drawing::Size(15, 14);
-            this->fcgCBFastDecode->TabIndex = 273;
-            this->fcgCBFastDecode->Tag = L"reCmd";
-            this->fcgCBFastDecode->UseVisualStyleBackColor = true;
+            this->fcgPNHideTabControlAudio->Controls->Add(this->fcgtabControlAudio);
+            this->fcgPNHideTabControlAudio->Location = System::Drawing::Point(619, 25);
+            this->fcgPNHideTabControlAudio->Name = L"fcgPNHideTabControlAudio";
+            this->fcgPNHideTabControlAudio->Size = System::Drawing::Size(388, 300);
+            this->fcgPNHideTabControlAudio->TabIndex = 13;
+            // 
+            // fcgPNHideTabControlMux
+            // 
+            this->fcgPNHideTabControlMux->Controls->Add(this->fcgtabControlMux);
+            this->fcgPNHideTabControlMux->Location = System::Drawing::Point(619, 331);
+            this->fcgPNHideTabControlMux->Name = L"fcgPNHideTabControlMux";
+            this->fcgPNHideTabControlMux->Size = System::Drawing::Size(388, 243);
+            this->fcgPNHideTabControlMux->TabIndex = 14;
+            // 
+            // fcgPNHideToolStripBorder
+            // 
+            this->fcgPNHideToolStripBorder->Location = System::Drawing::Point(0, 22);
+            this->fcgPNHideToolStripBorder->Name = L"fcgPNHideToolStripBorder";
+            this->fcgPNHideToolStripBorder->Size = System::Drawing::Size(1020, 4);
+            this->fcgPNHideToolStripBorder->TabIndex = 16;
+            this->fcgPNHideToolStripBorder->Visible = false;
             // 
             // frmConfig
             // 
             this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Dpi;
             this->ClientSize = System::Drawing::Size(1008, 629);
-            this->Controls->Add(this->fcgtabControlAudio);
+            this->Controls->Add(this->fcgPNHideToolStripBorder);
+            this->Controls->Add(this->fcgPNHideTabControlMux);
+            this->Controls->Add(this->fcgPNHideTabControlAudio);
+            this->Controls->Add(this->fcgPNHideTabControlVideo);
             this->Controls->Add(this->fcgLBguiExBlog);
             this->Controls->Add(this->fcgLBVersion);
             this->Controls->Add(this->fcgLBVersionDate);
@@ -4019,11 +4069,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             this->Controls->Add(this->fcgBTOK);
             this->Controls->Add(this->fcgBTCancel);
             this->Controls->Add(this->fcgTXCmd);
-            this->Controls->Add(this->fcgtabControlMux);
             this->Controls->Add(this->fcgtoolStripSettings);
-            this->Controls->Add(this->fcgtabControlVideo);
             this->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                                                      static_cast<System::Byte>(128)));
+                static_cast<System::Byte>(128)));
             this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
             this->MaximizeBox = false;
             this->Name = L"frmConfig";
@@ -4085,6 +4133,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUAudioBitrate))->EndInit();
             this->fcgtabPageAudioOther->ResumeLayout(false);
             this->fcgtabPageAudioOther->PerformLayout();
+            this->fcgPNHideTabControlVideo->ResumeLayout(false);
+            this->fcgPNHideTabControlAudio->ResumeLayout(false);
+            this->fcgPNHideTabControlMux->ResumeLayout(false);
             this->ResumeLayout(false);
             this->PerformLayout();
 
@@ -4094,6 +4145,8 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         const SYSTEM_DATA *sys_dat;
         CONF_GUIEX *conf;
         LocalSettings LocalStg;
+        DarkenWindowStgReader *dwStgReader;
+        AuoTheme themeMode;
         TBValueBitrateConvert TBBConvert;
         System::Threading::Timer^ qualityTimer;
         int timerChangeValue;
@@ -4107,6 +4160,12 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         frmUpdate^ frmExeUpdate;
 #endif
     private:
+        System::Void CheckTheme();
+        System::Void SetAllMouseMove(Control ^top, const AuoTheme themeTo);
+        System::Void fcgMouseEnter_SetColor(System::Object^  sender, System::EventArgs^  e);
+        System::Void fcgMouseLeave_SetColor(System::Object^  sender, System::EventArgs^  e);
+        System::Void TabControl_DarkDrawItem(System::Object^ sender, DrawItemEventArgs^ e);
+
         System::Int32 GetCurrentAudioDefaultBitrate();
         delegate System::Void qualityTimerChangeDelegate();
         System::Void InitComboBox();
@@ -4661,11 +4720,11 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             if (fcgTXX264Path->Text == String(use_default_exe_path).ToString()) {
                 fcgTXX264PathSub->Text = String(use_default_exe_path).ToString();
                 LocalStg.x264Path = L"";
-                fcgTXX264Path->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXX264Path->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
                 int c = fcgTXX264Path->SelectionStart;
                 LocalStg.x264Path = fcgTXX264Path->Text;
-                fcgTXX264Path->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXX264Path->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 fcgTXX264PathSub->Text = LocalStg.x264Path;
                 fcgTXX264PathSub->SelectionStart = fcgTXX264PathSub->Text->Length;
                 fcgTXX264Path->SelectionStart = c;
@@ -4677,10 +4736,10 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
             if (fcgTXX264PathSub->Text == String(use_default_exe_path).ToString()) {
                 fcgTXX264Path->Text = String(use_default_exe_path).ToString();
                 LocalStg.x264Path = L"";
-                fcgTXX264PathSub->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXX264PathSub->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
                 LocalStg.x264Path = fcgTXX264PathSub->Text;
-                fcgTXX264PathSub->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXX264PathSub->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 int c = fcgTXX264PathSub->SelectionStart;
                 fcgTXX264Path->Text = LocalStg.x264Path;
                 fcgTXX264Path->SelectionStart = fcgTXX264Path->Text->Length;
@@ -4692,9 +4751,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXAudioEncoderPath_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXAudioEncoderPath->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.audEncPath[fcgCXAudioEncoder->SelectedIndex] = L"";
-                fcgTXAudioEncoderPath->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXAudioEncoderPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXAudioEncoderPath->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXAudioEncoderPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.audEncPath[fcgCXAudioEncoder->SelectedIndex] = fcgTXAudioEncoderPath->Text;
                 fcgBTAudioEncoderPath->ContextMenuStrip = (File::Exists(fcgTXAudioEncoderPath->Text)) ? fcgCSExeFiles : nullptr;
             }
@@ -4703,9 +4762,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXMP4MuxerPath_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXMP4MuxerPath->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.MP4MuxerPath = L"";
-                fcgTXMP4MuxerPath->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXMP4MuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXMP4MuxerPath->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXMP4MuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.MP4MuxerPath = fcgTXMP4MuxerPath->Text;
                 fcgBTMP4MuxerPath->ContextMenuStrip = (File::Exists(fcgTXMP4MuxerPath->Text)) ? fcgCSExeFiles : nullptr;
             }
@@ -4714,9 +4773,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXTC2MP4Path_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXTC2MP4Path->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.TC2MP4Path = L"";
-                fcgTXTC2MP4Path->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXTC2MP4Path->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXTC2MP4Path->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXTC2MP4Path->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.TC2MP4Path = fcgTXTC2MP4Path->Text;
                 fcgBTTC2MP4Path->ContextMenuStrip = (File::Exists(fcgTXTC2MP4Path->Text)) ? fcgCSExeFiles : nullptr;
             }
@@ -4725,9 +4784,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXMP4RawMuxerPath_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXMP4RawPath->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.MP4RawPath = L"";
-                fcgTXMP4RawPath->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXMP4RawPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXMP4RawPath->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXMP4RawPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.MP4RawPath = fcgTXMP4RawPath->Text;
                 fcgBTMP4RawPath->ContextMenuStrip = (File::Exists(fcgTXMP4RawPath->Text)) ? fcgCSExeFiles : nullptr;
             }
@@ -4736,9 +4795,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXMKVMuxerPath_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXMKVMuxerPath->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.MKVMuxerPath = L"";
-                fcgTXMKVMuxerPath->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXMKVMuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXMKVMuxerPath->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXMKVMuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.MKVMuxerPath = fcgTXMKVMuxerPath->Text;
                 fcgBTMKVMuxerPath->ContextMenuStrip = (File::Exists(fcgTXMKVMuxerPath->Text)) ? fcgCSExeFiles : nullptr;
             }
@@ -4747,9 +4806,9 @@ private: System::Windows::Forms::CheckBox^  fcgCBFastDecode;
         System::Void fcgTXMPGMuxerPath_TextChanged(System::Object^  sender, System::EventArgs^  e) {
             if (fcgTXMPGMuxerPath->Text == String(use_default_exe_path).ToString()) {
                 LocalStg.MPGMuxerPath = L"";
-                fcgTXMPGMuxerPath->ForeColor = System::Drawing::SystemColors::ControlDark;
+                fcgTXMPGMuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Disabled);
             } else {
-                fcgTXMPGMuxerPath->ForeColor = System::Drawing::SystemColors::WindowText;
+                fcgTXMPGMuxerPath->ForeColor = getTextBoxForeColor(themeMode, dwStgReader, DarkenWindowState::Normal);
                 LocalStg.MPGMuxerPath = fcgTXMPGMuxerPath->Text;
                 fcgBTMPGMuxerPath->ContextMenuStrip = (File::Exists(fcgTXMPGMuxerPath->Text)) ? fcgCSExeFiles : nullptr;
             }

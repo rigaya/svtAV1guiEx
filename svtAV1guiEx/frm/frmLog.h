@@ -997,6 +997,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItemFilePathOp
         System::Void toolStripMenuItemTransparentValue_Click(System::Object^  sender, System::EventArgs^  e) {
             ToolStripMenuItemTransparent->Enabled = false;
             frmSetTransparency::Instance::get()->Owner = this;
+            frmSetTransparency::Instance::get()->InitTheme();
             frmSetTransparency::Instance::get()->Show();
         }
     public:
@@ -1011,6 +1012,7 @@ private: System::Windows::Forms::ToolStripMenuItem^  toolStripMenuItemFilePathOp
             frmSetLogColor::Instance::get()->colorWarning    = log_color_text[1];
             frmSetLogColor::Instance::get()->colorError      = log_color_text[2];
             //frmSetLogColor::Instance::get()->SetOpacity(this->Opacity);
+            frmSetLogColor::Instance::get()->InitTheme();
             frmSetLogColor::Instance::get()->Show();
         }
     public:
