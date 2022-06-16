@@ -457,6 +457,7 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
 #endif
     if (!prm.oth.disable_guicmd) {
         //GUI部のコマンドライン生成
+        set_auto_colormatrix(&enc, oip->h);
         sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " %s", gen_cmd(&enc, false).c_str());
     }
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " %s", prm.vid.cmdex);
