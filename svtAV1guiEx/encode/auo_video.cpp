@@ -81,7 +81,7 @@ static const char * specify_input_csp(int output_csp) {
     return specify_csp[output_csp];
 }
 
-int get_aviutl_color_format(int use_highbit, int output_csp, int input_as_lw48) {
+int get_aviutl_color_format(int bit_depth, int output_csp, int input_as_lw48) {
     //Aviutlからの入力に使用するフォーマット
 
     const int cf_aviutl_pixel48 = (input_as_lw48) ? CF_LW48 : CF_YC48;
@@ -90,13 +90,14 @@ int get_aviutl_color_format(int use_highbit, int output_csp, int input_as_lw48) 
             return cf_aviutl_pixel48;
         case OUT_CSP_RGB:
             return CF_RGB;
-        case OUT_CSP_YV12:
         case OUT_CSP_NV12:
-        case OUT_CSP_YUV422:
+        case OUT_CSP_NV16:
         case OUT_CSP_YUY2:
+        case OUT_CSP_YV12:
+        case OUT_CSP_YUV422:
         case OUT_CSP_YUV400:
         default:
-            return (use_highbit) ? cf_aviutl_pixel48 : CF_YUY2;
+            return (bit_depth > 8) ? cf_aviutl_pixel48 : CF_YUY2;
     }
 }
 
@@ -124,7 +125,7 @@ BOOL setup_afsvideo(const OUTPUT_INFO *oip, const SYSTEM_DATA *sys_dat, CONF_GUI
     //cmdexを適用
     set_cmd(&enc, conf->vid.cmdex, true);
 
-    const int color_format = get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE);
+    const int color_format = get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE);
     int buf_size;
     const int frame_size = calc_input_frame_size(oip->w, oip->h, color_format, buf_size);
     //Aviutl(自動フィールドシフト)からの映像入力
@@ -780,9 +781,9 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
 
     //YUY2/YC48->NV12/YUV444, RGBコピー用関数
     const int input_csp_idx = get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE);
-    const func_convert_frame convert_frame = get_convert_func(oip->w, input_csp_idx, enc.bit_depth, FALSE, enc.output_csp, FALSE);
+    const func_convert_frame convert_frame = get_convert_func(oip->w, input_csp_idx, enc.bit_depth, FALSE, enc.output_csp);
     if (convert_frame == NULL) {
-        ret |= AUO_RESULT_ERROR; error_select_convert_func(oip->w, oip->h, enc.bit_depth > 8, FALSE, enc.output_csp);
+        ret |= AUO_RESULT_ERROR; error_select_convert_func(oip->w, oip->h, enc.bit_depth, FALSE, enc.output_csp);
         return ret;
     }
     //映像バッファ用メモリ確保

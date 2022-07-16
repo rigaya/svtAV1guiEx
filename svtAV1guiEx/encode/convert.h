@@ -56,7 +56,6 @@ void sort_to_rgb(void *frame, CONVERT_CF_DATA *pixel_data, const int width, cons
 void sort_to_rgb_ssse3(void *frame, CONVERT_CF_DATA *pixel_data, const int width, const int height);
 
 
-
 //YUY2 -> nv12 (8bit)
 void convert_yuy2_to_nv12(void *frame, CONVERT_CF_DATA *pixel_data, const int width, const int height);
 void convert_yuy2_to_nv12_i(void *frame, CONVERT_CF_DATA *pixel_data, const int width, const int height);
@@ -200,6 +199,9 @@ void convert_yuy2_to_nv16_avx2(void *pixel, CONVERT_CF_DATA *pixel_data, const i
 
 //YUY2 -> yuv422
 void convert_yuy2_to_yuv422(void *pixel, CONVERT_CF_DATA *pixel_data, const int width, const int height);
+
+//YC48 -> yuv422
+void convert_yc48_to_yuv422_16bit(void *pixel, CONVERT_CF_DATA *pixel_data, const int width, const int height);
 
 //YC48 -> nv16 (16bit)
 void convert_yc48_to_nv16_16bit(void *pixel, CONVERT_CF_DATA *pixel_data, const int width, const int height);
