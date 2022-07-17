@@ -275,9 +275,9 @@ bool is_afsvfr(const CONF_GUIEX *conf) {
 #endif
 }
 
-#if ENABLE_AMP
 static BOOL check_amp(CONF_GUIEX *conf) {
     BOOL check = TRUE;
+#if ENABLE_AMP
     if (!conf->enc.use_auto_npass)
         return check;
     if (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) {
@@ -295,9 +295,9 @@ static BOOL check_amp(CONF_GUIEX *conf) {
     if (conf->vid.amp_check && conf->vid.afs && AUDIO_DELAY_CUT_ADD_VIDEO == conf->aud.delay_cut) {
         check = FALSE; error_amp_afs_audio_delay_confliction();
     }
+#endif
     return check;
 }
-#endif
 
 static BOOL muxer_supports_audio_format(const int muxer_to_be_used, const AUDIO_SETTINGS *aud_stg) {
     switch (muxer_to_be_used) {
@@ -636,10 +636,9 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
         default:
             break;
     }
-#if ENABLE_AMP
+
     //自動マルチパス設定
     check &= check_amp(conf);
-#endif
 
     //オーディオディレイカット
     if (conf->vid.afs && AUDIO_DELAY_CUT_ADD_VIDEO == conf->aud.delay_cut) {
@@ -1356,6 +1355,25 @@ double get_duration(const CONF_GUIEX *conf, const SYSTEM_DATA *sys_dat, const PR
     return duration;
 }
 
+#if ENABLE_AMP
+
+double get_amp_margin_bitrate(double base_bitrate, double margin_multi) {
+    double clamp_offset = (margin_multi < 0.0) ? 0.2 : 0.0;
+    return base_bitrate * clamp(1.0 - margin_multi / sqrt(max(base_bitrate, 1.0) / 100.0), 0.8 + clamp_offset, 1.0 + clamp_offset);
+}
+
+static AUO_RESULT amp_move_old_file(const char *muxout, const char *savefile) {
+    if (!PathFileExists(muxout))
+        return AUO_RESULT_ERROR;
+    char filename[MAX_PATH_LEN];
+    char appendix[MAX_APPENDIX_LEN];
+    for (int i = 0; !i || PathFileExists(filename); i++) {
+        sprintf_s(appendix, _countof(appendix), "_try%d%s", i, PathFindExtension(savefile));
+        apply_appendix(filename, _countof(filename), savefile, appendix);
+    }
+    return (rename(muxout, filename) == 0) ? AUO_RESULT_SUCCESS : AUO_RESULT_ERROR;
+}
+
 static double get_vid_ratio(double actual_vid_bitrate, double vid_lower_limit_bitrate) {
     double vid_rate = actual_vid_bitrate / vid_lower_limit_bitrate;
     if (vid_lower_limit_bitrate < 1600) {
@@ -1384,25 +1402,6 @@ static double get_audio_bitrate(const PRM_ENC *pe, const OUTPUT_INFO *oip, doubl
         }
     }
     return (aud_filesize * 8.0) / 1000.0 / duration;
-}
-
-#if ENABLE_AMP
-
-double get_amp_margin_bitrate(double base_bitrate, double margin_multi) {
-    double clamp_offset = (margin_multi < 0.0) ? 0.2 : 0.0;
-    return base_bitrate * clamp(1.0 - margin_multi / sqrt(max(base_bitrate, 1.0) / 100.0), 0.8 + clamp_offset, 1.0 + clamp_offset);
-}
-
-static AUO_RESULT amp_move_old_file(const char *muxout, const char *savefile) {
-    if (!PathFileExists(muxout))
-        return AUO_RESULT_ERROR;
-    char filename[MAX_PATH_LEN];
-    char appendix[MAX_APPENDIX_LEN];
-    for (int i = 0; !i || PathFileExists(filename); i++) {
-        sprintf_s(appendix, _countof(appendix), "_try%d%s", i, PathFindExtension(savefile));
-        apply_appendix(filename, _countof(filename), savefile, appendix);
-    }
-    return (rename(muxout, filename) == 0) ? AUO_RESULT_SUCCESS : AUO_RESULT_ERROR;
 }
 
 static void amp_adjust_lower_bitrate_set_default(CONF_ENCODER *cnf_x264) {
