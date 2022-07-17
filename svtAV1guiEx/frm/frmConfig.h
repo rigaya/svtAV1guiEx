@@ -54,7 +54,7 @@ using namespace System::Drawing;
 using namespace System::IO;
 
 
-namespace svtAV1guiEx {
+namespace AUO_NAME_R {
 
     /// <summary>
     /// frmConfig の概要

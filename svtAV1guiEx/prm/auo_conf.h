@@ -37,9 +37,6 @@
 #include "auo.h"
 #include "auo_options.h"
 
-#define ENABLE_AMP 0
-#define ENABLE_TCFILE_IN 0
-
 const int CONF_INITIALIZED = 1;
 
 enum {

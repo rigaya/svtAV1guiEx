@@ -30,6 +30,7 @@
 
 #define AUO_VERSION          0,1,4,0
 #define AUO_VERSION_STR      "1.04"
+#define AUO_NAME_R            svtAV1guiEx
 #define AUO_NAME_WITHOUT_EXT "svtAV1guiEx"
 #define AUO_NAME             "svtAV1guiEx.auo"
 #define AUO_NAME_W          L"svtAV1guiEx.auo"
@@ -41,6 +42,13 @@
 #define AUOSETUP_EVENT_ABORT "AUOSETUP_EVENT_ABORT"
 
 #define ENABLE_AUOSETUP 0
+
+
+#define ENCODER_X264 0
+#define ENCODER_X265 0
+#define ENCODER_SVTAV1 1
+#define ENABLE_AMP (ENCODER_x264 != 0)
+#define ENABLE_TCFILE_IN (ENCODER_x264 != 0)
 
 #ifdef DEBUG
 #define VER_DEBUG   VS_FF_DEBUG
