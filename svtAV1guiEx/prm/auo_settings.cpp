@@ -666,10 +666,10 @@ void guiEx_settings::save_local() {
     WritePrivateProfileIntWithDefault(   ini_section_main, "auto_ref_limit_by_level",   s_local.auto_ref_limit_by_level,   DEFAULT_AUTO_REFLIMIT_BYLEVEL, conf_fileName);
     WritePrivateProfileIntWithDefault(   ini_section_main, "default_audio_encoder",     s_local.default_audio_encoder,     DEFAULT_AUDIO_ENCODER,         conf_fileName);
 
-    WritePrivateProfileIntWithDefault(   INI_SECTION_AMP,  "amp_retry_limit",           s_local.amp_retry_limit,          DEFAULT_AMP_RETRY_LIMIT,       conf_fileName);
-    WritePrivateProfileDoubleWithDefault(INI_SECTION_AMP,  "amp_bitrate_margin_multi",  s_local.amp_bitrate_margin_multi, DEFAULT_AMP_MARGIN,            conf_fileName);
-    WritePrivateProfileDoubleWithDefault(INI_SECTION_AMP,  "amp_reenc_audio_multi",     s_local.amp_reenc_audio_multi,    DEFAULT_AMP_REENC_AUDIO_MULTI, conf_fileName);
-    WritePrivateProfileIntWithDefault(   INI_SECTION_AMP,  "amp_keep_old_file",         s_local.amp_keep_old_file,        DEFAULT_AMP_KEEP_OLD_FILE,     conf_fileName);
+    WritePrivateProfileIntWithDefault(   INI_SECTION_AMP,  "amp_retry_limit",           s_local.amp_retry_limit,           DEFAULT_AMP_RETRY_LIMIT,       conf_fileName);
+    WritePrivateProfileDoubleWithDefault(INI_SECTION_AMP,  "amp_bitrate_margin_multi",  s_local.amp_bitrate_margin_multi,  DEFAULT_AMP_MARGIN,            conf_fileName);
+    WritePrivateProfileDoubleWithDefault(INI_SECTION_AMP,  "amp_reenc_audio_multi",     s_local.amp_reenc_audio_multi,     DEFAULT_AMP_REENC_AUDIO_MULTI, conf_fileName);
+    WritePrivateProfileIntWithDefault(   INI_SECTION_AMP,  "amp_keep_old_file",         s_local.amp_keep_old_file,         DEFAULT_AMP_KEEP_OLD_FILE,     conf_fileName);
 
     WriteFontInfo(ini_section_main, "conf_font", &s_local.conf_font, conf_fileName);
 
