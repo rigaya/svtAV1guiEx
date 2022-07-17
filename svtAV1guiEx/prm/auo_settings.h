@@ -100,8 +100,8 @@ static const double DEFAULT_FBC_INITIAL_SIZE         = 39.8;
 static const char  *DEFAULT_EXE_DIR                  = "exe_files";
 static const char  *AUO_CHECK_FILEOPEN_NAME          = "auo_check_fileopen.exe";
 
-typedef struct {
-    char *name; //x264でのオプション名
+typedef struct ENC_OPTION_STR {
+    char *name; //エンコーダでのオプション名
     WCHAR *desc; //GUIでの表示用
 } ENC_OPTION_STR;
 
