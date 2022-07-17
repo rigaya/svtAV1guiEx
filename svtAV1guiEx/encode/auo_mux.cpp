@@ -245,9 +245,7 @@ static AUO_RESULT build_mux_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf,
     char audstr[MAX_CMD_LEN];
     build_aud_mux_cmd(audstr, _countof(audstr), mux_stg->aud_cmd, enable_aud_mux, pe);
     //映像用コマンド
-    replace(cmd, nSize, "%{vd_cmd}", vidstr);
-    //目印の%{vd_cat_cmd}を削除
-    replace(cmd, nSize, "%{vd_cat_cmd}", "");
+    replace(cmd, nSize, "%{vd_cmd}",  vidstr);
     //音声用コマンド
     replace(cmd, nSize, "%{au_cmd}",  audstr);
     //タイムコード用
