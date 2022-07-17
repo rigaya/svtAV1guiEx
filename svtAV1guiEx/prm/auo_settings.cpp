@@ -771,7 +771,6 @@ void guiEx_settings::apply_fn_replace(char *target_filename, DWORD nSize) {
         replace(target_filename, nSize, i_rep.from, i_rep.to);
 }
 
-
 ColorRGB DarkenWindowStgNamedColor::parseColor(const std::string& colorStr) const {
     if (colorStr.length() == 0) return ColorRGB();
     {
