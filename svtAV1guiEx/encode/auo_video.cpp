@@ -713,11 +713,6 @@ static void video_output_close_thread(video_output_thread_t *thread_data, AUO_RE
     memset(thread_data, 0, sizeof(thread_data[0]));
 }
 
-static bool process_private_ws_is_over_threshold(const PROCESS_INFORMATION& pi_enc, const int reinit_process_MB) {
-    const uint64_t proc_private_ws_MB = getProcessWorkingSet(pi_enc.dwProcessId) / (1024 * 1024);
-    return proc_private_ws_MB > reinit_process_MB;
-}
-
 static void error_videnc_failed(const PRM_ENC *pe) {
     ULARGE_INTEGER temp_drive_avail_space = { 0 };
     const uint64_t disk_warn_threshold = 4 * 1024 * 1024; //4MB
