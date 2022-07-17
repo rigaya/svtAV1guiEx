@@ -500,10 +500,9 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
     const auto exeFiles = find_exe_files(defaultExeDir, defaultExeDir2);
 
     //必要な実行ファイル
-    //x264
     if (!conf->oth.disable_guicmd && pe->video_out_type != VIDEO_OUTPUT_DISABLED) {
         if (!PathFileExists(exstg->s_enc.fullpath)) {
-            const auto targetExes = find_target_exe_files("SvtAv1Enc", exeFiles);
+            const auto targetExes = find_target_exe_files(ENCODER_APP_NAME, exeFiles);
             if (targetExes.size() > 0) {
                 const auto latestVidEnc = find_latest_videnc(targetExes);
                 if (exstg->s_local.get_relative_path) {
@@ -513,17 +512,11 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
                 }
             }
             if (!PathFileExists(exstg->s_enc.fullpath)) {
-                error_no_exe_file("SvtAv1EncApp.exe", exstg->s_enc.fullpath);
+                error_no_exe_file(ENCODER_APP_NAME, exstg->s_enc.fullpath);
                 check = FALSE;
             }
         }
         info_use_exe_found(ENCODER_NAME, exstg->s_enc.fullpath);
-    }
-    if (!conf->oth.disable_guicmd) {
-        if (pe->video_out_type != VIDEO_OUTPUT_DISABLED && !PathFileExists(exstg->s_enc.fullpath)) {
-            error_no_exe_file("SvtAv1EncApp.exe", exstg->s_enc.fullpath);
-            check = FALSE;
-        }
     }
 
     //音声エンコーダ
