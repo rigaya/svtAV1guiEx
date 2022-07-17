@@ -472,7 +472,7 @@ AUO_RESULT mux(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, cons
         //なので、単純に使用するmuxerをmuxer.exeに切り替え
         pe->muxer_to_be_used = MUXER_MP4_RAW;
     }
-    if (pe->muxer_to_be_used == MUXER_MP4_RAW && !muxer_is_for_raw_only(pe, sys_dat)) {
+    if (ENCODER_SVTAV1 && pe->muxer_to_be_used == MUXER_MP4_RAW && !muxer_is_for_raw_only(pe, sys_dat)) {
         pe->muxer_to_be_used = MUXER_MP4;
     }
 
