@@ -223,12 +223,97 @@ static BOOL check_muxer_exist(MUXER_SETTINGS *muxer_stg, const char *aviutl_dir,
     return FALSE;
 }
 
+static BOOL check_if_exe_is_mp4box(const char *exe_path, const char *version_arg) {
+    BOOL ret = FALSE;
+    char exe_message[8192] = { 0 };
+    if (   PathFileExists(exe_path)
+        && RP_SUCCESS == get_exe_message(exe_path, version_arg, exe_message, _countof(exe_message), AUO_PIPE_MUXED)
+        && (stristr(exe_message, "mp4box") || stristr(exe_message, "GPAC"))) {
+        ret = TRUE;
+    }
+    return ret;
+}
+
+static BOOL check_if_exe_is_lsmash(const char *exe_path, const char *version_arg) {
+    BOOL ret = FALSE;
+    char exe_message[8192] = { 0 };
+    if (   PathFileExists(exe_path)
+        && RP_SUCCESS == get_exe_message(exe_path, version_arg, exe_message, _countof(exe_message), AUO_PIPE_MUXED)
+        && stristr(exe_message, "L-SMASH")) {
+        ret = TRUE;
+    }
+    return ret;
+}
+
+static BOOL check_muxer_matched_with_ini(const MUXER_SETTINGS *mux_stg) {
+    BOOL ret = TRUE;
+    //不確定な場合は"0", mp4boxなら"-1", L-SMASHなら"1"
+    int ini_muxer_mode = (NULL != stristr(mux_stg[MUXER_MP4].filename, "remuxer"))
+                       - (NULL != stristr(mux_stg[MUXER_MP4].filename, "mp4box"));
+    int exe_muxer_mode = (FALSE != check_if_exe_is_lsmash(mux_stg[MUXER_MP4].fullpath, "--version"))
+                       - (FALSE != check_if_exe_is_mp4box(mux_stg[MUXER_MP4].fullpath, "-version"));
+    //互いに明確に相反する場合にエラーを出す
+    if (ini_muxer_mode * exe_muxer_mode < 0) {
+        error_mp4_muxer_unmatch_of_ini_and_exe(0 < exe_muxer_mode);
+        ret = FALSE;
+    }
+    return ret;
+}
+
 bool is_afsvfr(const CONF_GUIEX *conf) {
 #if ENCODER_SVTAV1
     return (conf->vid.afs != 0 && !conf->vid.afs_24fps);
 #else
     return conf->vid.afs != 0;
 #endif
+}
+
+#if ENABLE_AMP
+static BOOL check_amp(CONF_GUIEX *conf) {
+    BOOL check = TRUE;
+    if (!conf->enc.use_auto_npass)
+        return check;
+    if (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) {
+        //if (conf->x264.bitrate > conf->vid.amp_limit_bitrate_upper) {
+        //    check = FALSE; error_amp_bitrate_confliction();
+        //} else if (conf->vid.amp_limit_bitrate_upper <= 0.0)
+        //    conf->vid.amp_check &= ~AMPLIMIT_BITRATE; //フラグを折る
+        if (conf->vid.amp_limit_bitrate_upper <= 0.0)
+            conf->vid.amp_check &= ~AMPLIMIT_BITRATE_UPPER; //フラグを折る
+    }
+    if (conf->vid.amp_check & AMPLIMIT_FILE_SIZE) {
+        if (conf->vid.amp_limit_file_size <= 0.0)
+            conf->vid.amp_check &= ~AMPLIMIT_FILE_SIZE; //フラグを折る
+    }
+    if (conf->vid.amp_check && conf->vid.afs && AUDIO_DELAY_CUT_ADD_VIDEO == conf->aud.delay_cut) {
+        check = FALSE; error_amp_afs_audio_delay_confliction();
+    }
+    return check;
+}
+#endif
+
+static BOOL muxer_supports_audio_format(const int muxer_to_be_used, const AUDIO_SETTINGS *aud_stg) {
+    switch (muxer_to_be_used) {
+    case MUXER_TC2MP4:
+    case MUXER_MP4_RAW:
+    case MUXER_MP4:
+        return aud_stg->unsupported_mp4 == 0;
+    case MUXER_MKV:
+    case MUXER_MPG:
+    case MUXER_DISABLED:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+BOOL check_if_exedit_is_used() {
+    char name[256];
+    wsprintf(name, "exedit_%d_%d", '01', GetCurrentProcessId());
+    auto handle = unique_handle(OpenFileMapping(FILE_MAP_WRITE, FALSE, name),
+        [](HANDLE h) { if (h != INVALID_HANDLE_VALUE) CloseHandle(h); });
+
+    return handle != nullptr;
 }
 
 static std::string find_auo_check_fileopen(const char *defaultExeDir, const char *defaultExeDir2) {
@@ -310,91 +395,6 @@ static BOOL check_temp_file_open(const char *target, const std::string& auo_chec
         }
     }
     return FALSE;
-}
-
-static BOOL check_if_exe_is_mp4box(const char *exe_path, const char *version_arg) {
-    BOOL ret = FALSE;
-    char exe_message[8192] = { 0 };
-    if (   PathFileExists(exe_path)
-        && RP_SUCCESS == get_exe_message(exe_path, version_arg, exe_message, _countof(exe_message), AUO_PIPE_MUXED)
-        && (stristr(exe_message, "mp4box") || stristr(exe_message, "GPAC"))) {
-        ret = TRUE;
-    }
-    return ret;
-}
-
-static BOOL check_if_exe_is_lsmash(const char *exe_path, const char *version_arg) {
-    BOOL ret = FALSE;
-    char exe_message[8192] = { 0 };
-    if (   PathFileExists(exe_path)
-        && RP_SUCCESS == get_exe_message(exe_path, version_arg, exe_message, _countof(exe_message), AUO_PIPE_MUXED)
-        && stristr(exe_message, "L-SMASH")) {
-        ret = TRUE;
-    }
-    return ret;
-}
-
-static BOOL check_muxer_matched_with_ini(const MUXER_SETTINGS *mux_stg) {
-    BOOL ret = TRUE;
-    //不確定な場合は"0", mp4boxなら"-1", L-SMASHなら"1"
-    int ini_muxer_mode = (NULL != stristr(mux_stg[MUXER_MP4].filename, "remuxer"))
-                       - (NULL != stristr(mux_stg[MUXER_MP4].filename, "mp4box"));
-    int exe_muxer_mode = (FALSE != check_if_exe_is_lsmash(mux_stg[MUXER_MP4].fullpath, "--version"))
-                       - (FALSE != check_if_exe_is_mp4box(mux_stg[MUXER_MP4].fullpath, "-version"));
-    //互いに明確に相反する場合にエラーを出す
-    if (ini_muxer_mode * exe_muxer_mode < 0) {
-        error_mp4_muxer_unmatch_of_ini_and_exe(0 < exe_muxer_mode);
-        ret = FALSE;
-    }
-    return ret;
-}
-
-#if ENABLE_AMP
-static BOOL check_amp(CONF_GUIEX *conf) {
-    BOOL check = TRUE;
-    if (!conf->enc.use_auto_npass)
-        return check;
-    if (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) {
-        //if (conf->x264.bitrate > conf->vid.amp_limit_bitrate_upper) {
-        //    check = FALSE; error_amp_bitrate_confliction();
-        //} else if (conf->vid.amp_limit_bitrate_upper <= 0.0)
-        //    conf->vid.amp_check &= ~AMPLIMIT_BITRATE; //フラグを折る
-        if (conf->vid.amp_limit_bitrate_upper <= 0.0)
-            conf->vid.amp_check &= ~AMPLIMIT_BITRATE_UPPER; //フラグを折る
-    }
-    if (conf->vid.amp_check & AMPLIMIT_FILE_SIZE) {
-        if (conf->vid.amp_limit_file_size <= 0.0)
-            conf->vid.amp_check &= ~AMPLIMIT_FILE_SIZE; //フラグを折る
-    }
-    if (conf->vid.amp_check && conf->vid.afs && AUDIO_DELAY_CUT_ADD_VIDEO == conf->aud.delay_cut) {
-        check = FALSE; error_amp_afs_audio_delay_confliction();
-    }
-    return check;
-}
-#endif
-
-static BOOL muxer_supports_audio_format(const int muxer_to_be_used, const AUDIO_SETTINGS *aud_stg) {
-    switch (muxer_to_be_used) {
-    case MUXER_TC2MP4:
-    case MUXER_MP4_RAW:
-    case MUXER_MP4:
-        return aud_stg->unsupported_mp4 == 0;
-    case MUXER_MKV:
-    case MUXER_MPG:
-    case MUXER_DISABLED:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-BOOL check_if_exedit_is_used() {
-    char name[256];
-    wsprintf(name, "exedit_%d_%d", '01', GetCurrentProcessId());
-    auto handle = unique_handle(OpenFileMapping(FILE_MAP_WRITE, FALSE, name),
-        [](HANDLE h) { if (h != INVALID_HANDLE_VALUE) CloseHandle(h); });
-
-    return handle != nullptr;
 }
 
 BOOL audio_encoder_exe_exists(const CONF_GUIEX *conf, const guiEx_settings *exstg) {
