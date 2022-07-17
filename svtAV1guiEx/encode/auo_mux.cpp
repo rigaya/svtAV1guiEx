@@ -455,7 +455,10 @@ AUO_RESULT mux(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, cons
         && muxer_is_remux_only(pe, sys_dat)) {
         //mp4用muxer(初期状態)で、動画・音声ともrawなら、raw用muxerに完全に切り替える
         if ((enable_vid_mux && video_to_mux_is_raw(pe, sys_dat)) &&
-            (enable_aud_mux && audio_to_mux_is_raw(pe, sys_dat, ALL))) {
+            (enable_aud_mux && audio_to_mux_is_raw(pe, sys_dat, ALL)) &&
+            //多重音声を扱う際、muxer.exeのコマンドを二重発行すると、--file-format m4aが重複して、muxer.exeがエラー終了してしまう。
+            //これを回避するため、多重音声では各音声をmuxer.exeでmp4に格納してから、remuxer.exeで多重化する
+            pe->aud_count <= 1) {
             pe->muxer_to_be_used = MUXER_MP4_RAW;
         } else {
             //mp4用muxer(初期状態)で、動画・音声のどちらかがrawなら、rawのものを事前にmuxerでmp4に格納する。
