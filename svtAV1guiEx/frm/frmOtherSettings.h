@@ -155,9 +155,9 @@ namespace AUO_NAME_R {
     private: System::Windows::Forms::Label^  fosLBDefaultAudioEncoder;
 private: System::Windows::Forms::CheckBox^  fosCBWineCompat;
 private: System::Windows::Forms::CheckBox^  fosCBOutputMoreLog;
-private: System::Windows::Forms::TabPage^  fostabPageUpdate;
-private: System::Windows::Forms::CheckBox^  fosCBUpdateOverwrite;
-private: System::Windows::Forms::CheckBox^  fosCBUpdateCheckAuto;
+
+
+
 private: System::Windows::Forms::Panel^  fosPNHideTabPage;
 
 
@@ -244,9 +244,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosLBAMPLimitMarginMin = (gcnew System::Windows::Forms::Label());
             this->fosTBAMPLimitMarginMulti = (gcnew System::Windows::Forms::TrackBar());
             this->fosCBAmpKeepOldFile = (gcnew System::Windows::Forms::CheckBox());
-            this->fostabPageUpdate = (gcnew System::Windows::Forms::TabPage());
-            this->fosCBUpdateCheckAuto = (gcnew System::Windows::Forms::CheckBox());
-            this->fosCBUpdateOverwrite = (gcnew System::Windows::Forms::CheckBox());
             this->fosPNHideTabPage = (gcnew System::Windows::Forms::Panel());
             this->fosTabControl->SuspendLayout();
             this->fostabPageGeneral->SuspendLayout();
@@ -256,7 +253,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosGroupBoxAMPLimitMarginExample->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fosNUAMPLimitMargin))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fosTBAMPLimitMarginMulti))->BeginInit();
-            this->fostabPageUpdate->SuspendLayout();
             this->fosPNHideTabPage->SuspendLayout();
             this->SuspendLayout();
             // 
@@ -317,7 +313,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosTabControl->Controls->Add(this->fostabPageGeneral);
             this->fosTabControl->Controls->Add(this->fostabPageGUI);
             this->fosTabControl->Controls->Add(this->fostabPageAMP);
-            this->fosTabControl->Controls->Add(this->fostabPageUpdate);
             this->fosTabControl->Location = System::Drawing::Point(2, 2);
             this->fosTabControl->Name = L"fosTabControl";
             this->fosTabControl->SelectedIndex = 0;
@@ -450,7 +445,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fostabPageGUI->Controls->Add(this->fosTXStgDir);
             this->fostabPageGUI->Location = System::Drawing::Point(4, 24);
             this->fostabPageGUI->Name = L"fostabPageGUI";
-            this->fostabPageGUI->Size = System::Drawing::Size(384, 374);
+            this->fostabPageGUI->Size = System::Drawing::Size(380, 372);
             this->fostabPageGUI->TabIndex = 2;
             this->fostabPageGUI->Text = L"ログ・設定画面";
             this->fostabPageGUI->UseVisualStyleBackColor = true;
@@ -591,7 +586,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fostabPageAMP->Location = System::Drawing::Point(4, 24);
             this->fostabPageAMP->Name = L"fostabPageAMP";
             this->fostabPageAMP->Padding = System::Windows::Forms::Padding(3);
-            this->fostabPageAMP->Size = System::Drawing::Size(384, 374);
+            this->fostabPageAMP->Size = System::Drawing::Size(380, 372);
             this->fostabPageAMP->TabIndex = 1;
             this->fostabPageAMP->Text = L"自動マルチパス";
             this->fostabPageAMP->UseVisualStyleBackColor = true;
@@ -799,37 +794,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosCBAmpKeepOldFile->Text = L"自動マルチパスで、上限をオーバーしてしまい再エンコードする際に、上限オーバーの動画を削除しない";
             this->fosCBAmpKeepOldFile->UseVisualStyleBackColor = true;
             // 
-            // fostabPageUpdate
-            // 
-            this->fostabPageUpdate->Controls->Add(this->fosCBUpdateCheckAuto);
-            this->fostabPageUpdate->Controls->Add(this->fosCBUpdateOverwrite);
-            this->fostabPageUpdate->Location = System::Drawing::Point(4, 24);
-            this->fostabPageUpdate->Name = L"fostabPageUpdate";
-            this->fostabPageUpdate->Size = System::Drawing::Size(384, 374);
-            this->fostabPageUpdate->TabIndex = 3;
-            this->fostabPageUpdate->Text = L"更新";
-            this->fostabPageUpdate->UseVisualStyleBackColor = true;
-            // 
-            // fosCBUpdateCheckAuto
-            // 
-            this->fosCBUpdateCheckAuto->AutoSize = true;
-            this->fosCBUpdateCheckAuto->Location = System::Drawing::Point(17, 18);
-            this->fosCBUpdateCheckAuto->Name = L"fosCBUpdateCheckAuto";
-            this->fosCBUpdateCheckAuto->Size = System::Drawing::Size(147, 19);
-            this->fosCBUpdateCheckAuto->TabIndex = 19;
-            this->fosCBUpdateCheckAuto->Text = L"定期的に更新を確認する";
-            this->fosCBUpdateCheckAuto->UseVisualStyleBackColor = true;
-            // 
-            // fosCBUpdateOverwrite
-            // 
-            this->fosCBUpdateOverwrite->AutoSize = true;
-            this->fosCBUpdateOverwrite->Location = System::Drawing::Point(17, 43);
-            this->fosCBUpdateOverwrite->Name = L"fosCBUpdateOverwrite";
-            this->fosCBUpdateOverwrite->Size = System::Drawing::Size(178, 19);
-            this->fosCBUpdateOverwrite->TabIndex = 18;
-            this->fosCBUpdateOverwrite->Text = L"更新時、古いファイルを削除する";
-            this->fosCBUpdateOverwrite->UseVisualStyleBackColor = true;
-            // 
             // fosPNHideTabPage
             // 
             this->fosPNHideTabPage->Controls->Add(this->fosTabControl);
@@ -871,8 +835,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosGroupBoxAMPLimitMarginExample->PerformLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fosNUAMPLimitMargin))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fosTBAMPLimitMarginMulti))->EndInit();
-            this->fostabPageUpdate->ResumeLayout(false);
-            this->fostabPageUpdate->PerformLayout();
             this->fosPNHideTabPage->ResumeLayout(false);
             this->ResumeLayout(false);
 
@@ -909,8 +871,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             fos_ex_stg->s_local.default_output_ext        = fosCXDefaultOutExt->SelectedIndex;
             fos_ex_stg->s_local.run_bat_minimized         = fosCBRunBatMinimized->Checked;
             fos_ex_stg->s_local.default_audio_encoder     = fosCXDefaultAudioEncoder->SelectedIndex;
-            fos_ex_stg->s_local.update_check_auto         = fosCBUpdateCheckAuto->Checked;
-            fos_ex_stg->s_local.update_overwrite          = fosCBUpdateOverwrite->Checked;
             fos_ex_stg->save_local();
             fos_ex_stg->save_log_win();
             this->Close();
@@ -955,8 +915,6 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             fosCBGetRelativePath->Checked           = fos_ex_stg->s_local.get_relative_path != 0;
             fosCXDefaultOutExt->SelectedIndex       = fos_ex_stg->s_local.default_output_ext;
             fosCBRunBatMinimized->Checked           = fos_ex_stg->s_local.run_bat_minimized != 0;
-            fosCBUpdateCheckAuto->Checked           = fos_ex_stg->s_local.update_check_auto != 0;
-            fosCBUpdateOverwrite->Checked           = fos_ex_stg->s_local.update_overwrite != 0;
             fosCXDefaultAudioEncoder->SelectedIndex = clamp(fos_ex_stg->s_local.default_audio_encoder, 0, fosCXDefaultAudioEncoder->Items->Count);
             if (str_has_char(fos_ex_stg->s_local.conf_font.name))
                 SetFontFamilyToForm(this, gcnew FontFamily(String(fos_ex_stg->s_local.conf_font.name).ToString()), this->Font->FontFamily);
