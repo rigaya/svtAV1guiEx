@@ -176,7 +176,7 @@ public:
     };
 };
 
-typedef struct {
+typedef struct AUDIO_ENC_MODE {
     char *name;          //名前
     char *cmd;           //コマンドライン
     BOOL bitrate;        //ビットレート指定モード
@@ -192,7 +192,7 @@ typedef struct {
     char *cmd_list;      //コマンドラインのリスト
 } AUDIO_ENC_MODE;
 
-typedef struct {
+typedef struct AUDIO_SETTINGS {
     char *keyName;               //iniファイルでのセクション名
     char *dispname;              //名前
     char *filename;              //拡張子付き名前
@@ -211,14 +211,14 @@ typedef struct {
     AUDIO_ENC_MODE *mode;        //エンコードモードの設定
 } AUDIO_SETTINGS;
 
-typedef struct {
+typedef struct MUXER_CMD_EX {
     char *name;      //拡張オプションの名前
     char *cmd;       //拡張オプションのコマンドライン
     char *cmd_apple; //Apple用モードの時のコマンドライン
     char *chap_file; //チャプターファイル
 } MUXER_CMD_EX;
 
-typedef struct {
+typedef struct MUXER_SETTINGS {
     char *keyName;                //iniファイルでのセクション名
     char *dispname;               //名前
     char *filename;               //拡張子付き名前
@@ -260,12 +260,12 @@ typedef struct {
     float *profile_vbv_multi;            //profileによるvbv倍率
 } ENC_SETTINGS;
 
-typedef struct {
+typedef struct FILENAME_REPLACE {
     char *from; //置換元文字列
     char *to;   //置換先文字列
 } FILENAME_REPLACE;
 
-typedef struct {
+typedef struct LOG_WINDOW_SETTINGS {
     BOOL minimized;                        //最小化で起動
     BOOL wine_compat;                      //wine互換モード
     int  log_level;                        //ログ出力のレベル
@@ -285,7 +285,7 @@ typedef struct {
     AUO_FONT_INFO log_font;                //ログフォント
 } LOG_WINDOW_SETTINGS;
 
-typedef struct {
+typedef struct BITRATE_CALC_SETTINGS {
     BOOL   calc_bitrate;          //ビットレート計算モード
     BOOL   calc_time_from_frame;  //フレーム数とフレームレートから動画時間を計算
     int    last_frame_num;        //最後に指定したフレーム数
@@ -294,7 +294,7 @@ typedef struct {
     double initial_size;          //初期サイズ
 } BITRATE_CALC_SETTINGS;
 
-typedef struct {
+typedef struct LOCAL_SETTINGS {
     BOOL   large_cmdbox;                        //拡大サイズでコマンドラインプレビューを行う
     DWORD  audio_buffer_size;                   //音声用バッファサイズ
     BOOL   auto_afs_disable;                    //自動的にafsを無効化
