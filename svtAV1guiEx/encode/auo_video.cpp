@@ -982,6 +982,12 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     return ret;
 }
 
+BOOL check_videnc_mp4_output(const char *exe_path, const char *temp_filename) {
+    UNREFERENCED_PARAMETER(exe_path);
+    UNREFERENCED_PARAMETER(temp_filename);
+    return FALSE;
+}
+
 static void set_window_title_x264(const PRM_ENC *pe) {
     char mes[256] = { 0 };
     strcpy_s(mes, _countof(mes), "svt-av1エンコード");
