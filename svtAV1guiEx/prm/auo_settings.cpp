@@ -231,6 +231,10 @@ void guiEx_settings::initialize(BOOL disable_loading, const char *_auo_path, con
 }
 
 guiEx_settings::~guiEx_settings() {
+    clear_all();
+}
+
+void guiEx_settings::clear_all() {
     clear_aud();
     clear_mux();
     clear_enc();
