@@ -443,10 +443,10 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
     if (!PathIsDirectory(savedir)) {
         error_savdir_do_not_exist(oip->savefile, savedir);
         check = FALSE;
-        //出力フォルダにファイルを開けるかどうか
+    //出力フォルダにファイルを開けるかどうか
     } else if (!check_temp_file_open(savedir, auo_check_fileopen_path, true, true)) {
         check = FALSE;
-        //一時ファイルを開けるかどうか
+    //一時ファイルを開けるかどうか
     } else if (!check_temp_file_open(pe->temp_filename, auo_check_fileopen_path, false, false)) {
         check = FALSE;
     }
