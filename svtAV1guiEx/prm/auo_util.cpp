@@ -25,6 +25,7 @@
 //
 // --------------------------------------------------------------------------------------------
 
+
 #include <Windows.h>
 #include <string.h>
 #include <ctype.h>
@@ -248,7 +249,6 @@ std::wstring GetFullPathFrom(const wchar_t *path, const wchar_t *baseDir) {
     return p.lexically_normal().wstring();
 }
 
-
 static inline BOOL is_space_or_crlf(int c) {
     return (c == ' ' || c == '\r' || c == '\n');
 }
@@ -445,7 +445,7 @@ static int getRealWindowsVersion(DWORD *major, DWORD *minor, DWORD *build) {
     HMODULE hModule = NULL;
     RtlGetVersion_FUNC func = NULL;
     int ret = 1;
-    if (NULL != (hModule = LoadLibrary(_T("ntdll.dll")))
+    if (   NULL != (hModule = LoadLibrary(_T("ntdll.dll")))
         && NULL != (func = (RtlGetVersion_FUNC)GetProcAddress(hModule, "RtlGetVersion"))) {
         func(&osver);
         *major = osver.dwMajorVersion;
@@ -513,10 +513,10 @@ const TCHAR *getOSVersion(DWORD *buildNumber) {
         case 6:
             switch (infoex.dwMinorVersion) {
             case 0:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows Vista") : _T("Windows Server 2008");    break;
-            case 1:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 7") : _T("Windows Server 2008 R2"); break;
-            case 2:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 8") : _T("Windows Server 2012");    break;
-            case 3:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 8.1") : _T("Windows Server 2012 R2"); break;
-            case 4:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 10") : _T("Windows Server 2016");    break;
+            case 1:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 7")     : _T("Windows Server 2008 R2"); break;
+            case 2:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 8")     : _T("Windows Server 2012");    break;
+            case 3:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 8.1")   : _T("Windows Server 2012 R2"); break;
+            case 4:  ptr = (infoex.wProductType == VER_NT_WORKSTATION) ? _T("Windows 10")    : _T("Windows Server 2016");    break;
             default:
                 if (5 <= infoex.dwMinorVersion) {
                     ptr = _T("Later than Windows 10");
