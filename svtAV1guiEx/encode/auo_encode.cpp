@@ -744,23 +744,27 @@ static void set_aud_delay_cut(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *
     }
 }
 
-int get_auto_npass(const CONF_GUIEX *conf) {
+bool use_auto_npass(const CONF_GUIEX *conf) {
+#if ENCODER_SVTAV1	
     if (!conf->oth.disable_guicmd) {
         CONF_ENCODER enc = get_default_prm();
         set_cmd(&enc, conf->enc.cmd, true);
-        return enc.pass == 2 ? 2 : 1;
+        return enc.pass > 1;
     }
-    return 1;
+    return false;
+#else
+    return conf->enc.use_auto_npass;
+#endif    
 }
 
 int get_total_path(const CONF_GUIEX *conf) {
-#if ENABLE_AMP
+#if ENCODER_SVTAV1
+    return use_auto_npass(conf) ? 2 : 1;
+#else
     return (conf->enc.use_auto_npass
          && conf->enc.rc_mode == X264_RC_BITRATE
          && !conf->oth.disable_guicmd)
          ? conf->enc.auto_npass : 1;
-#else
-    return get_auto_npass(conf);
 #endif
 }
 
@@ -1187,7 +1191,7 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
         }
     }
     //ステータスファイル
-    if (get_auto_npass(conf) > 1 && sys_dat->exstg->s_local.auto_del_stats) {
+    if (use_auto_npass(conf) && sys_dat->exstg->s_local.auto_del_stats) {
         char stats[MAX_PATH_LEN];
         strcpy_s(stats, sizeof(stats), conf->vid.stats);
         cmd_replace(stats, sizeof(stats), pe, sys_dat, conf, oip);
