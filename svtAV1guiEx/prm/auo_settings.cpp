@@ -258,7 +258,7 @@ int guiEx_settings::get_faw_index() {
 void guiEx_settings::load_encode_stg() {
     load_aud();
     load_mux();
-    load_x264();
+    load_enc();
     load_local(); //fullpathの情報がきちんと格納されるよう、最後に呼ぶ
 }
 
@@ -484,7 +484,7 @@ void guiEx_settings::load_enc_cmd(ENC_CMD *x264cmd, int *count, int *default_ind
     }
 }
 
-void guiEx_settings::load_x264() {
+void guiEx_settings::load_enc() {
     char key[INI_KEY_MAX_LEN];
 
     clear_enc();
