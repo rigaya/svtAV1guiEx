@@ -29,11 +29,9 @@
 #define _AUO_CONF_H_
 
 #include <Windows.h>
-// Needed for MSVC 2017
 #if (_MSC_VER >= 1910)
-    #include <intrin.h>
+#include <intrin.h>
 #endif
-
 #include "auo.h"
 #include "auo_options.h"
 
@@ -59,14 +57,29 @@ static inline int get_run_bat_idx(DWORD flag) {
     return (int)ret;
 }
 
+#if ENCODER_X264
+static const char *const CONF_NAME_OLD_1 = "x264guiEx ConfigFile";
+static const char *const CONF_NAME_OLD_2 = "x264guiEx ConfigFile v2";
+static const char *const CONF_NAME       = CONF_NAME_OLD_2;
+#elif ENCODER_X265
+static const char *const CONF_NAME_OLD1  = "x265guiEx ConfigFile";
+static const char *const CONF_NAME_OLD2  = "x264/x265guiEx ConfigFile";
+static const char *const CONF_NAME_OLD3  = "x265guiEx ConfigFile v2";
+static const char *const CONF_NAME_OLD4  = "x265guiEx ConfigFile v3";
+static const char *const CONF_NAME_OLD5  = "x265guiEx ConfigFile v4";
+static const char *const CONF_NAME       = CONF_NAME_OLD5;
+#elif ENCODER_SVTAV1
 static const char *const CONF_NAME_OLD_1 = "svtAV1guiEx ConfigFile v1";
 static const char *const CONF_NAME       = CONF_NAME_OLD_1;
+#else
+static_assert(false);
+#endif
 const int CONF_NAME_BLOCK_LEN            = 32;
 const int CONF_BLOCK_MAX                 = 32;
 const int CONF_BLOCK_COUNT               = 5; //最大 CONF_BLOCK_MAXまで
 const int CONF_HEAD_SIZE                 = (3 + CONF_BLOCK_MAX) * sizeof(int) + CONF_BLOCK_MAX * sizeof(size_t) + CONF_NAME_BLOCK_LEN;
 
-static const char *const CONF_LAST_OUT = "前回出力.stg";
+static const char *const CONF_LAST_OUT   = "前回出力.stg";
 
 enum {
     CONF_ERROR_NONE = 0,
