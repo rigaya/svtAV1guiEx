@@ -84,8 +84,8 @@ enum {
 };
 
 enum {
-    CHECK_KEYFRAME_NONE = 0x00,
-    CHECK_KEYFRAME_AVIUTL = 0x01, //Aviutlのキーフレームフラグをチェックする
+    CHECK_KEYFRAME_NONE    = 0x00,
+    CHECK_KEYFRAME_AVIUTL  = 0x01, //Aviutlのキーフレームフラグをチェックする
     CHECK_KEYFRAME_CHAPTER = 0x02, //チャプターの位置にキーフレームを設定する
 };
 
@@ -105,11 +105,11 @@ static const char *const AUDIO_DELAY_CUT_MODE[] = {
 };
 
 #pragma pack(push,1)
-typedef struct {
+typedef struct CON_ENCPRM {
     char cmd[3072];
 } CON_ENCPRM;
 
-typedef struct {
+typedef struct CONF_VIDEO {
     BOOL   afs;                      //自動フィールドシフトの使用
     BOOL   afs_bitrate_correction;   //afs & 2pass時、ドロップ数に応じてビットレートを補正
     BOOL   auo_tcfile_out;           //auo側でタイムコードを出力する
@@ -128,7 +128,7 @@ typedef struct {
     BOOL afs_24fps;
 } CONF_VIDEO; //動画用設定(x264以外)
 
-typedef struct {
+typedef struct CONF_AUDIO {
     int   encoder;             //使用する音声エンコーダ
     int   enc_mode;            //使用する音声エンコーダの設定
     int   bitrate;             //ビットレート指定モード
@@ -142,7 +142,7 @@ typedef struct {
     int   delay_cut;           //エンコード遅延の削除
 } CONF_AUDIO; //音声用設定
 
-typedef struct {
+typedef struct CONF_MUX {
     BOOL disable_mp4ext;  //mp4出力時、外部muxerを使用する
     BOOL disable_mkvext;  //mkv出力時、外部muxerを使用する
     int  mp4_mode;        //mp4 外部muxer用追加コマンドの設定
@@ -155,7 +155,7 @@ typedef struct {
     int  mpg_mode;        //mpg 外部muxer用追加コマンドの設定
 } CONF_MUX; //muxer用設定
 
-typedef struct {
+typedef struct CONF_OTHER {
     BOOL  disable_guicmd;         //GUIによるコマンドライン生成を停止(CLIモード)
     int   temp_dir;               //一時ディレクトリ
     BOOL  out_audio_only;         //音声のみ出力
@@ -173,7 +173,7 @@ typedef struct {
     };
 } CONF_OTHER;
 
-typedef struct {
+typedef struct CONF_GUIEX {
     char        conf_name[CONF_NAME_BLOCK_LEN];  //保存時に使用
     int         size_all;                        //保存時: CONF_GUIEXの全サイズ / 設定中、エンコ中: CONF_INITIALIZED
     int         head_size;                       //ヘッダ部分の全サイズ
@@ -200,7 +200,6 @@ public:
     static int  save_guiEx_conf(const CONF_GUIEX *conf, const char *stg_file); //設定をstgファイルとして保存
 };
 
-//定義はsvtAV1guiEx.cpp
 void init_CONF_GUIEX(CONF_GUIEX *conf); //初期化し、x264設定のデフォルトを設定
 
 //出力ファイルの拡張子フィルタを作成
