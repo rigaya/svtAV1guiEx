@@ -100,37 +100,7 @@ static int write_log_enc_mes_line(char *const mes, LOG_CACHE *cache_line) {
     return mes_len;
 }
 
-#if 0
-void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames) {
-    double progress = 0, fps = 0, bitrate = 0;
-    int i_frame = 0, total_frame = 0;
-    int remain_time[3] = { 0 }, elapsed_time[3] = { 0 };
-    char buffer[1024] = { 0 };
-    int length = 0;
-    const char *ptr = buffer;
-    if ('[' == mes[0]
-        && 11 >= sscanf_s(mes, "[%lf%%] %d/%d %lf %lf %d:%d:%d %d:%d:%d %n",
-            &progress, &i_frame, &total_frame, &fps, &bitrate,
-            &remain_time[0], &remain_time[1], &remain_time[2],
-            &elapsed_time[0], &elapsed_time[1], &elapsed_time[2],
-            &length)) {
-        const char *qtr = mes + length;
-        while (' ' == *qtr) qtr++;
-        while (' ' != *qtr && '\0' != *qtr) qtr++;
-        while (' ' == *qtr) qtr++;
-        while (' ' != *qtr && '\0' != *qtr) qtr++;
-        while (' ' == *qtr) qtr++;
-        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s, eta %d:%02d:%02d, %s %s",
-            progress, i_frame, total_frame, fps, bitrate, elapsed_time[0], elapsed_time[1], elapsed_time[2], ('\0' != *qtr) ? "est.size" : "", qtr);
-    } else if (3 == sscanf_s(mes, "%d %lf %lf", &i_frame, &fps, &bitrate)) {
-        sprintf_s(buffer, _countof(buffer), "%d frames, %.2lf fps, %.2lf kb/s", i_frame, fps, bitrate);
-    } else {
-        ptr = mes;
-    }
-    set_window_title_enc_mes(ptr, total_drop, current_frames);
-}
-#else
-
+#if ENCODER_SVTAV1
 void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames, int total_frames) {
     static std::chrono::system_clock::time_point last_update = std::chrono::system_clock::now();
     auto current = std::chrono::system_clock::now();
@@ -158,6 +128,35 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
     }
     set_window_title_enc_mes(ptr, total_drop, current_frames);
 }
+#else
+void set_reconstructed_title_mes(const char *mes, int total_drop, int current_frames, int total_frames) {
+    double progress = 0, fps = 0, bitrate = 0;
+    int i_frame = 0, total_frame = 0;
+    int remain_time[3] = { 0 }, elapsed_time[3] = { 0 };
+    char buffer[1024] = { 0 };
+    int length = 0;
+    const char *ptr = buffer;
+    if ('[' == mes[0]
+        && 11 >= sscanf_s(mes, "[%lf%%] %d/%d %lf %lf %d:%d:%d %d:%d:%d %n",
+            &progress, &i_frame, &total_frame, &fps, &bitrate,
+            &remain_time[0], &remain_time[1], &remain_time[2],
+            &elapsed_time[0], &elapsed_time[1], &elapsed_time[2],
+            &length)) {
+        const char *qtr = mes + length;
+        while (' ' == *qtr) qtr++;
+        while (' ' != *qtr && '\0' != *qtr) qtr++;
+        while (' ' == *qtr) qtr++;
+        while (' ' != *qtr && '\0' != *qtr) qtr++;
+        while (' ' == *qtr) qtr++;
+        sprintf_s(buffer, _countof(buffer), "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s, eta %d:%02d:%02d, %s %s",
+            progress, i_frame, total_frame, fps, bitrate, elapsed_time[0], elapsed_time[1], elapsed_time[2], ('\0' != *qtr) ? "est.size" : "", qtr);
+    } else if (3 == sscanf_s(mes, "%d %lf %lf", &i_frame, &fps, &bitrate)) {
+        sprintf_s(buffer, _countof(buffer), "%d frames, %.2lf fps, %.2lf kb/s", i_frame, fps, bitrate);
+    } else {
+        ptr = mes;
+    }
+    set_window_title_enc_mes(ptr, total_drop, current_frames);
+}
 #endif
 
 void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int current_frames, int total_frames) {
@@ -175,18 +174,24 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         b = a - 1;
         while (*b == ' ' || *b == '\r')
             b--;
-        *(b + 1) = '\0';
+        *(b+1) = '\0';
         if ((b = strrchr(mes, '\r', b - mes - 2)) != NULL)
             mes = b + 1;
+#if ENCODER_SVTAV1
         if (strstr(mes, "Encoding frame")) {
+#else
+        if (NULL == strstr(mes, "frames")) {
+#endif
             set_reconstructed_title_mes(mes, total_drop, current_frames, total_frames);
         } else {
             set_window_title_enc_mes(mes, total_drop, current_frames);
         }
         mes = a + 1;
     }
-    //if (mes == msg && *log_len)
-    //    mes += write_log_enc_mes_line(mes, NULL);
+    if (!ENCODER_SVTAV1) {
+        if (mes == msg && *log_len)
+            mes += write_log_enc_mes_line(mes, NULL);
+    }
     memmove(msg, mes, ((*log_len = fin - mes) + 1) * sizeof(msg[0]));
 }
 void write_args(const char *args) {
