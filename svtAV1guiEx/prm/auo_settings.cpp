@@ -52,14 +52,33 @@ static const char * const STG_DEFAULT_DIRECTORY_APPENDIX = "_stg";
 
 //----    セクション名    ---------------------------------------------------
 
+#if ENCODER_X264
+static const char * const INI_SECTION_MAIN         = "X264GUIEX";
+static const char * const INI_SECTION_ENC          = "X264";
+static const char * const INI_SECTION_ENC_DEFAULT  = "X264_DEFAULT";
+static const char * const INI_SECTION_ENC_PRESET   = "X264_PRESET";
+static const char * const INI_SECTION_ENC_TUNE     = "X264_TUNE";
+static const char * const INI_SECTION_ENC_PROFILE  = "X264_PROFILE";
+#elif ENCODER_X265
+static const char * const INI_SECTION_MAIN         = "X265GUIEX"; //CONF_VER
+static const char * const INI_SECTION_MAIN_OLD     = "X26XGUIEX"; //CONF_VER_OLD
+static const char * const INI_SECTION_ENC          = "X265";
+static const char * const INI_SECTION_ENC_DEFAULT  = "X265_DEFAULT";
+static const char * const INI_SECTION_ENC_PRESET   = "X265_PRESET";
+static const char * const INI_SECTION_ENC_TUNE     = "X265_TUNE";
+static const char * const INI_SECTION_ENC_PROFILE  = "X265_PROFILE";
+#elif ENCODER_SVTAV1
 static const char * const INI_SECTION_MAIN         = "SVTAV1GUIEX";
-static const char * const INI_SECTION_APPENDIX     = "APPENDIX";
-static const char * const INI_SECTION_AUD          = "AUDIO";
 static const char * const INI_SECTION_ENC          = "ENC";
 static const char * const INI_SECTION_ENC_DEFAULT  = "ENC_DEFAULT";
 static const char * const INI_SECTION_ENC_PRESET   = "ENC_PRESET";
 static const char * const INI_SECTION_ENC_TUNE     = "ENC_TUNE";
 static const char * const INI_SECTION_ENC_PROFILE  = "ENC_PROFILE";
+#else
+static_assert(false);
+#endif
+static const char * const INI_SECTION_APPENDIX     = "APPENDIX";
+static const char * const INI_SECTION_AUD          = "AUDIO";
 static const char * const INI_SECTION_MUX          = "MUXER";
 static const char * const INI_SECTION_FN           = "FILENAME_REPLACE";
 static const char * const INI_SECTION_PREFIX       = "SETTING_";
