@@ -4635,7 +4635,7 @@ private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
     private:
         System::Void fcgBTCmdEx_Click(System::Object^  sender, System::EventArgs^  e) {
             CONF_GUIEX cnf;
-            init_CONF_GUIEX(&cnf);
+            init_CONF_GUIEX(&cnf, fcgCBUsehighbit->Checked);
             FrmToConf(&cnf);
             char cmdex[2048] = { 0 };
             GetCHARfromString(cmdex, sizeof(cmdex), fcgTXCmdEx->Text);
@@ -4661,7 +4661,7 @@ private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
         System::Void fcgBTOK_Click(System::Object^  sender, System::EventArgs^  e) {
             if (CheckLocalStg())
                 return;
-            init_CONF_GUIEX(conf);
+            init_CONF_GUIEX(conf, fcgCBUsehighbit->Checked);
             FrmToConf(conf);
             SaveLocalStg();
             ZeroMemory(conf->oth.notes, sizeof(conf->oth.notes));
@@ -4674,7 +4674,7 @@ private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
     private:
         System::Void fcgBTDefault_Click(System::Object^  sender, System::EventArgs^  e) {
             CONF_GUIEX confDefault;
-            init_CONF_GUIEX(&confDefault);
+            init_CONF_GUIEX(&confDefault, FALSE);
             ConfToFrm(&confDefault, true);
         }
     private:
@@ -4687,7 +4687,7 @@ private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
     private:
         System::Void fcgRebuildCmd(System::Object^  sender, System::EventArgs^  e) {
             CONF_GUIEX rebuild;
-            init_CONF_GUIEX(&rebuild);
+            init_CONF_GUIEX(&rebuild, fcgCBUsehighbit->Checked);
             fcgTXCmd->Text = FrmToConf(&rebuild);
             if (CheckedStgMenuItem != nullptr)
                 ChangePresetNameDisplay(memcmp(&rebuild, cnf_stgSelected, sizeof(CONF_GUIEX)) != 0);
@@ -4697,7 +4697,7 @@ private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
             if (CheckedStgMenuItem == nullptr)
                 return;
             CONF_GUIEX check_change;
-            init_CONF_GUIEX(&check_change);
+            init_CONF_GUIEX(&check_change, fcgCBUsehighbit->Checked);
             FrmToConf(&check_change);
             ChangePresetNameDisplay(memcmp(&check_change, cnf_stgSelected, sizeof(CONF_GUIEX)) != 0);
         }

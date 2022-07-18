@@ -171,7 +171,7 @@ BOOL func_output( OUTPUT_INFO *oip )
         if (!PathFileExists(default_stg_file)
             || guiEx_config::load_guiEx_conf(&g_conf, default_stg_file) != CONF_ERROR_NONE) {
             //前回出力した設定ファイルがない場合は、デフォルト設定をロード
-            init_CONF_GUIEX(&g_conf);
+            init_CONF_GUIEX(&g_conf, FALSE);
             memset(default_stg_file, 0, sizeof(default_stg_file));
         }
     }
@@ -264,7 +264,7 @@ int func_config_set( void *data,int size )
     init_SYSTEM_DATA(&g_sys_dat);
     if (!g_sys_dat.exstg->get_init_success(TRUE))
         return NULL;
-    init_CONF_GUIEX(&g_conf);
+    init_CONF_GUIEX(&g_conf, FALSE);
     return (guiEx_config::adjust_conf_size(&g_conf, data, size)) ? size : NULL;
 }
 
@@ -289,7 +289,8 @@ void delete_SYSTEM_DATA(SYSTEM_DATA *sys_dat) {
     }
     sys_dat->init = FALSE;
 }
-void init_CONF_GUIEX(CONF_GUIEX *conf) {
+void init_CONF_GUIEX(CONF_GUIEX *conf, BOOL use_high_bit) {
+    UNREFERENCED_PARAMETER(use_high_bit);
     ZeroMemory(conf, sizeof(CONF_GUIEX));
     guiEx_config::write_conf_header(conf);
     conf->aud.encoder = g_sys_dat.exstg->s_local.default_audio_encoder;

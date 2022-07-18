@@ -759,7 +759,7 @@ System::Void frmConfig::SaveToStgFile(String^ stgName) {
     size_t nameLen = CountStringBytes(stgName) + 1;
     char *stg_name = (char *)malloc(nameLen);
     GetCHARfromString(stg_name, nameLen, stgName);
-    init_CONF_GUIEX(cnf_stgSelected);
+    init_CONF_GUIEX(cnf_stgSelected, fcgCBUsehighbit->Checked);
     FrmToConf(cnf_stgSelected);
     String^ stgDir = Path::GetDirectoryName(stgName);
     if (!Directory::Exists(stgDir))
@@ -777,7 +777,7 @@ System::Void frmConfig::SaveToStgFile(String^ stgName) {
         default:
             break;
     }
-    init_CONF_GUIEX(cnf_stgSelected);
+    init_CONF_GUIEX(cnf_stgSelected, fcgCBUsehighbit->Checked);
     FrmToConf(cnf_stgSelected);
 }
 
@@ -870,7 +870,7 @@ System::Void frmConfig::RebuildStgFileDropDown(String^ stgDir) {
 System::Void frmConfig::InitData(CONF_GUIEX *set_config, const SYSTEM_DATA *system_data) {
     if (set_config->size_all != CONF_INITIALIZED) {
         //初期化されていなければ初期化する
-        init_CONF_GUIEX(set_config);
+        init_CONF_GUIEX(set_config, FALSE);
     }
     conf = set_config;
     sys_dat = system_data;

@@ -68,7 +68,7 @@ void guiEx_config::write_conf_header(CONF_GUIEX *save_conf) {
 //拡張できない場合 FALSEを返す
 BOOL guiEx_config::adjust_conf_size(CONF_GUIEX *conf_buf, void *old_data, int old_size) {
     BOOL ret = FALSE;
-    init_CONF_GUIEX(conf_buf);
+    init_CONF_GUIEX(conf_buf, FALSE);
     if (((CONF_GUIEX *)old_data)->size_all != CONF_INITIALIZED)
         return ret;
     {
@@ -114,7 +114,7 @@ int guiEx_config::load_guiEx_conf(CONF_GUIEX *conf, const char *stg_file) {
     }
     fread(&conf_size, sizeof(int), 1, fp);
     BYTE *dat = (BYTE*)calloc(conf_size, 1);
-    init_CONF_GUIEX(conf);
+    init_CONF_GUIEX(conf, FALSE);
     fseek(fp, 0, SEEK_SET);
     fread(dat, conf_size, 1, fp);
     fclose(fp);
