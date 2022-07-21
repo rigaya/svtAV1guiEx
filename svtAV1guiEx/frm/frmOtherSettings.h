@@ -29,6 +29,7 @@
 
 #include "auo_version.h"
 #include "auo_settings.h"
+#include "auo_mes.h"
 
 using namespace System;
 using namespace System::ComponentModel;
@@ -81,7 +82,7 @@ namespace AUO_NAME_R {
         static String^ stgDir;
         static int useLastExt;
 
-    protected: 
+    protected:
     private: System::Windows::Forms::Button^  fosCBCancel;
     private: System::Windows::Forms::Button^  fosCBOK;
 
@@ -153,12 +154,9 @@ namespace AUO_NAME_R {
     private: System::Windows::Forms::CheckBox^  fosCBAutoRefLimitByLevel;
     private: System::Windows::Forms::ComboBox^  fosCXDefaultAudioEncoder;
     private: System::Windows::Forms::Label^  fosLBDefaultAudioEncoder;
-private: System::Windows::Forms::CheckBox^  fosCBWineCompat;
-private: System::Windows::Forms::CheckBox^  fosCBOutputMoreLog;
-
-
-
-private: System::Windows::Forms::Panel^  fosPNHideTabPage;
+    private: System::Windows::Forms::CheckBox^  fosCBWineCompat;
+    private: System::Windows::Forms::CheckBox^  fosCBOutputMoreLog;
+    private: System::Windows::Forms::Panel^  fosPNHideTabPage;
 
 
 
@@ -169,7 +167,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
 
 
 
-    public: 
+    public:
 
     public:
         static property frmOtherSettings^ Instance {
@@ -344,7 +342,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // 
             this->fosCXDefaultAudioEncoder->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fosCXDefaultAudioEncoder->FormattingEnabled = true;
-            this->fosCXDefaultAudioEncoder->Location = System::Drawing::Point(52, 104);
+            this->fosCXDefaultAudioEncoder->Location = System::Drawing::Point(41, 104);
             this->fosCXDefaultAudioEncoder->Name = L"fosCXDefaultAudioEncoder";
             this->fosCXDefaultAudioEncoder->Size = System::Drawing::Size(190, 23);
             this->fosCXDefaultAudioEncoder->TabIndex = 25;
@@ -352,7 +350,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosLBDefaultAudioEncoder
             // 
             this->fosLBDefaultAudioEncoder->AutoSize = true;
-            this->fosLBDefaultAudioEncoder->Location = System::Drawing::Point(25, 81);
+            this->fosLBDefaultAudioEncoder->Location = System::Drawing::Point(14, 81);
             this->fosLBDefaultAudioEncoder->Name = L"fosLBDefaultAudioEncoder";
             this->fosLBDefaultAudioEncoder->Size = System::Drawing::Size(130, 15);
             this->fosLBDefaultAudioEncoder->TabIndex = 24;
@@ -365,7 +363,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosCBAutoRefLimitByLevel->Name = L"fosCBAutoRefLimitByLevel";
             this->fosCBAutoRefLimitByLevel->Size = System::Drawing::Size(283, 19);
             this->fosCBAutoRefLimitByLevel->TabIndex = 23;
-            this->fosCBAutoRefLimitByLevel->Text = L"参照距離をH.264のレベルに応じて自動的に制限する";
+            this->fosCBAutoRefLimitByLevel->Text = L"参照距離をレベルに応じて自動的に制限する";
             this->fosCBAutoRefLimitByLevel->UseVisualStyleBackColor = true;
             // 
             // fosCBChapConvertToUTF8
@@ -445,7 +443,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fostabPageGUI->Controls->Add(this->fosTXStgDir);
             this->fostabPageGUI->Location = System::Drawing::Point(4, 24);
             this->fostabPageGUI->Name = L"fostabPageGUI";
-            this->fostabPageGUI->Size = System::Drawing::Size(380, 372);
+            this->fostabPageGUI->Size = System::Drawing::Size(380, 369);
             this->fostabPageGUI->TabIndex = 2;
             this->fostabPageGUI->Text = L"ログ・設定画面";
             this->fostabPageGUI->UseVisualStyleBackColor = true;
@@ -453,7 +451,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBOutputMoreLog
             // 
             this->fosCBOutputMoreLog->AutoSize = true;
-            this->fosCBOutputMoreLog->Location = System::Drawing::Point(20, 294);
+            this->fosCBOutputMoreLog->Location = System::Drawing::Point(20, 289);
             this->fosCBOutputMoreLog->Name = L"fosCBOutputMoreLog";
             this->fosCBOutputMoreLog->Size = System::Drawing::Size(143, 19);
             this->fosCBOutputMoreLog->TabIndex = 26;
@@ -463,7 +461,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBWineCompat
             // 
             this->fosCBWineCompat->AutoSize = true;
-            this->fosCBWineCompat->Location = System::Drawing::Point(20, 266);
+            this->fosCBWineCompat->Location = System::Drawing::Point(20, 261);
             this->fosCBWineCompat->Name = L"fosCBWineCompat";
             this->fosCBWineCompat->Size = System::Drawing::Size(104, 19);
             this->fosCBWineCompat->TabIndex = 25;
@@ -473,7 +471,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBGetRelativePath
             // 
             this->fosCBGetRelativePath->AutoSize = true;
-            this->fosCBGetRelativePath->Location = System::Drawing::Point(20, 237);
+            this->fosCBGetRelativePath->Location = System::Drawing::Point(20, 232);
             this->fosCBGetRelativePath->Name = L"fosCBGetRelativePath";
             this->fosCBGetRelativePath->Size = System::Drawing::Size(185, 19);
             this->fosCBGetRelativePath->TabIndex = 24;
@@ -482,7 +480,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // 
             // fosBTSetFont
             // 
-            this->fosBTSetFont->Location = System::Drawing::Point(241, 202);
+            this->fosBTSetFont->Location = System::Drawing::Point(241, 197);
             this->fosBTSetFont->Name = L"fosBTSetFont";
             this->fosBTSetFont->Size = System::Drawing::Size(124, 27);
             this->fosBTSetFont->TabIndex = 23;
@@ -493,7 +491,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBStgEscKey
             // 
             this->fosCBStgEscKey->AutoSize = true;
-            this->fosCBStgEscKey->Location = System::Drawing::Point(20, 207);
+            this->fosCBStgEscKey->Location = System::Drawing::Point(20, 202);
             this->fosCBStgEscKey->Name = L"fosCBStgEscKey";
             this->fosCBStgEscKey->Size = System::Drawing::Size(168, 19);
             this->fosCBStgEscKey->TabIndex = 22;
@@ -503,7 +501,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBDisableToolTip
             // 
             this->fosCBDisableToolTip->AutoSize = true;
-            this->fosCBDisableToolTip->Location = System::Drawing::Point(20, 71);
+            this->fosCBDisableToolTip->Location = System::Drawing::Point(20, 66);
             this->fosCBDisableToolTip->Name = L"fosCBDisableToolTip";
             this->fosCBDisableToolTip->Size = System::Drawing::Size(158, 19);
             this->fosCBDisableToolTip->TabIndex = 17;
@@ -513,7 +511,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBDisableVisualStyles
             // 
             this->fosCBDisableVisualStyles->AutoSize = true;
-            this->fosCBDisableVisualStyles->Location = System::Drawing::Point(20, 101);
+            this->fosCBDisableVisualStyles->Location = System::Drawing::Point(20, 96);
             this->fosCBDisableVisualStyles->Name = L"fosCBDisableVisualStyles";
             this->fosCBDisableVisualStyles->Size = System::Drawing::Size(128, 19);
             this->fosCBDisableVisualStyles->TabIndex = 18;
@@ -523,7 +521,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBLogDisableTransparency
             // 
             this->fosCBLogDisableTransparency->AutoSize = true;
-            this->fosCBLogDisableTransparency->Location = System::Drawing::Point(20, 177);
+            this->fosCBLogDisableTransparency->Location = System::Drawing::Point(20, 172);
             this->fosCBLogDisableTransparency->Name = L"fosCBLogDisableTransparency";
             this->fosCBLogDisableTransparency->Size = System::Drawing::Size(174, 19);
             this->fosCBLogDisableTransparency->TabIndex = 21;
@@ -536,7 +534,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fosLBDisableVisualStyles->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fosLBDisableVisualStyles->ForeColor = System::Drawing::Color::OrangeRed;
-            this->fosLBDisableVisualStyles->Location = System::Drawing::Point(41, 120);
+            this->fosLBDisableVisualStyles->Location = System::Drawing::Point(41, 115);
             this->fosLBDisableVisualStyles->Name = L"fosLBDisableVisualStyles";
             this->fosLBDisableVisualStyles->Size = System::Drawing::Size(161, 14);
             this->fosLBDisableVisualStyles->TabIndex = 19;
@@ -545,7 +543,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosCBLogStartMinimized
             // 
             this->fosCBLogStartMinimized->AutoSize = true;
-            this->fosCBLogStartMinimized->Location = System::Drawing::Point(20, 147);
+            this->fosCBLogStartMinimized->Location = System::Drawing::Point(20, 142);
             this->fosCBLogStartMinimized->Name = L"fosCBLogStartMinimized";
             this->fosCBLogStartMinimized->Size = System::Drawing::Size(184, 19);
             this->fosCBLogStartMinimized->TabIndex = 20;
@@ -555,7 +553,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // fosLBStgDir
             // 
             this->fosLBStgDir->AutoSize = true;
-            this->fosLBStgDir->Location = System::Drawing::Point(7, 12);
+            this->fosLBStgDir->Location = System::Drawing::Point(7, 7);
             this->fosLBStgDir->Name = L"fosLBStgDir";
             this->fosLBStgDir->Size = System::Drawing::Size(123, 15);
             this->fosLBStgDir->TabIndex = 7;
@@ -563,7 +561,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // 
             // fosBTStgDir
             // 
-            this->fosBTStgDir->Location = System::Drawing::Point(334, 32);
+            this->fosBTStgDir->Location = System::Drawing::Point(334, 27);
             this->fosBTStgDir->Name = L"fosBTStgDir";
             this->fosBTStgDir->Size = System::Drawing::Size(35, 23);
             this->fosBTStgDir->TabIndex = 8;
@@ -573,7 +571,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             // 
             // fosTXStgDir
             // 
-            this->fosTXStgDir->Location = System::Drawing::Point(34, 32);
+            this->fosTXStgDir->Location = System::Drawing::Point(34, 27);
             this->fosTXStgDir->Name = L"fosTXStgDir";
             this->fosTXStgDir->Size = System::Drawing::Size(294, 23);
             this->fosTXStgDir->TabIndex = 6;
@@ -586,7 +584,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->fostabPageAMP->Location = System::Drawing::Point(4, 24);
             this->fostabPageAMP->Name = L"fostabPageAMP";
             this->fostabPageAMP->Padding = System::Windows::Forms::Padding(3);
-            this->fostabPageAMP->Size = System::Drawing::Size(380, 372);
+            this->fostabPageAMP->Size = System::Drawing::Size(380, 369);
             this->fostabPageAMP->TabIndex = 1;
             this->fostabPageAMP->Text = L"自動マルチパス";
             this->fostabPageAMP->UseVisualStyleBackColor = true;
@@ -843,7 +841,54 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
     private:
         AuoTheme themeMode;
         const DarkenWindowStgReader *dwStgReader;
-    private: 
+    private:
+        System::Void LoadLangText() {
+            LOAD_CLI_TEXT(fosCBCancel);
+            LOAD_CLI_TEXT(fosCBOK);
+            LOAD_CLI_TEXT(fosCBAutoAFSDisable);
+            LOAD_CLI_TEXT(fosCBAutoDelChap);
+            LOAD_CLI_TEXT(fostabPageGeneral);
+            LOAD_CLI_TEXT(fosLBDefaultAudioEncoder);
+            LOAD_CLI_TEXT(fosCBAutoRefLimitByLevel);
+            LOAD_CLI_TEXT(fosCBChapConvertToUTF8);
+            LOAD_CLI_TEXT(fosCBKeepQPFile);
+            LOAD_CLI_TEXT(fosCBRunBatMinimized);
+            LOAD_CLI_TEXT(fosLBDefaultOutExt2);
+            LOAD_CLI_TEXT(fosLBDefaultOutExt);
+            LOAD_CLI_TEXT(fostabPageGUI);
+            LOAD_CLI_TEXT(fosCBOutputMoreLog);
+            LOAD_CLI_TEXT(fosCBWineCompat);
+            LOAD_CLI_TEXT(fosCBGetRelativePath);
+            LOAD_CLI_TEXT(fosBTSetFont);
+            LOAD_CLI_TEXT(fosCBStgEscKey);
+            LOAD_CLI_TEXT(fosCBDisableToolTip);
+            LOAD_CLI_TEXT(fosCBDisableVisualStyles);
+            LOAD_CLI_TEXT(fosCBLogDisableTransparency);
+            LOAD_CLI_TEXT(fosLBDisableVisualStyles);
+            LOAD_CLI_TEXT(fosCBLogStartMinimized);
+            LOAD_CLI_TEXT(fosLBStgDir);
+            LOAD_CLI_TEXT(fosBTStgDir);
+            LOAD_CLI_TEXT(fostabPageAMP);
+            LOAD_CLI_TEXT(fosCBAutoDelStats);
+            LOAD_CLI_TEXT(fosGroupBoxAMPLimit);
+            LOAD_CLI_TEXT(fosLBAMPLimitMarginWarning);
+            LOAD_CLI_TEXT(fosBTAMPMarginMulti);
+            LOAD_CLI_TEXT(fosGroupBoxAMPLimitMarginExample);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB32);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB22);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB31);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB21);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB12);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleB11);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleA12);
+            LOAD_CLI_TEXT(fosLBAMPLMMExampleA11);
+            LOAD_CLI_TEXT(fosLBAMPLimitMarginInfo);
+            LOAD_CLI_TEXT(fosLBAMPLimitMarginMax);
+            LOAD_CLI_TEXT(fosLBAMPLimitMarginMin);
+            LOAD_CLI_TEXT(fosCBAmpKeepOldFile);
+            LOAD_CLI_MAIN_TEXT(fosMain);
+        }
+    private:
         System::Void fosCBOK_Click(System::Object^  sender, System::EventArgs^  e) {
             //DisableToolTipHelp = fosCBDisableToolTip->Checked;
             make_file_filter(NULL, 0, fosCXDefaultOutExt->SelectedIndex);
@@ -876,26 +921,31 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             this->Close();
 
         }
-    private: 
+    private:
         System::Void fosSetComboBox() {
             fosCXDefaultOutExt->SuspendLayout();
             fosCXDefaultOutExt->Items->Clear();
             for (int i = 0; i < _countof(OUTPUT_FILE_EXT); i++)
                 fosCXDefaultOutExt->Items->Add(String(OUTPUT_FILE_EXT_DESC[i]).ToString() + L" (" + String(OUTPUT_FILE_EXT[i]).ToString() + L")");
             fosCXDefaultOutExt->ResumeLayout();
-            
+
             fosCXDefaultAudioEncoder->SuspendLayout();
             fosCXDefaultAudioEncoder->Items->Clear();
             for (int i = 0; i < fos_ex_stg->s_aud_count; i++)
                 fosCXDefaultAudioEncoder->Items->Add(String(fos_ex_stg->s_aud[i].dispname).ToString());
             fosCXDefaultAudioEncoder->ResumeLayout();
         }
-    private: 
+    private:
         System::Void frmOtherSettings_Load(System::Object^  sender, System::EventArgs^  e) {
             this->Text = String(AUO_FULL_NAME).ToString();
             fosTXStgDir->Text = stgDir;
             fos_ex_stg->load_encode_stg();
             fos_ex_stg->load_log_win();
+#if ENCODER_X265
+            this->fosCBAutoRefLimitByLevel->Visible = false;
+#endif
+
+            LoadLangText();
             fosSetComboBox();
             fosCBAutoAFSDisable->Checked            = fos_ex_stg->s_local.auto_afs_disable != 0;
             fosNUAMPLimitMargin->Value              = clamp(Convert::ToDecimal(fos_ex_stg->s_local.amp_bitrate_margin_multi * 100.0), fosNUAMPLimitMargin->Minimum, fosNUAMPLimitMargin->Maximum);
@@ -920,7 +970,7 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
                 SetFontFamilyToForm(this, gcnew FontFamily(String(fos_ex_stg->s_local.conf_font.name).ToString()), this->Font->FontFamily);
             fosNUAMPLimitMargin_ValueChanged(nullptr, nullptr);
         }
-    private: 
+    private:
         System::Void fosBTStgDir_Click(System::Object^  sender, System::EventArgs^  e) {
             FolderBrowserDialog^ fbd = gcnew FolderBrowserDialog();
             if (System::IO::Directory::Exists(fosTXStgDir->Text)) {
@@ -932,11 +982,11 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
                 fosTXStgDir->Text = fbd->SelectedPath;
             }
         }
-    private: 
+    private:
         System::Void fosCBCancel_Click(System::Object^  sender, System::EventArgs^  e) {
             this->Close();
         }
-    private: 
+    private:
         System::Void frmOtherSettings_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
             if (e->KeyCode == Keys::Escape)
                 this->Close();
@@ -974,20 +1024,20 @@ private: System::Windows::Forms::Panel^  fosPNHideTabPage;
             fosTBAMPLimitMarginMulti->Value = Convert::ToInt32(fosNUAMPLimitMargin->Value);
             fosAMPLimitMarginRecalcExample();
             if (fosNUAMPLimitMargin->Value > 9) {
-                fosLBAMPLimitMarginInfo->ForeColor = Color::Green; 
-                fosLBAMPLimitMarginInfo->Text = L"余裕";
+                fosLBAMPLimitMarginInfo->ForeColor = Color::Green;
+                fosLBAMPLimitMarginInfo->Text = LOAD_CLI_STRING(AUO_OTHER_SETTINGS_AMP_MARGIN_L);
                 fosLBAMPLimitMarginWarning->Visible = false;
             } else if (fosNUAMPLimitMargin->Value > 4) {
-                fosLBAMPLimitMarginInfo->ForeColor = Color::Green; 
-                fosLBAMPLimitMarginInfo->Text = L"普通";
+                fosLBAMPLimitMarginInfo->ForeColor = Color::Green;
+                fosLBAMPLimitMarginInfo->Text = LOAD_CLI_STRING(AUO_OTHER_SETTINGS_AMP_MARGIN_M);
                 fosLBAMPLimitMarginWarning->Visible = false;
             } else if (fosNUAMPLimitMargin->Value > 2) {
-                fosLBAMPLimitMarginInfo->ForeColor = Color::OrangeRed; 
-                fosLBAMPLimitMarginInfo->Text = L"ややぎりぎり";
+                fosLBAMPLimitMarginInfo->ForeColor = Color::OrangeRed;
+                fosLBAMPLimitMarginInfo->Text = LOAD_CLI_STRING(AUO_OTHER_SETTINGS_AMP_MARGIN_S);
                 fosLBAMPLimitMarginWarning->Visible = true;
             } else {
-                fosLBAMPLimitMarginInfo->ForeColor = Color::Red; 
-                fosLBAMPLimitMarginInfo->Text = L"ぎりぎり";
+                fosLBAMPLimitMarginInfo->ForeColor = Color::Red;
+                fosLBAMPLimitMarginInfo->Text = LOAD_CLI_STRING(AUO_OTHER_SETTINGS_AMP_MARGIN_XS);
                 fosLBAMPLimitMarginWarning->Visible = true;
             }
         }

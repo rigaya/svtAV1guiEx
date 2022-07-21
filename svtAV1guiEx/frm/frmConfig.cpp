@@ -61,13 +61,13 @@ System::Boolean frmSaveNewStg::checkStgFileName(String^ stgName) {
         return false;
 
     if (!ValidiateFileName(stgName)) {
-        MessageBox::Show(L"ファイル名に使用できない文字が含まれています。\n保存できません。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_INVALID_CHAR), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
         return false;
     }
     if (String::Compare(Path::GetExtension(stgName), L".stg", true))
         stgName += L".stg";
     if (File::Exists(fileName = Path::Combine(fsnCXFolderBrowser->GetSelectedFolder(), stgName)))
-        if (MessageBox::Show(stgName + L" はすでに存在します。上書きしますか?", L"上書き確認", MessageBoxButtons::YesNo, MessageBoxIcon::Question)
+        if (MessageBox::Show(stgName + LOAD_CLI_STRING(AUO_CONFIG_ALREADY_EXISTS), LOAD_CLI_STRING(AUO_CONFIG_OVERWRITE_CHECK), MessageBoxButtons::YesNo, MessageBoxIcon::Question)
             != System::Windows::Forms::DialogResult::Yes)
             return false;
     StgFileName = fileName;
@@ -213,81 +213,6 @@ System::Void frmConfig::SetAudioBitrate(int bitrate) {
 System::Void frmConfig::InformfbcClosed() {
     fcgTSBBitrateCalc->Checked = false;
 }
-#
-
-/// -------------------------------------------------
-///     frmUpdate 関数
-/// -------------------------------------------------
-System::Void frmConfig::fcgTSBUpdate_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-#if ENABLE_AUOSETUP
-    if (fcgTSBUpdate->Checked)
-        frmExeUpdate->Show();
-    else
-        frmExeUpdate->Visible = false; //Close()してしまうとfrmExeUpdateがDisposeされてしまう
-#endif
-}
-
-System::Void frmConfig::fcgTSBUpdate_CheckFinished(String^ mes) {
-#if ENABLE_AUOSETUP
-    //更新をチェックした時間を保存する
-    if (this->InvokeRequired) {
-        this->Invoke(gcnew svtAV1guiEx::DelegateProcessFin(this, &frmConfig::fcgTSBUpdate_CheckFinished), mes);
-        return;
-    }
-
-    guiEx_settings stg;
-    stg.load_encode_stg();
-    GetCHARfromString(stg.s_local.last_update_check, _countof(stg.s_local.last_update_check), DateTime::Now.ToString());
-    stg.save_local();
-
-    if (auoSetupControl::checkIfUpdateAvailable(mes)) {
-        fcgTSBUpdate->Text = L"更新*";
-        fcgTSBUpdate->ForeColor = Color::MediumSlateBlue;
-    }
-#endif
-}
-
-System::Void frmConfig::fcgTSBUpdate_UpdateFinished(String^ mes) {
-#if ENABLE_AUOSETUP
-    if (this->InvokeRequired) {
-        this->Invoke(gcnew svtAV1guiEx::DelegateProcessFin(this, &frmConfig::fcgTSBUpdate_UpdateFinished), mes);
-        return;
-    }
-
-    fcgTSBUpdate->Text = L"更新";
-    fcgTSBUpdate->ForeColor = SystemColors::ControlText;
-
-    //更新にしたがって表示を更新する
-    guiEx_settings stg;
-    stg.load_encode_stg();
-    LocalStg.x264Path        = String(stg.s_enc.fullpath).ToString();
-    LocalStg.MP4MuxerPath    = String(stg.s_mux[MUXER_MP4].fullpath).ToString();
-    LocalStg.TC2MP4Path      = String(stg.s_mux[MUXER_TC2MP4].fullpath).ToString();
-    LocalStg.MP4RawPath      = String(stg.s_mux[MUXER_MP4_RAW].fullpath).ToString();
-    LocalStg.audEncPath[DEFAULT_AUDIO_ENCODER] = String(stg.s_aud[DEFAULT_AUDIO_ENCODER].fullpath).ToString();
-    LocalStg.audEncPath[DEFAULT_AUDIO_ENCODER+1] = String(stg.s_aud[DEFAULT_AUDIO_ENCODER+1].fullpath).ToString();
-
-    SetLocalStg();
-    if (fcgCXAudioEncoder->SelectedIndex == DEFAULT_AUDIO_ENCODER
-        || fcgCXAudioEncoder->SelectedIndex == (DEFAULT_AUDIO_ENCODER+1)) {
-        fcgTXAudioEncoderPath->Text = LocalStg.audEncPath[fcgCXAudioEncoder->SelectedIndex];
-    }
-#endif
-}
-
-System::Void frmConfig::InformfruClosed() {
-    fcgTSBUpdate->Checked = false;
-}
-
-#if ENABLE_AUOSETUP
-System::Void frmUpdate::frmUpdate_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
-    e->Cancel = true;
-    this->Visible = false; //Close()してしまうとfrmExeUpdateがDisposeされてしまう
-    frmConfig^ fcg = dynamic_cast<frmConfig^>(this->Owner);
-    if (fcg != nullptr)
-        fcg->InformfruClosed();
-}
-#endif
 
 /// -------------------------------------------------
 ///     frmConfig 関数
@@ -333,7 +258,7 @@ System::Boolean frmConfig::CheckLocalStg() {
     if (LocalStg.x264Path->Length > 0
         && !File::Exists(LocalStg.x264Path)) {
         error = true;
-        err += L"指定された SvtAv1EncApp は存在しません。\n [ " + LocalStg.x264Path + L" ]\n";
+        err += LOAD_CLI_STRING(AUO_CONFIG_VID_ENC_NOT_EXIST) + L"\n [ " + LocalStg.x264Path + L" ]\n";
     }
     //音声エンコーダのチェック (実行ファイル名がない場合はチェックしない)
     if (LocalStg.audEncExeName[fcgCXAudioEncoder->SelectedIndex]->Length) {
@@ -346,7 +271,7 @@ System::Boolean frmConfig::CheckLocalStg() {
             //選択された音声がfawでない または fawであってもfaw2aacがない
             if (error) err += L"\n\n";
             error = true;
-            err += L"指定された 音声エンコーダ は存在しません。\n [ " + AudioEncoderPath + L" ]\n";
+            err += LOAD_CLI_STRING(AUO_CONFIG_AUD_ENC_NOT_EXIST) + L"\n [ " + AudioEncoderPath + L" ]\n";
         }
     }
     //FAWのチェック
@@ -354,29 +279,29 @@ System::Boolean frmConfig::CheckLocalStg() {
         if (sys_dat->exstg->s_aud_faw_index == FAW_INDEX_ERROR) {
             if (error) err += L"\n\n";
             error = true;
-            err += L"FAWCheckが選択されましたが、svtAV1guiEx.ini から\n"
-                + L"FAW の設定を読み込めませんでした。\n"
-                + L"svtAV1guiEx.ini を確認してください。\n";
+            err += LOAD_CLI_STRING(AUO_CONFIG_FAW_STG_NOT_FOUND_IN_INI1) + L"\n"
+                +  LOAD_CLI_STRING(AUO_CONFIG_FAW_STG_NOT_FOUND_IN_INI2) + L"\n"
+                +  LOAD_CLI_STRING(AUO_CONFIG_FAW_STG_NOT_FOUND_IN_INI3);
         } else if (!File::Exists(LocalStg.audEncPath[sys_dat->exstg->s_aud_faw_index])
                    && !check_if_faw2aac_exists()) {
             //fawの実行ファイルが存在しない かつ faw2aacも存在しない
             if (error) err += L"\n\n";
             error = true;
-            err += L"FAWCheckが選択されましたが、FAW(fawcl)へのパスが正しく指定されていません。\n"
-                +  L"一度設定画面でFAW(fawcl)へのパスを指定してください。\n";
+            err += LOAD_CLI_STRING(AUO_CONFIG_FAW_PATH_UNSET1) + L"\n"
+                +  LOAD_CLI_STRING(AUO_CONFIG_FAW_PATH_UNSET2);
         }
     }
     //自動マルチパスの自動ビットレート設定のチェック
     if (fcgLBAMPAutoBitrate != nullptr && fcgLBAMPAutoBitrate->Visible) {
         if (error) err += L"\n\n";
         error = true;
-        err += L"目標映像ビットレートを自動に設定するには、\n"
-            + L"上限ビットレート、上限ファイルサイズの少なくとも片方を\n"
-            + L"適切に設定する必要があります。\n"
-            + L"上限ビットレート、上限ファイルサイズの設定を見なおしてください。";
+        err += LOAD_CLI_STRING(AUO_CONFIG_AMP_STG_INVALID1) + L"\n"
+            +  LOAD_CLI_STRING(AUO_CONFIG_AMP_STG_INVALID2) + L"\n"
+            +  LOAD_CLI_STRING(AUO_CONFIG_AMP_STG_INVALID3) + L"\n"
+            +  LOAD_CLI_STRING(AUO_CONFIG_AMP_STG_INVALID4);
     }
     if (error)
-        MessageBox::Show(this, err, L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        MessageBox::Show(this, err, LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
     return error;
 }
 
@@ -401,8 +326,8 @@ System::Void frmConfig::SaveLocalStg() {
 }
 
 System::Void frmConfig::SetLocalStg() {
-    fcgLBX264Path->Text           = L"SvtAv1EncApp.exe の指定";
-    fcgLBX264PathSub->Text        = L"SvtAv1EncApp.exe の指定";
+    fcgLBX264Path->Text           = System::String(ENCODER_NAME).ToString() + L".exe" + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
+    fcgLBX264PathSub->Text        = System::String(ENCODER_NAME).ToString() + L".exe" + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
     fcgTXX264Path->Text           = LocalStg.x264Path;
     fcgTXX264PathSub->Text        = LocalStg.x264Path;
     fcgTXMP4MuxerPath->Text       = LocalStg.MP4MuxerPath;
@@ -413,11 +338,11 @@ System::Void frmConfig::SetLocalStg() {
     fcgTXCustomAudioTempDir->Text = LocalStg.CustomAudTmpDir;
     fcgTXCustomTempDir->Text      = LocalStg.CustomTmpDir;
     fcgTXMP4BoxTempDir->Text      = LocalStg.CustomMP4TmpDir;
-    fcgLBMP4MuxerPath->Text       = LocalStg.MP4MuxerExeName + L" の指定";
-    fcgLBMKVMuxerPath->Text       = LocalStg.MKVMuxerExeName + L" の指定";
-    fcgLBTC2MP4Path->Text         = LocalStg.TC2MP4ExeName   + L" の指定";
-    fcgLBMPGMuxerPath->Text       = LocalStg.MPGMuxerExeName + L" の指定";
-    fcgLBMP4RawPath->Text         = LocalStg.MP4RawExeName + L" の指定";
+    fcgLBMP4MuxerPath->Text       = LocalStg.MP4MuxerExeName + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
+    fcgLBMKVMuxerPath->Text       = LocalStg.MKVMuxerExeName + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
+    fcgLBTC2MP4Path->Text         = LocalStg.TC2MP4ExeName   + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
+    fcgLBMPGMuxerPath->Text       = LocalStg.MPGMuxerExeName + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
+    fcgLBMP4RawPath->Text         = LocalStg.MP4RawExeName   + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
 
     fcgTXX264Path->SelectionStart           = fcgTXX264Path->Text->Length;
     fcgTXX264PathSub->SelectionStart        = fcgTXX264PathSub->Text->Length;
@@ -458,6 +383,7 @@ System::Void frmConfig::fcgTSBOtherSettings_Click(System::Object^  sender, Syste
     ActivateToolTip(stg.s_local.disable_tooltip_help == FALSE);
     if (str_has_char(stg.s_local.conf_font.name))
         SetFontFamilyToForm(this, gcnew FontFamily(String(stg.s_local.conf_font.name).ToString()), this->Font->FontFamily);
+    LoadLangText();
 }
 
 System::Void frmConfig::fcgTSBCMDOnly_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -507,7 +433,7 @@ System::Boolean frmConfig::EnableSettingsNoteChange(bool Enable) {
         fcgTSLSettingsNotes->Visible == !Enable)
         return true;
     if (CountStringBytes(fcgTSTSettingsNotes->Text) > fcgTSTSettingsNotes->MaxLength - 1) {
-        MessageBox::Show(this, L"入力された文字数が多すぎます。減らしてください。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        MessageBox::Show(this, LOAD_CLI_STRING(AUO_CONFIG_TEXT_LIMIT_LENGTH), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
         fcgTSTSettingsNotes->Focus();
         fcgTSTSettingsNotes->SelectionStart = fcgTSTSettingsNotes->Text->Length;
         return false;
@@ -517,7 +443,7 @@ System::Boolean frmConfig::EnableSettingsNoteChange(bool Enable) {
     if (Enable) {
         fcgTSTSettingsNotes->Text = fcgTSLSettingsNotes->Text;
         fcgTSTSettingsNotes->Focus();
-        bool isDefaultNote = String::Compare(fcgTSTSettingsNotes->Text, String(DefaultStgNotes).ToString()) == 0;
+        bool isDefaultNote = fcgTSLSettingsNotes->Overflow != ToolStripItemOverflow::Never;
         fcgTSTSettingsNotes->Select((isDefaultNote) ? 0 : fcgTSTSettingsNotes->Text->Length, fcgTSTSettingsNotes->Text->Length);
     } else {
         SetfcgTSLSettingsNotes(fcgTSTSettingsNotes->Text);
@@ -590,8 +516,8 @@ System::Void frmConfig::AdjustCXDropDownWidth(ComboBox^ CX) {
 System::Void frmConfig::InitCXCmdExInsert() {
     fcgCXCmdExInsert->BeginUpdate();
     fcgCXCmdExInsert->Items->Clear();
-    fcgCXCmdExInsert->Items->Add(L"文字列を挿入...");
-    fcgCXCmdExInsert->Items->Add(L"ファイル フルパス...");
+    fcgCXCmdExInsert->Items->Add(LOAD_CLI_STRING(AUO_CONFIG_INSERT_STRING));
+    fcgCXCmdExInsert->Items->Add(LOAD_CLI_STRING(AUO_CONFIG_FILE_FULL_PATH));
     System::Drawing::Graphics^ ds = fcgCXCmdExInsert->CreateGraphics();
     float max_width_of_string = 0;
     for (int i = 0; REPLACE_STRINGS_LIST[i].desc; i++)
@@ -602,7 +528,11 @@ System::Void frmConfig::InitCXCmdExInsert() {
         AppenStr += L" … ";
         for (float current_width = 0.0; current_width < max_width_of_string; AppenStr = AppenStr->Insert(length_of_string, L" "))
             current_width = ds->MeasureString(AppenStr, fcgCXCmdExInsert->Font).Width;
-        AppenStr += String(REPLACE_STRINGS_LIST[i].desc).ToString();
+        String^ descStr = LOAD_CLI_STRING(REPLACE_STRINGS_LIST[i].mes);
+        if (descStr->Length == 0) {
+            descStr = String(REPLACE_STRINGS_LIST[i].desc).ToString();
+        }
+        AppenStr += descStr;
         fcgCXCmdExInsert->Items->Add(AppenStr);
     }
     delete ds;
@@ -638,7 +568,7 @@ System::Void frmConfig::setAudioDisplay() {
     AUDIO_SETTINGS *astg = &sys_dat->exstg->s_aud[fcgCXAudioEncoder->SelectedIndex];
     //～の指定
     if (str_has_char(astg->filename)) {
-        fcgLBAudioEncoderPath->Text = String(astg->filename).ToString() + L" の指定";
+        fcgLBAudioEncoderPath->Text = String(astg->filename).ToString() + LOAD_CLI_STRING(AUO_CONFIG_SPECIFY_EXE_PATH);
         fcgTXAudioEncoderPath->Enabled = true;
         fcgTXAudioEncoderPath->Text = LocalStg.audEncPath[fcgCXAudioEncoder->SelectedIndex];
         fcgBTAudioEncoderPath->Enabled = true;
@@ -694,8 +624,16 @@ System::Void frmConfig::AudioEncodeModeChanged() {
         const int items_to_set = _countof(AUDIO_DELAY_CUT_MODE) - 1 - ((delay_cut_edts_available) ? 0 : 1);
         fcgCXAudioDelayCut->BeginUpdate();
         fcgCXAudioDelayCut->Items->Clear();
-        for (int i = 0; i < items_to_set; i++)
-            fcgCXAudioDelayCut->Items->Add(String(AUDIO_DELAY_CUT_MODE[i]).ToString());
+        for (int i = 0; i < items_to_set; i++) {
+            String^ string = nullptr;
+            if (AUDIO_DELAY_CUT_MODE[i].mes != AUO_MES_UNKNOWN) {
+                string = LOAD_CLI_STRING(AUDIO_DELAY_CUT_MODE[i].mes);
+            }
+            if (string == nullptr || string->Length == 0) {
+                string = String(AUDIO_DELAY_CUT_MODE[i].desc).ToString();
+            }
+            fcgCXAudioDelayCut->Items->Add(string);
+        }
         fcgCXAudioDelayCut->EndUpdate();
         fcgCXAudioDelayCut->SelectedIndex = (current_idx >= items_to_set) ? 0 : current_idx;
     } else {
@@ -725,7 +663,7 @@ System::Void frmConfig::UncheckAllDropDownItem(ToolStripItem^ mItem) {
 System::Void frmConfig::CheckTSSettingsDropDownItem(ToolStripMenuItem^ mItem) {
     UncheckAllDropDownItem(fcgTSSettings);
     CheckedStgMenuItem = mItem;
-    fcgTSSettings->Text = (mItem == nullptr) ? L"プロファイル" : mItem->Text;
+    fcgTSSettings->Text = (mItem == nullptr) ? LOAD_CLI_STRING(AUO_CONFIG_PROFILE) : mItem->Text;
     if (mItem != nullptr)
         mItem->Checked = true;
     fcgTSBSave->Enabled = false;
@@ -764,15 +702,14 @@ System::Void frmConfig::SaveToStgFile(String^ stgName) {
     String^ stgDir = Path::GetDirectoryName(stgName);
     if (!Directory::Exists(stgDir))
         Directory::CreateDirectory(stgDir);
-    guiEx_config exCnf;
-    int result = exCnf.save_guiEx_conf(cnf_stgSelected, stg_name);
+    int result = guiEx_config::save_guiEx_conf(cnf_stgSelected, stg_name);
     free(stg_name);
     switch (result) {
         case CONF_ERROR_FILE_OPEN:
-            MessageBox::Show(L"設定ファイルオープンに失敗しました。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_OPEN_STG_FILE), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
             return;
         case CONF_ERROR_INVALID_FILENAME:
-            MessageBox::Show(L"ファイル名に使用できない文字が含まれています。\n保存できません。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_INVALID_CHAR), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
             return;
         default:
             break;
@@ -802,8 +739,8 @@ System::Void frmConfig::fcgTSBSaveNew_Click(System::Object^  sender, System::Eve
 
 System::Void frmConfig::DeleteStgFile(ToolStripMenuItem^ mItem) {
     if (System::Windows::Forms::DialogResult::OK ==
-        MessageBox::Show(L"設定ファイル " + mItem->Text + L" を削除してよろしいですか?",
-        L"エラー", MessageBoxButtons::OKCancel, MessageBoxIcon::Exclamation))
+        MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ASK_STG_FILE_DELETE) + L"[" + mItem->Text + L"]",
+        LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OKCancel, MessageBoxIcon::Exclamation))
     {
         File::Delete(mItem->Tag->ToString());
         RebuildStgFileDropDown(nullptr);
@@ -823,13 +760,12 @@ System::Void frmConfig::fcgTSSettings_DropDownItemClicked(System::Object^  sende
     if (ClickedMenuItem->Tag == nullptr || ClickedMenuItem->Tag->ToString()->Length == 0)
         return;
     CONF_GUIEX load_stg;
-    guiEx_config exCnf;
     char stg_path[MAX_PATH_LEN];
     GetCHARfromString(stg_path, sizeof(stg_path), ClickedMenuItem->Tag->ToString());
-    if (exCnf.load_guiEx_conf(&load_stg, stg_path) == CONF_ERROR_FILE_OPEN) {
-        if (MessageBox::Show(L"設定ファイルオープンに失敗しました。\n"
-                           + L"このファイルを削除しますか?",
-                           L"エラー", MessageBoxButtons::YesNo, MessageBoxIcon::Error)
+    if (guiEx_config::load_guiEx_conf(&load_stg, stg_path) == CONF_ERROR_FILE_OPEN) {
+        if (MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_OPEN_STG_FILE) + L"\n"
+                           + LOAD_CLI_STRING(AUO_CONFIG_ASK_STG_FILE_DELETE),
+                           LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::YesNo, MessageBoxIcon::Error)
                            == System::Windows::Forms::DialogResult::Yes)
             DeleteStgFile(ClickedMenuItem);
         return;
@@ -864,6 +800,80 @@ System::Void frmConfig::RebuildStgFileDropDown(String^ stgDir) {
     if (!Directory::Exists(CurrentStgDir))
         Directory::CreateDirectory(CurrentStgDir);
     RebuildStgFileDropDown(fcgTSSettings, Path::GetFullPath(CurrentStgDir));
+}
+
+///////////////   言語ファイル関連   //////////////////////
+
+System::Void frmConfig::CheckTSLanguageDropDownItem(ToolStripMenuItem^ mItem) {
+    UncheckAllDropDownItem(fcgTSLanguage);
+    fcgTSLanguage->Text = (mItem == nullptr) ? LOAD_CLI_STRING(AuofcgTSSettings) : mItem->Text;
+    if (mItem != nullptr)
+        mItem->Checked = true;
+}
+System::Void frmConfig::SetSelectedLanguage(const char *language_text) {
+    for (int i = 0; i < fcgTSLanguage->DropDownItems->Count; i++) {
+        ToolStripMenuItem^ item = dynamic_cast<ToolStripMenuItem^>(fcgTSLanguage->DropDownItems[i]);
+        char item_text[MAX_PATH_LEN];
+        GetCHARfromString(item_text, sizeof(item_text), item->Tag->ToString());
+        if (strncmp(item_text, language_text, strlen(language_text)) == 0) {
+            CheckTSLanguageDropDownItem(item);
+            break;
+        }
+    }
+}
+
+System::Void frmConfig::SaveSelectedLanguage(const char *language_text) {
+    sys_dat->exstg->set_and_save_lang(language_text);
+}
+
+System::Void frmConfig::fcgTSLanguage_DropDownItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
+    ToolStripMenuItem^ ClickedMenuItem = dynamic_cast<ToolStripMenuItem^>(e->ClickedItem);
+    if (ClickedMenuItem == nullptr)
+        return;
+    if (ClickedMenuItem->Tag == nullptr || ClickedMenuItem->Tag->ToString()->Length == 0)
+        return;
+
+    char language_text[MAX_PATH_LEN];
+    GetCHARfromString(language_text, sizeof(language_text), ClickedMenuItem->Tag->ToString());
+    SaveSelectedLanguage(language_text);
+    load_lng(language_text);
+    overwrite_aviutl_ini_auo_info();
+    LoadLangText();
+    CheckTSLanguageDropDownItem(ClickedMenuItem);
+}
+
+System::Void frmConfig::InitLangList() {
+    if (list_lng != nullptr) {
+        delete list_lng;
+    }
+#define ENABLE_LNG_FILE_DETECT 1
+#if ENABLE_LNG_FILE_DETECT
+    auto lnglist = find_lng_files();
+    list_lng = new std::vector<std::string>();
+    for (const auto& lang : lnglist) {
+        list_lng->push_back(lang);
+    }
+#endif
+
+    fcgTSLanguage->DropDownItems->Clear();
+
+    for (const auto& auo_lang : list_auo_languages) {
+        String^ label = String(auo_lang.code).ToString() + L" (" + String(auo_lang.name).ToString() + L")";
+        ToolStripMenuItem^ mItem = gcnew ToolStripMenuItem(label);
+        mItem->DropDownItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &frmConfig::fcgTSLanguage_DropDownItemClicked);
+        mItem->Tag = String(auo_lang.code).ToString();
+        fcgTSLanguage->DropDownItems->Add(mItem);
+    }
+#if ENABLE_LNG_FILE_DETECT
+    for (size_t i = 0; i < list_lng->size(); i++) {
+        auto filename = String(PathFindFileNameA((*list_lng)[i].c_str())).ToString();
+        ToolStripMenuItem^ mItem = gcnew ToolStripMenuItem(filename);
+        mItem->DropDownItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &frmConfig::fcgTSLanguage_DropDownItemClicked);
+        mItem->Tag = filename;
+        fcgTSLanguage->DropDownItems->Add(mItem);
+    }
+#endif
+    SetSelectedLanguage(sys_dat->exstg->get_lang());
 }
 
 //////////////   初期化関連     ////////////////
@@ -1028,43 +1038,11 @@ System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, Sys
     fcgNUQP->Visible = !videoBitrateMode;
 }
 
-System::Void frmConfig::initUpdater() {
-#if ENABLE_AUOSETUP
-    frmExeUpdate = gcnew frmUpdate();
-    frmExeUpdate->Owner = this;
-    frmExeUpdate->init(gcnew svtAV1guiEx::DelegateProcessFin(this, &frmConfig::fcgTSBUpdate_CheckFinished),
-                       gcnew svtAV1guiEx::DelegateProcessFin(this, &frmConfig::fcgTSBUpdate_UpdateFinished));
-    if (!sys_dat->exstg->s_local.update_check_auto) {
-        return;
-    }
-    if (str_has_char(sys_dat->exstg->s_local.last_update_check)) {
-        try {
-            DateTime dtLastUpdate = DateTime::Parse(String(sys_dat->exstg->s_local.last_update_check).ToString());
-            TimeSpan tsFromLastUpdate = DateTime::Now - dtLastUpdate;
-            //一週間以内に確認していれば自動的に更新チェック
-            if (tsFromLastUpdate < TimeSpan(7, 0, 0, 0)) {
-                return;
-            }
-        } catch (...) {
-            //そのまま下へ
-        }
-    }
-    frmExeUpdate->startCheck();
-#else
-    fcgTSBUpdate->Enabled = false;
-    fcgTSBUpdate->Visible = false;
-    toolStripSeparator2->Visible = false;
-#endif
-}
-
 System::Void frmConfig::InitForm() {
     //UIテーマ切り替え
     CheckTheme();
-    initUpdater();
-    //ローカル設定のロード
-    LoadLocalStg();
-    //ローカル設定の反映
-    SetLocalStg();
+    //言語設定ファイルのロード
+    InitLangList();
     //設定ファイル集の初期化
     InitStgFileList();
     //コンボボックスの値を設定
@@ -1089,8 +1067,6 @@ System::Void frmConfig::InitForm() {
         break;
     }
     //ツールチップ
-    SetHelpToolTips();
-    SetX264VersionToolTip(LocalStg.x264Path);
     ActivateToolTip(sys_dat->exstg->s_local.disable_tooltip_help == FALSE);
     //パラメータセット
     ConfToFrm(conf, true);
@@ -1101,15 +1077,8 @@ System::Void frmConfig::InitForm() {
     fcgChangeMuxerVisible(nullptr, nullptr);
     fcgChangeEnabled(nullptr, nullptr);
     fcgCBAFS_CheckedChanged(nullptr, nullptr);
-    fcgTXX264Path_Leave(nullptr, nullptr);
-    fcgTXX264PathSub_Leave(nullptr, nullptr);
-    fcgTXAudioEncoderPath_Leave(nullptr, nullptr);
-    fcgTXMP4MuxerPath_Leave(nullptr, nullptr);
-    fcgTXTC2MP4Path_Leave(nullptr, nullptr);
-    fcgTXMP4RawPath_Leave(nullptr, nullptr);
-    fcgTXMKVMuxerPath_Leave(nullptr, nullptr);
-    fcgTXMPGMuxerPath_Leave(nullptr, nullptr);
     EnableSettingsNoteChange(false);
+    ExeTXPathLeave();
     //コマンドラインの更新
     fcgRebuildCmd(nullptr, nullptr);
     //表示位置の調整
@@ -1119,6 +1088,179 @@ System::Void frmConfig::InitForm() {
     //フォントの設定
     if (str_has_char(sys_dat->exstg->s_local.conf_font.name))
         SetFontFamilyToForm(this, gcnew FontFamily(String(sys_dat->exstg->s_local.conf_font.name).ToString()), this->Font->FontFamily);
+}
+
+
+
+System::Void frmConfig::LoadLangText() {
+    //一度ウィンドウの再描画を完全に抑止する
+    SendMessage(reinterpret_cast<HWND>(this->Handle.ToPointer()), WM_SETREDRAW, 0, 0);
+    //空白時にグレーで入れる文字列を言語変更のため一度空白に戻す
+    ExeTXPathEnter();
+    //言語更新開始
+    LOAD_CLI_TEXT(fcgtabPageSVTAV1_1);
+    LOAD_CLI_TEXT(fcgLBFastDecode);
+    LOAD_CLI_TEXT(fcgLBTune);
+    LOAD_CLI_TEXT(fcgLBBiasPct);
+    LOAD_CLI_TEXT(fcgLBOverShootPct);
+    LOAD_CLI_TEXT(fcgLBUnderShootPct);
+    LOAD_CLI_TEXT(fcgLBMaxSectionPct);
+    LOAD_CLI_TEXT(fcgLBMinSectionPct);
+    LOAD_CLI_TEXT(fcgLBScm);
+    LOAD_CLI_TEXT(fcgLBEnableCDEF);
+    LOAD_CLI_TEXT(fcgLBFilmGrain);
+    LOAD_CLI_TEXT(fcgLBRestrictedMV);
+    LOAD_CLI_TEXT(fcgLBEnableTF);
+    LOAD_CLI_TEXT(fcgLBEnableOverlay);
+    LOAD_CLI_TEXT(fcgLBEnableDLF);
+    LOAD_CLI_TEXT(fcgLBSceneChangeDetection);
+    LOAD_CLI_TEXT(fcggroupBoxColorMatrix);
+    LOAD_CLI_TEXT(fcgLBInputRange);
+    LOAD_CLI_TEXT(fcgLBTransfer);
+    LOAD_CLI_TEXT(fcgLBColorPrim);
+    LOAD_CLI_TEXT(fcgLBColorMatrix);
+    LOAD_CLI_TEXT(fcggroupBoxAepectRatio);
+    LOAD_CLI_TEXT(fcgLBAspectRatio);
+    LOAD_CLI_TEXT(fcgLBKbps);
+    LOAD_CLI_TEXT(fcgLBRC);
+    LOAD_CLI_TEXT(fcgLBEncMode);
+    LOAD_CLI_TEXT(fcgLB2pasAuto);
+    LOAD_CLI_TEXT(fcgLBProfileAV1);
+    LOAD_CLI_TEXT(fcgLBColorFormat);
+    LOAD_CLI_TEXT(fcgLBEnableRestortionFiltering);
+    LOAD_CLI_TEXT(fcgLBMaxQP);
+    LOAD_CLI_TEXT(fcgLBMinQP);
+    LOAD_CLI_TEXT(fcgLBMfmv);
+    LOAD_CLI_TEXT(fcgLBAQ);
+    LOAD_CLI_TEXT(fcgLBHierarchicalLevels);
+    LOAD_CLI_TEXT(fcgLBTile2);
+    LOAD_CLI_TEXT(fcgLBTile);
+    LOAD_CLI_TEXT(fcgLBIntraRefreshType);
+    LOAD_CLI_TEXT(fcgLBKeyint);
+    LOAD_CLI_TEXT(fcgLBThreads);
+    LOAD_CLI_TEXT(fcgCBUsehighbit);
+    LOAD_CLI_TEXT(fcgBTX264Path);
+    LOAD_CLI_TEXT(fcgLBX264Path);
+    LOAD_CLI_TEXT(fcgtabPageSVTAV1_2);
+    LOAD_CLI_TEXT(fcgLBEnableStatReport);
+    LOAD_CLI_TEXT(fcgLBSTATUS);
+    LOAD_CLI_TEXT(fcgBTStatusFile);
+    LOAD_CLI_TEXT(fcgtabPageExSettings);
+    LOAD_CLI_TEXT(fcgBTX264PathSub);
+    LOAD_CLI_TEXT(fcgLBX264PathSub);
+    LOAD_CLI_TEXT(fcgLBTempDir);
+    LOAD_CLI_TEXT(fcgBTCustomTempDir);
+    LOAD_CLI_TEXT(fcggroupBoxCmdEx);
+    LOAD_CLI_TEXT(fcgCBNulOutCLI);
+    LOAD_CLI_TEXT(fcgBTCmdEx);
+    LOAD_CLI_TEXT(fcgLBX264Priority);
+    LOAD_CLI_TEXT(fcggroupBoxExSettings);
+    LOAD_CLI_TEXT(fcgCBAfs24fpsMode);
+    LOAD_CLI_TEXT(fcgCBAuoTcfileout);
+    LOAD_CLI_TEXT(fcgCBAFSBitrateCorrection);
+    LOAD_CLI_TEXT(fcgCBAFS);
+    LOAD_CLI_TEXT(fcgTSExeFileshelp);
+    LOAD_CLI_TEXT(fcgtoolStripSettings);
+    LOAD_CLI_TEXT(fcgTSBSave);
+    LOAD_CLI_TEXT(fcgTSBSaveNew);
+    LOAD_CLI_TEXT(fcgTSBDelete);
+    LOAD_CLI_TEXT(fcgTSSettings);
+    LOAD_CLI_TEXT(fcgTSBCMDOnly);
+    LOAD_CLI_TEXT(fcgTSBBitrateCalc);
+    LOAD_CLI_TEXT(fcgTSBOtherSettings);
+    LOAD_CLI_TEXT(fcgTSLSettingsNotes);
+    LOAD_CLI_TEXT(fcgTSTSettingsNotes);
+    LOAD_CLI_TEXT(fcgtabPageMP4);
+    LOAD_CLI_TEXT(fcgCBMP4MuxApple);
+    LOAD_CLI_TEXT(fcgBTTC2MP4Path);
+    LOAD_CLI_TEXT(fcgBTMP4MuxerPath);
+    LOAD_CLI_TEXT(fcgLBTC2MP4Path);
+    LOAD_CLI_TEXT(fcgLBMP4MuxerPath);
+    LOAD_CLI_TEXT(fcgLBMP4CmdEx);
+    LOAD_CLI_TEXT(fcgCBMP4MuxerExt);
+    LOAD_CLI_TEXT(fcgBTMP4RawPath);
+    LOAD_CLI_TEXT(fcgLBMP4RawPath);
+    LOAD_CLI_TEXT(fcgBTMP4BoxTempDir);
+    LOAD_CLI_TEXT(fcgLBMP4BoxTempDir);
+    LOAD_CLI_TEXT(fcgtabPageMKV);
+    LOAD_CLI_TEXT(fcgBTMKVMuxerPath);
+    LOAD_CLI_TEXT(fcgLBMKVMuxerPath);
+    LOAD_CLI_TEXT(fcgLBMKVMuxerCmdEx);
+    LOAD_CLI_TEXT(fcgCBMKVMuxerExt);
+    LOAD_CLI_TEXT(fcgtabPageMPG);
+    LOAD_CLI_TEXT(fcgBTMPGMuxerPath);
+    LOAD_CLI_TEXT(fcgLBMPGMuxerPath);
+    LOAD_CLI_TEXT(fcgLBMPGMuxerCmdEx);
+    LOAD_CLI_TEXT(fcgCBMPGMuxerExt);
+    LOAD_CLI_TEXT(fcgtabPageMux);
+    LOAD_CLI_TEXT(fcgLBMuxPriority);
+    LOAD_CLI_TEXT(fcgtabPageBat);
+    LOAD_CLI_TEXT(fcgLBBatAfterString);
+    LOAD_CLI_TEXT(fcgLBBatBeforeString);
+    LOAD_CLI_TEXT(fcgBTBatAfterPath);
+    LOAD_CLI_TEXT(fcgLBBatAfterPath);
+    LOAD_CLI_TEXT(fcgCBWaitForBatAfter);
+    LOAD_CLI_TEXT(fcgCBRunBatAfter);
+    LOAD_CLI_TEXT(fcgBTBatBeforePath);
+    LOAD_CLI_TEXT(fcgLBBatBeforePath);
+    LOAD_CLI_TEXT(fcgCBWaitForBatBefore);
+    LOAD_CLI_TEXT(fcgCBRunBatBefore);
+    LOAD_CLI_TEXT(fcgBTCancel);
+    LOAD_CLI_TEXT(fcgBTOK);
+    LOAD_CLI_TEXT(fcgBTDefault);
+    LOAD_CLI_TEXT(fcgLBVersionDate);
+    LOAD_CLI_TEXT(fcgLBVersion);
+    LOAD_CLI_TEXT(fcgLBguiExBlog);
+    LOAD_CLI_TEXT(fcgtabPageAudioMain);
+    LOAD_CLI_TEXT(fcgLBAudioDelayCut);
+    LOAD_CLI_TEXT(fcgCBAudioEncTiming);
+    LOAD_CLI_TEXT(fcgBTCustomAudioTempDir);
+    LOAD_CLI_TEXT(fcgCBAudioUsePipe);
+    LOAD_CLI_TEXT(fcgLBAudioBitrate);
+    LOAD_CLI_TEXT(fcgCBAudio2pass);
+    LOAD_CLI_TEXT(fcgLBAudioEncMode);
+    LOAD_CLI_TEXT(fcgBTAudioEncoderPath);
+    LOAD_CLI_TEXT(fcgLBAudioEncoderPath);
+    LOAD_CLI_TEXT(fcgCBAudioOnly);
+    LOAD_CLI_TEXT(fcgCBFAWCheck);
+    LOAD_CLI_TEXT(fcgLBAudioEncoder);
+    LOAD_CLI_TEXT(fcgLBAudioTemp);
+    LOAD_CLI_TEXT(fcgtabPageAudioOther);
+    LOAD_CLI_TEXT(fcgLBBatAfterAudioString);
+    LOAD_CLI_TEXT(fcgLBBatBeforeAudioString);
+    LOAD_CLI_TEXT(fcgBTBatAfterAudioPath);
+    LOAD_CLI_TEXT(fcgLBBatAfterAudioPath);
+    LOAD_CLI_TEXT(fcgCBRunBatAfterAudio);
+    LOAD_CLI_TEXT(fcgBTBatBeforeAudioPath);
+    LOAD_CLI_TEXT(fcgLBBatBeforeAudioPath);
+    LOAD_CLI_TEXT(fcgCBRunBatBeforeAudio);
+    LOAD_CLI_TEXT(fcgLBAudioPriority);
+    //LOAD_CLI_MAIN_TEXT(fcgMain);
+
+    //ローカル設定のロード(ini変更を反映)
+    LoadLocalStg();
+    //ローカル設定の反映
+    SetLocalStg();
+    //コンボボックスの値を設定
+    InitComboBox();
+    //ツールチップ
+    SetHelpToolTips();
+    SetX264VersionToolTip(LocalStg.x264Path);
+    ActivateToolTip(sys_dat->exstg->s_local.disable_tooltip_help == FALSE);
+    //タイムコードのappendix(後付修飾子)を反映
+    fcgCBAuoTcfileout->Text = LOAD_CLI_STRING(AUO_CONFIG_TC_FILE_OUT) + L" (" + String(sys_dat->exstg->s_append.tc).ToString() + L")";
+    { //タイトル表示,バージョン情報,コンパイル日時
+        auto auo_full_name = g_auo_mes.get(AUO_GUIEX_FULL_NAME);
+        if (auo_full_name == nullptr || wcslen(auo_full_name) == 0) auo_full_name = AUO_FULL_NAME_W;
+        this->Text = String(auo_full_name).ToString();
+        fcgLBVersion->Text = String(auo_full_name).ToString() + L" " + String(AUO_VERSION_STR_W).ToString();
+        fcgLBVersionDate->Text = L"build " + String(__DATE__).ToString() + L" " + String(__TIME__).ToString();
+    }
+    //空白時にグレーで入れる文字列を言語に即して復活させる
+    ExeTXPathLeave();
+    //一度ウィンドウの再描画を再開し、強制的に再描画させる
+    SendMessage(reinterpret_cast<HWND>(this->Handle.ToPointer()), WM_SETREDRAW, 1, 0);
+    this->Refresh();
 }
 
 /////////////         データ <-> GUI     /////////////
@@ -1236,7 +1378,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     //x264部
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
     enc.rc                   = list_rc[fcgCXRC->SelectedIndex].value;
-    enc.enable_tpl_la        = (enc.rc == get_cx_value(list_rc, "CQP")) ? 0 : 1;
+    enc.enable_tpl_la        = (enc.rc == get_cx_value(list_rc, L"CQP")) ? 0 : 1;
     enc.preset               = list_enc_mode[fcgCXEncMode->SelectedIndex].value;
     enc.bitrate              = (int)fcgNUBitrate->Value;
     enc.qp                   = (int)fcgNUQP->Value;
@@ -1342,7 +1484,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
 
 System::Void frmConfig::GetfcgTSLSettingsNotes(char *notes, int nSize) {
     ZeroMemory(notes, nSize);
-    if (fcgTSLSettingsNotes->ForeColor == Color::FromArgb(StgNotesColor[0][0], StgNotesColor[0][1], StgNotesColor[0][2]))
+    if (fcgTSLSettingsNotes->Overflow != ToolStripItemOverflow::Never)
         GetCHARfromString(notes, nSize, fcgTSLSettingsNotes->Text);
 }
 
@@ -1350,19 +1492,23 @@ System::Void frmConfig::SetfcgTSLSettingsNotes(const char *notes) {
     if (str_has_char(notes)) {
         fcgTSLSettingsNotes->ForeColor = Color::FromArgb(StgNotesColor[0][0], StgNotesColor[0][1], StgNotesColor[0][2]);
         fcgTSLSettingsNotes->Text = String(notes).ToString();
+        fcgTSLSettingsNotes->Overflow = ToolStripItemOverflow::AsNeeded;
     } else {
         fcgTSLSettingsNotes->ForeColor = Color::FromArgb(StgNotesColor[1][0], StgNotesColor[1][1], StgNotesColor[1][2]);
-        fcgTSLSettingsNotes->Text = String(DefaultStgNotes).ToString();
+        fcgTSLSettingsNotes->Text = LOAD_CLI_STRING(AuofcgTSTSettingsNotes);
+        fcgTSLSettingsNotes->Overflow = ToolStripItemOverflow::Never;
     }
 }
 
 System::Void frmConfig::SetfcgTSLSettingsNotes(String^ notes) {
-    if (notes->Length && String::Compare(notes, String(DefaultStgNotes).ToString()) != 0) {
+    if (notes->Length && fcgTSLSettingsNotes->Overflow != ToolStripItemOverflow::Never) {
         fcgTSLSettingsNotes->ForeColor = Color::FromArgb(StgNotesColor[0][0], StgNotesColor[0][1], StgNotesColor[0][2]);
         fcgTSLSettingsNotes->Text = notes;
+        fcgTSLSettingsNotes->Overflow = ToolStripItemOverflow::AsNeeded;
     } else {
         fcgTSLSettingsNotes->ForeColor = Color::FromArgb(StgNotesColor[1][0], StgNotesColor[1][1], StgNotesColor[1][2]);
-        fcgTSLSettingsNotes->Text = String(DefaultStgNotes).ToString();
+        fcgTSLSettingsNotes->Text = LOAD_CLI_STRING(AuofcgTSTSettingsNotes);
+        fcgTSLSettingsNotes->Overflow = ToolStripItemOverflow::Never;
     }
 }
 
@@ -1495,44 +1641,30 @@ System::Void frmConfig::SetAllCheckChangedEvents(Control ^top) {
     }
 }
 
-//System::Void frmConfig::SetHelpToolTipsColorMatrix(Control^ control, const char *type) {
-//    const ENC_OPTION_STR *list = get_option_list(type);
-//    fcgTTX264->SetToolTip(control,      L"--" + String(type).ToString() + L"\n"
-//        + L"auto とするとAviutlの色空間「自動」に合わせ\n"
-//        + L"以下のように設定します。\n"
-//        + L"縦解像度" + COLOR_MATRIX_THRESHOLD + L"以上 … " + String(list[COLOR_MATRIX_HD].desc).ToString() + L"\n"
-//        + L"縦解像度" + COLOR_MATRIX_THRESHOLD + L"未満 … " + String(list[COLOR_MATRIX_SD].desc).ToString() + L"\n"
-//        + L"よくわからない場合は 指定なし が無難です。"
-//        );
-//}
+System::Void frmConfig::SetHelpToolTipsColorMatrix(Control^ control, const char *type) {
+    fcgTTX264->SetToolTip(control, L"--" + String(type).ToString() + L"\n"
+        + LOAD_CLI_STRING(AuofrmTTColorMatrix1) + L"\n"
+        + LOAD_CLI_STRING(AuofrmTTColorMatrix2) + L"\n"
+        + LOAD_CLI_STRING(AuofrmTTColorMatrix3) + L" " + COLOR_MATRIX_THRESHOLD + L" " + LOAD_CLI_STRING(AuofrmTTColorMatrix4) + L" … bt709\n"
+        + LOAD_CLI_STRING(AuofrmTTColorMatrix3) + L" " + COLOR_MATRIX_THRESHOLD + L" " + LOAD_CLI_STRING(AuofrmTTColorMatrix5) + L" … bt601\n"
+        + LOAD_CLI_STRING(AuofrmTTColorMatrix6)
+    );
+}
 
 System::Void frmConfig::SetHelpToolTips() {
     //x264基本
-    fcgTTX264->SetToolTip(fcgCBUsehighbit, L""
-        + L"--input-depth 10\n"
-        + L"\n"
-        + L"10bit深度でエンコードを行います。\n"
-        + L"通常のプレーヤーでは再生できないこともあるため、\n"
-        + L"high bit depthエンコードがなにかを理解している場合にのみ、\n"
-        + L"使用してください。"
-        );
-    fcgTTX264->SetToolTip(fcgBTX264Path, L""
-        + L"SvtAv1EncApp.exeの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTX264->SetToolTip(fcgBTX264PathSub, L""
-        + L"SvtAv1EncApp.exeの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
+#define SET_TOOL_TIP_SVTAV1(target, x) { fcgTTX264->SetToolTip(target, LOAD_CLI_STRING(AuofrmTT ## x)); }
+#define SET_TOOL_TIP_EX2(target, x) { fcgTTEx->SetToolTip(target, LOAD_CLI_STRING(AuofrmTT ## x)); }
+#define SET_TOOL_TIP_EX(target) { fcgTTEx->SetToolTip(target, LOAD_CLI_STRING(AuofrmTT ## target)); }
+
+    SET_TOOL_TIP_SVTAV1(fcgCBUsehighbit, fcgCBUsehighbit);
+    SET_TOOL_TIP_SVTAV1(fcgBTX264Path, fcgBTX264Path);
+    SET_TOOL_TIP_SVTAV1(fcgBTX264PathSub, fcgBTX264Path);
 
     //色空間
-    //SetHelpToolTipsColorMatrix(fcgCXColorMatrix, "colormatrix");
-    //SetHelpToolTipsColorMatrix(fcgCXColorPrim,   "colorprim");
-    //SetHelpToolTipsColorMatrix(fcgCXTransfer,    "transfer");
+    SetHelpToolTipsColorMatrix(fcgCXColorMatrix, "colormatrix");
+    SetHelpToolTipsColorMatrix(fcgCXColorPrim,   "colorprim");
+    SetHelpToolTipsColorMatrix(fcgCXTransfer,    "transfer");
     //fcgTTX264->SetToolTip(fcgCXInputRange,      L"--input-range\n"
     //    + L"\n"
     //    + L"\"" + String(list_input_range[0].desc).ToString() + L"\"  [デフォルト]\n"
@@ -1543,273 +1675,80 @@ System::Void frmConfig::SetHelpToolTips() {
     //    + L"  pc色調 (フルレンジ)"
     //    );
 
-    fcgTTX264->SetToolTip(fcgCXAspectRatio,      L""
-        + String(aspect_desc[0]).ToString() + L"\n"
-        + L"   --sar を直接指定します。\n"
+    fcgTTX264->SetToolTip(fcgCXAspectRatio, L""
+        + LOAD_CLI_STRING(aspect_desc[0].mes) + L"\n"
+        + L"   " + LOAD_CLI_STRING(AuofrmTTfcgCXAspectRatioSAR) + L"\n"
         + L"\n"
-        + String(aspect_desc[1]).ToString() + L"\n"
-        + L"   エンコード時に 解像度から --sarを自動計算します。"
-        );
-    fcgTTX264->SetToolTip(fcgNUAspectRatioX,     L"アスペクト比 横 (幅)");
-    fcgTTX264->SetToolTip(fcgNUAspectRatioY,     L"アスペクト比 縦 (高さ)");
+        + LOAD_CLI_STRING(aspect_desc[1].mes) + L"\n"
+        + L"   " + LOAD_CLI_STRING(AuofrmTTfcgCXAspectRatioDAR) + L"\n"
+    );
+    SET_TOOL_TIP_SVTAV1(fcgNUAspectRatioX, fcgNUAspectRatioX);
+    SET_TOOL_TIP_SVTAV1(fcgNUAspectRatioY, fcgNUAspectRatioY);
     fcgTTX264->SetToolTip(fcgNUThreads,          L"--threads\n"
         + L"\"0\" で自動です。"
         );
 
     //拡張
-    fcgTTEx->SetToolTip(fcgCBAFS,                L""
-        + L"自動フィールドシフト(afs)を使用してVFR化を行います。\n"
-        + L"エンコード時にタイムコードを作成し、mux時に埋め込んで\n"
-        + L"フレームレートを変更します。\n"
-        + L"\n"
-        + L"外部muxerの使用が必須となり、mp4出力時は\n"
-        + L"mp4boxとともにtc2mp4modが必要になりますので、\n"
-        + L"忘れずに指定してください。\n"
-        + L"\n"
-        + L"また、あとからフレームレートを変更するため、\n"
-        + L"x264のVBV設定が正確に反映されなくなる点に注意してください。"
-        );
-    fcgTTEx->SetToolTip(fcgCBAFSBitrateCorrection, L""
-        + L"自動フィールドシフト(afs)使用時にはmux時のフレームレート変更により\n"
-        + L"実レートが指定したビットレートからずれてしまいます。\n"
-        + L"\n"
-        + L"そこで、1pass目のdrop数から計算して\n"
-        + L"ビットレート指定値の補正を行います。\n"
-        + L"これにより最終的な実レートが設定通りの動画を作成できます。"
-        );
-    fcgTTEx->SetToolTip(fcgCBAuoTcfileout, L""
-        + L"タイムコードを出力します。このタイムコードは\n"
-        + L"自動フィールドシフト(afs)を反映したものになります。"
-        );
-    fcgTTEx->SetToolTip(fcgCXTempDir,      L""
-        + L"一時ファイル群\n"
-        + L"・音声一時ファイル(wav / エンコード後音声)\n"
-        + L"・動画一時ファイル\n"
-        + L"・タイムコードファイル\n"
-        + L"・qpファイル\n"
-        + L"・mux後ファイル\n"
-        + L"の作成場所を指定します。"
-        );
-    fcgTTEx->SetToolTip(fcgBTCustomTempDir, L""
-        + L"一時ファイルの場所を「カスタム」に設定した際に\n"
-        + L"使用される一時ファイルの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgBTCmdEx,       L""
-        + L"入力したコマンド(オプション)をGUIに反映させます。"
-        );
+    SET_TOOL_TIP_EX(fcgCBAFS);
+    SET_TOOL_TIP_EX(fcgCBAFSBitrateCorrection);
+    SET_TOOL_TIP_EX(fcgCBAuoTcfileout);
+    //SET_TOOL_TIP_EX(fcgCBCheckKeyframes);
+    //SET_TOOL_TIP_EX(fcgCBSetKeyframeAtChapter);
+    //SET_TOOL_TIP_EX(fcgCBInputAsLW48);
+    SET_TOOL_TIP_EX(fcgCXTempDir);
+    SET_TOOL_TIP_EX(fcgBTCustomTempDir);
+    SET_TOOL_TIP_EX(fcgBTCmdEx);
 
     //音声
-    fcgTTEx->SetToolTip(fcgCXAudioEncoder, L""
-        + L"使用する音声エンコーダを指定します。\n"
-        + L"これらの設定はsvtAV1guiEx.iniに記述されています。"
-        );
-    fcgTTEx->SetToolTip(fcgCBAudioOnly,    L""
-        + L"動画の出力を行わず、音声エンコードのみ行います。\n"
-        + L"音声エンコードに失敗した場合などに使用してください。"
-        );
-    fcgTTEx->SetToolTip(fcgCBFAWCheck,     L""
-        + L"音声エンコード時に音声がFakeAACWav(FAW)かどうかの判定を行い、\n"
-        + L"FAWだと判定された場合、設定を無視して、\n"
-        + L"自動的にFAWを使用するよう切り替えます。\n"
-        + L"\n"
-        + L"一度音声エンコーダからFAW(fawcl)を選択し、\n"
-        + L"実行ファイルの場所を指定しておく必要があります。"
-        );
-    fcgTTEx->SetToolTip(fcgBTAudioEncoderPath, L""
-        + L"音声エンコーダの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXAudioEncMode, L""
-        + L"音声エンコーダのエンコードモードを切り替えます。\n"
-        + L"これらの設定はsvtAV1guiEx.iniに記述されています。"
-        );
-    fcgTTEx->SetToolTip(fcgCBAudio2pass,   L""
-        + L"音声エンコードを2passで行います。\n"
-        + L"2pass時はパイプ処理は行えません。"
-        );
-    fcgTTEx->SetToolTip(fcgCBAudioUsePipe, L""
-        + L"パイプを通して、音声データをエンコーダに渡します。\n"
-        + L"パイプと2passは同時に指定できません。"
-        );
-    fcgTTEx->SetToolTip(fcgNUAudioBitrate, L""
-        + L"音声ビットレートを指定します。"
-        );
-    fcgTTEx->SetToolTip(fcgCXAudioPriority, L""
-        + L"音声エンコーダのCPU優先度を設定します。\n"
-        + L"AviutlSync で Aviutlの優先度と同じになります。"
-        );
-    fcgTTEx->SetToolTip(fcgCXAudioEncTiming, L""
-        + L"音声を処理するタイミングを設定します。\n"
-        + L" 後　 … 映像→音声の順で処理します。\n"
-        + L" 前　 … 音声→映像の順で処理します。\n"
-        + L" 同時 … 映像と音声を同時に処理します。"
-        );
-    fcgTTEx->SetToolTip(fcgCXAudioTempDir, L""
-        + L"音声一時ファイル(エンコード後のファイル)\n"
-        + L"の出力先を変更します。"
-        );
-    fcgTTEx->SetToolTip(fcgBTCustomAudioTempDir, L""
-        + L"音声一時ファイルの場所を「カスタム」にした時に\n"
-        + L"使用される音声一時ファイルの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
+    SET_TOOL_TIP_EX(fcgCXAudioEncoder);
+    SET_TOOL_TIP_EX(fcgCBAudioOnly);
+    SET_TOOL_TIP_EX(fcgCBFAWCheck);
+    SET_TOOL_TIP_EX(fcgBTAudioEncoderPath);
+    SET_TOOL_TIP_EX(fcgCXAudioEncMode);
+    SET_TOOL_TIP_EX(fcgCBAudio2pass);
+    SET_TOOL_TIP_EX(fcgCBAudioUsePipe);
+    SET_TOOL_TIP_EX(fcgNUAudioBitrate);
+    SET_TOOL_TIP_EX(fcgCXAudioPriority);
+    SET_TOOL_TIP_EX(fcgCXAudioEncTiming);
+    SET_TOOL_TIP_EX(fcgCXAudioTempDir);
+    SET_TOOL_TIP_EX(fcgBTCustomAudioTempDir);
     //音声バッチファイル実行
-    fcgTTEx->SetToolTip(fcgCBRunBatBeforeAudio, L""
-        + L"音声エンコード開始前にバッチファイルを実行します。"
-        );
-    fcgTTEx->SetToolTip(fcgCBRunBatAfterAudio, L""
-        + L"音声エンコード終了後、バッチファイルを実行します。"
-        );
-    fcgTTEx->SetToolTip(fcgBTBatBeforeAudioPath, L""
-        + L"音声エンコード終了後実行するバッチファイルを指定します。\n"
-        + L"実際のバッチ実行時には新たに\"<バッチファイル名>_tmp.bat\"を作成、\n"
-        + L"指定したバッチファイルの内容をコピーし、\n"
-        + L"さらに特定文字列を置換して実行します。\n"
-        + L"使用できる置換文字列はreadmeをご覧下さい。"
-        );
-    fcgTTEx->SetToolTip(fcgBTBatAfterAudioPath, L""
-        + L"音声エンコード終了後実行するバッチファイルを指定します。\n"
-        + L"実際のバッチ実行時には新たに\"<バッチファイル名>_tmp.bat\"を作成、\n"
-        + L"指定したバッチファイルの内容をコピーし、\n"
-        + L"さらに特定文字列を置換して実行します。\n"
-        + L"使用できる置換文字列はreadmeをご覧下さい。"
-        );
+    SET_TOOL_TIP_EX(fcgCBRunBatBeforeAudio);
+    SET_TOOL_TIP_EX(fcgCBRunBatAfterAudio);
+    SET_TOOL_TIP_EX(fcgBTBatBeforeAudioPath);
+    SET_TOOL_TIP_EX(fcgBTBatAfterAudioPath);
 
     //muxer
-    fcgTTEx->SetToolTip(fcgCBMP4MuxerExt, L""
-        + L"指定したmuxerでmuxを行います。\n"
-        + L"チェックを外すとmuxを行いません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXMP4CmdEx,    L""
-        + L"muxerに渡す追加オプションを選択します。\n"
-        + L"これらの設定はsvtAV1guiEx.iniに記述されています。"
-        );
-    fcgTTEx->SetToolTip(fcgBTMP4MuxerPath, L""
-        + L"mp4用muxerの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgBTTC2MP4Path, L""
-        + L"tc2mp4modの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgBTMP4RawPath, L""
-        + L"raw用mp4muxerの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXMP4BoxTempDir, L""
-        + L"mp4box用の一時フォルダの場所を指定します。"
-        );
-    fcgTTEx->SetToolTip(fcgBTMP4BoxTempDir, L""
-        + L"mp4box用一時フォルダの場所を「カスタム」に設定した際に\n"
-        + L"使用される一時フォルダの場所です。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgCBMKVMuxerExt, L""
-        + L"指定したmuxerでmuxを行います。\n"
-        + L"チェックを外すとmuxを行いません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXMKVCmdEx,    L""
-        + L"muxerに渡す追加オプションを選択します。\n"
-        + L"これらの設定はsvtAV1guiEx.iniに記述されています。"
-        );
-    fcgTTEx->SetToolTip(fcgBTMKVMuxerPath, L""
-        + L"mkv用muxerの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgCBMPGMuxerExt, L""
-        + L"指定したmuxerでmuxを行います。\n"
-        + L"チェックを外すとmuxを行いません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXMPGCmdEx,    L""
-        + L"muxerに渡す追加オプションを選択します。\n"
-        + L"これらの設定はsvtAV1guiEx.iniに記述されています。"
-        );
-    fcgTTEx->SetToolTip(fcgBTMPGMuxerPath, L""
-        + L"mpg用muxerの場所を指定します。\n"
-        + L"\n"
-        + L"この設定はsvtAV1guiEx.confに保存され、\n"
-        + L"バッチ処理ごとの変更はできません。"
-        );
-    fcgTTEx->SetToolTip(fcgCXMuxPriority, L""
-        + L"muxerのCPU優先度を指定します。\n"
-        + L"AviutlSync で Aviutlの優先度と同じになります。"
-        );
+    SET_TOOL_TIP_EX(fcgCBMP4MuxerExt);
+    SET_TOOL_TIP_EX(fcgCXMP4CmdEx);
+    SET_TOOL_TIP_EX(fcgBTMP4MuxerPath);
+    SET_TOOL_TIP_EX(fcgBTTC2MP4Path);
+    SET_TOOL_TIP_EX(fcgBTMP4RawPath);
+    SET_TOOL_TIP_EX(fcgCXMP4BoxTempDir);
+    SET_TOOL_TIP_EX(fcgBTMP4BoxTempDir);
+    SET_TOOL_TIP_EX(fcgCBMKVMuxerExt);
+    SET_TOOL_TIP_EX(fcgCXMKVCmdEx);
+    SET_TOOL_TIP_EX(fcgBTMKVMuxerPath);
+    SET_TOOL_TIP_EX(fcgCBMPGMuxerExt);
+    SET_TOOL_TIP_EX(fcgCXMPGCmdEx);
+    SET_TOOL_TIP_EX(fcgBTMPGMuxerPath);
+    SET_TOOL_TIP_EX(fcgCXMuxPriority);
     //バッチファイル実行
-    fcgTTEx->SetToolTip(fcgCBRunBatBefore, L""
-        + L"エンコード開始前にバッチファイルを実行します。"
-        );
-    fcgTTEx->SetToolTip(fcgCBRunBatAfter, L""
-        + L"エンコード終了後、バッチファイルを実行します。"
-        );
-    fcgTTEx->SetToolTip(fcgCBWaitForBatBefore, L""
-        + L"バッチ処理開始後、バッチ処理が終了するまで待機します。"
-        );
-    fcgTTEx->SetToolTip(fcgCBWaitForBatAfter, L""
-        + L"バッチ処理開始後、バッチ処理が終了するまで待機します。"
-        );
-    fcgTTEx->SetToolTip(fcgBTBatBeforePath, L""
-        + L"エンコード終了後実行するバッチファイルを指定します。\n"
-        + L"実際のバッチ実行時には新たに\"<バッチファイル名>_tmp.bat\"を作成、\n"
-        + L"指定したバッチファイルの内容をコピーし、\n"
-        + L"さらに特定文字列を置換して実行します。\n"
-        + L"使用できる置換文字列はreadmeをご覧下さい。"
-        );
-    fcgTTEx->SetToolTip(fcgBTBatAfterPath, L""
-        + L"エンコード終了後実行するバッチファイルを指定します。\n"
-        + L"実際のバッチ実行時には新たに\"<バッチファイル名>_tmp.bat\"を作成、\n"
-        + L"指定したバッチファイルの内容をコピーし、\n"
-        + L"さらに特定文字列を置換して実行します。\n"
-        + L"使用できる置換文字列はreadmeをご覧下さい。"
-        );
-    //上部ツールストリップ
-    fcgTSBCMDOnly->ToolTipText = L""
-        + L"GUIモード と CLIモードを切り替えます。\n"
-        + L"CLIモードはコマンドライン入力のみで\n"
-        + L"オプションの指定を行います。";
-
-    fcgTSBDelete->ToolTipText = L""
-        + L"現在選択中のプロファイルを削除します。";
-
-    fcgTSBOtherSettings->ToolTipText = L""
-        + L"プロファイルの保存フォルダを変更します。";
-
-    fcgTSBSave->ToolTipText = L""
-        + L"現在の設定をプロファイルに上書き保存します。";
-
-    fcgTSBSaveNew->ToolTipText = L""
-        + L"現在の設定を新たなプロファイルに保存します。";
-
+    SET_TOOL_TIP_EX(fcgCBRunBatBefore);
+    SET_TOOL_TIP_EX(fcgCBRunBatAfter);
+    SET_TOOL_TIP_EX(fcgCBWaitForBatBefore);
+    SET_TOOL_TIP_EX(fcgCBWaitForBatAfter);
+    SET_TOOL_TIP_EX(fcgBTBatBeforePath);
+    SET_TOOL_TIP_EX(fcgBTBatAfterPath);
     //他
-    fcgTTEx->SetToolTip(fcgTXCmd,         L""
-        + L"x264に渡される予定のコマンドラインです。\n"
-        + L"エンコード時には更に\n"
-        + L"・「追加コマンド」の付加\n"
-        + L"・\"auto\"な設定項目の反映\n"
-        + L"・必要な情報の付加(--fps/-o/--input-res/--input-csp/--frames等)\n"
-        + L"が行われます。\n"
-        + L"\n"
-        + L"このウィンドウはダブルクリックで拡大縮小できます。"
-        );
-    fcgTTEx->SetToolTip(fcgBTDefault,     L""
-        + L"デフォルト設定をロードします。"
-        );
+    SET_TOOL_TIP_EX(fcgTXCmd);
+    SET_TOOL_TIP_EX(fcgBTDefault);
+    //上部ツールストリップ
+    fcgTSBCMDOnly->ToolTipText = LOAD_CLI_STRING(AuofrmTTfcgTSBCMDOnly);
+    fcgTSBDelete->ToolTipText = LOAD_CLI_STRING(AuofrmTTfcgTSBDelete);
+    fcgTSBOtherSettings->ToolTipText = LOAD_CLI_STRING(AuofrmTTfcgTSBOtherSettings);
+    fcgTSBSave->ToolTipText = LOAD_CLI_STRING(AuofrmTTfcgTSBSave);
+    fcgTSBSaveNew->ToolTipText = LOAD_CLI_STRING(AuofrmTTfcgTSBSaveNew);
 }
 System::Void frmConfig::SetX264VersionToolTip(String^ x264Path) {
     String^ mes;
@@ -1820,16 +1759,16 @@ System::Void frmConfig::SetX264VersionToolTip(String^ x264Path) {
         if (get_exe_message(exe_path, "--version", mes_buf, _countof(mes_buf), AUO_PIPE_MUXED) == RP_SUCCESS)
             mes = String(mes_buf).ToString();
         else
-            mes = L"バージョン情報の取得に失敗しました。";
+            mes = LOAD_CLI_STRING(AUO_CONFIG_ERR_GET_EXE_VER);
     } else {
-        mes = L"指定された実行ファイルが存在しません。";
+        mes = LOAD_CLI_STRING(AUO_CONFIG_ERR_EXE_NOT_FOUND);
     }
     fcgTTX264Version->SetToolTip(fcgTXX264Path, mes);
     fcgTTX264Version->SetToolTip(fcgTXX264PathSub, mes);
 }
 System::Void frmConfig::ShowExehelp(String^ ExePath, String^ args) {
     if (!File::Exists(ExePath)) {
-        MessageBox::Show(L"指定された実行ファイルが存在しません。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_EXE_NOT_FOUND), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
     } else {
         char exe_path[MAX_PATH_LEN];
         char file_path[MAX_PATH_LEN];
@@ -1854,16 +1793,17 @@ System::Void frmConfig::ShowExehelp(String^ ExePath, String^ args) {
             GetCHARfromString(cmd, sizeof(cmd), arg_list[i]);
             if (get_exe_message_to_file(exe_path, cmd, file_path, AUO_PIPE_MUXED, 5) != RP_SUCCESS) {
                 File::Delete(String(file_path).ToString());
-                MessageBox::Show(L"helpの取得に失敗しました。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+                MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_GET_HELP), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
                 return;
             }
         }
         try {
             System::Diagnostics::Process::Start(String(file_path).ToString());
         } catch (...) {
-            MessageBox::Show(L"helpを開く際に不明なエラーが発生しました。", L"エラー", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            MessageBox::Show(LOAD_CLI_STRING(AUO_CONFIG_ERR_OPEN_HELP), LOAD_CLI_STRING(AUO_GUIEX_ERROR), MessageBoxButtons::OK, MessageBoxIcon::Error);
         }
     }
 }
+
 
 #pragma warning( pop )

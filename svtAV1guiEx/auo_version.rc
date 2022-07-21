@@ -28,9 +28,9 @@
 #include <winver.h>
 #include "auo_version.h"
 
-#if ENABLE_AUOSETUP
-AUOSETUP    EXE_DATA DISCARDABLE "..\\auoSetup\\auoSetup.exe.gz"
-#endif
+SVTAV1GUIEX_JA_LNG EXE_DATA DISCARDABLE "svtAV1guiEx.ja.lng"
+SVTAV1GUIEX_EN_LNG EXE_DATA DISCARDABLE "svtAV1guiEx.en.lng"
+//SVTAV1GUIEX_ZH_LNG EXE_DATA DISCARDABLE "svtAV1guiEx.zh.lng"
 
 
 //

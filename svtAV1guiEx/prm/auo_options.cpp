@@ -107,7 +107,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     if (IS_OPTION("crf")) {
         i++;
         int ret = to_int(&cx->qp, argv[i]);
-        cx->rc = get_cx_value(list_rc, "CRF");
+        cx->rc = get_cx_value(list_rc, L"CRF");
         return ret;
     }
     OPT_NUM("rc", rc);
@@ -198,7 +198,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
 
     OPT_NUM("preset", preset);
     OPT_NUM("input-depth", bit_depth);
-    if (cx->rc == get_cx_value(list_rc, "CRF")) {
+    if (cx->rc == get_cx_value(list_rc, L"CRF")) {
         cmd << " --crf " << (int)(cx->qp);
     } else {
         OPT_NUM("rc", rc);
@@ -210,9 +210,9 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("tbr", bitrate);
     OPT_NUM("lp", lp);
 
-    if (cx->rc == get_cx_value(list_rc, "CQP")) {
+    if (cx->rc == get_cx_value(list_rc, L"CQP")) {
         cmd << " --aq-mode " << 0;
-    } else if (cx->rc == get_cx_value(list_rc, "CRF")) {
+    } else if (cx->rc == get_cx_value(list_rc, L"CRF")) {
         if (cx->aq != 0) OPT_NUM("aq-mode", aq);
     } else {
         OPT_NUM("aq-mode", aq);
@@ -254,9 +254,9 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
 
 void set_auto_colormatrix(CONF_ENCODER *cx, int height) {
     if (cx->matrix_coefficients == COLOR_MATRIX_AUTO)
-        cx->matrix_coefficients = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colormatrix, "bt709") : get_cx_value(list_colormatrix, "bt601");
+        cx->matrix_coefficients = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colormatrix, L"bt709") : get_cx_value(list_colormatrix, L"bt601");
     if (cx->color_primaries == COLOR_MATRIX_AUTO)
-        cx->color_primaries = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colorprim, "bt709") : get_cx_value(list_colormatrix, "bt601");
+        cx->color_primaries = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colorprim, L"bt709") : get_cx_value(list_colormatrix, L"bt601");
     if (cx->transfer_characteristics == COLOR_MATRIX_AUTO)
-        cx->transfer_characteristics = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_transfer, "bt709") : get_cx_value(list_colormatrix, "bt601");
+        cx->transfer_characteristics = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_transfer, L"bt709") : get_cx_value(list_colormatrix, L"bt601");
 }

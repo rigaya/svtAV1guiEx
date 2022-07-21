@@ -1,9 +1,9 @@
 ﻿// -----------------------------------------------------------------------------------------
-// svtAV1guiEx by rigaya
+// x264guiEx/x265guiEx/svtAV1guiEx by rigaya
 // -----------------------------------------------------------------------------------------
 // The MIT License
 //
-// Copyright (c) 2019 rigaya
+// Copyright (c) 2010-2022 rigaya
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,11 +30,14 @@
 
 #define AUO_VERSION          0,1,4,0
 #define AUO_VERSION_STR      "1.04"
+#define AUO_VERSION_STR_W   L"1.04"
 #define AUO_NAME_R            svtAV1guiEx
 #define AUO_NAME_WITHOUT_EXT "svtAV1guiEx"
+#define AUO_NAME_WITHOUT_EXT_W L"svtAV1guiEx"
 #define AUO_NAME             "svtAV1guiEx.auo"
 #define AUO_NAME_W          L"svtAV1guiEx.auo"
 #define AUO_FULL_NAME        "拡張 SVT-AV1 出力(GUI) Ex"
+#define AUO_FULL_NAME_W     L"拡張 SVT-AV1 出力(GUI) Ex"
 #define AUO_VERSION_NAME     "拡張 SVT-AV1 出力(GUI) Ex " AUO_VERSION_STR
 #define AUO_VERSION_INFO     "拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) " AUO_VERSION_STR " by rigaya"
 #define AUO_EXT_FILTER       "All Support Formats (*.*)\0*.mkv;*.mp4;*.264;*.mp4\0mkv file (*.mkv)\0*.mkv\0mp4 file (*.mp4)\0*.mp4\0raw file (*.264)\0*.264\0"
@@ -47,8 +50,8 @@
 #define ENCODER_X264 0
 #define ENCODER_X265 0
 #define ENCODER_SVTAV1 1
-#define ENABLE_AMP (ENCODER_x264 != 0)
-#define ENABLE_TCFILE_IN (ENCODER_x264 != 0)
+#define ENABLE_AMP (ENCODER_X264 != 0)
+#define ENABLE_TCFILE_IN (ENCODER_X264 != 0)
 
 #ifdef DEBUG
 #define VER_DEBUG   VS_FF_DEBUG

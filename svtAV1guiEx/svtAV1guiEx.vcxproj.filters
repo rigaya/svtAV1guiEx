@@ -124,6 +124,9 @@
     <ClCompile Include="prm\cpu_info.cpp">
       <Filter>ソース ファイル\prm</Filter>
     </ClCompile>
+    <ClCompile Include="frm\auo_mes.cpp">
+      <Filter>ソース ファイル\frm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SvtAv1GuiEx.def">
@@ -263,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="frm\frmUpdate.h">
       <Filter>フォーム</Filter>
+    </ClInclude>
+    <ClInclude Include="frm\auo_mes.h">
+      <Filter>ヘッダー ファイル\frm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
