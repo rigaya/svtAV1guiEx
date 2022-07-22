@@ -1047,16 +1047,10 @@ System::Void frmConfig::InitForm() {
     InitStgFileList();
     //コンボボックスの値を設定
     InitComboBox();
-    //タイムコードのappendix(後付修飾子)を反映
-    fcgCBAuoTcfileout->Text = L"タイムコード出力 (" + String(sys_dat->exstg->s_append.tc).ToString() + L")";
-    //タイトル表示
-    this->Text = String(AUO_FULL_NAME).ToString();
-    //バージョン情報,コンパイル日時
-    fcgLBVersion->Text     = String(AUO_VERSION_NAME).ToString();
-    fcgLBVersionDate->Text = L"build " + String(__DATE__).ToString() + L" " + String(__TIME__).ToString();
     //スレッド数上限
     int max_threads_set = (int)(cpu_core_count() * 1.5 + 0.51);
     fcgNUThreads->Maximum = max_threads_set;
+    //デフォルトの出力拡張子によってデフォルトのタブを変更
     switch (sys_dat->exstg->s_local.default_output_ext) {
     case 0: //mp4
         fcgtabControlMux->SelectedTab = fcgtabPageMP4;
@@ -1066,8 +1060,6 @@ System::Void frmConfig::InitForm() {
         fcgtabControlMux->SelectedTab = fcgtabPageMKV;
         break;
     }
-    //ツールチップ
-    ActivateToolTip(sys_dat->exstg->s_local.disable_tooltip_help == FALSE);
     //パラメータセット
     ConfToFrm(conf, true);
     //イベントセット
@@ -1685,7 +1677,7 @@ System::Void frmConfig::SetHelpToolTips() {
     SET_TOOL_TIP_SVTAV1(fcgNUAspectRatioX, fcgNUAspectRatioX);
     SET_TOOL_TIP_SVTAV1(fcgNUAspectRatioY, fcgNUAspectRatioY);
     fcgTTX264->SetToolTip(fcgNUThreads,          L"--threads\n"
-        + L"\"0\" で自動です。"
+        + LOAD_CLI_STRING(AuofrmTTZeroAsAuto)
         );
 
     //拡張
