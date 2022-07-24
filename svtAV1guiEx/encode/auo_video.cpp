@@ -164,9 +164,9 @@ static AUO_RESULT check_cmdex(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC 
     //cmdexを適用
     set_cmd(&enc, conf->vid.cmdex, true);
 
-    const int color_format = get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE); //現在の色形式を保存
+    const int color_format = get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE); //現在の色形式を保存
 
-    if (color_format != get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE)) {
+    if (color_format != get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE)) {
         //cmdexで入力色形式が変更になる場合、再初期化
         close_afsvideo(pe);
         if (!setup_afsvideo(oip, sys_dat, conf, pe)) {
@@ -776,7 +776,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     PathGetDirectory(x264dir, _countof(x264dir), sys_dat->exstg->s_enc.fullpath);
 
     //YUY2/YC48->NV12/YUV444, RGBコピー用関数
-    const int input_csp_idx = get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE);
+    const int input_csp_idx = get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE);
     const func_convert_frame convert_frame = get_convert_func(oip->w, input_csp_idx, enc.bit_depth, FALSE, enc.output_csp);
     if (convert_frame == NULL) {
         ret |= AUO_RESULT_ERROR; error_select_convert_func(oip->w, oip->h, enc.bit_depth, FALSE, enc.output_csp);
@@ -821,7 +821,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         UINT64 amp_filesize_limit = (UINT64)(1.02 * get_amp_filesize_limit(conf, oip, pe, sys_dat));
 #endif
         BOOL enc_pause = FALSE, copy_frame = FALSE, drop = FALSE;
-        const DWORD aviutl_color_fmt = COLORFORMATS[get_aviutl_color_format(enc.bit_depth > 8, enc.output_csp, FALSE)].FOURCC;
+        const DWORD aviutl_color_fmt = COLORFORMATS[get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE)].FOURCC;
         double time_get_frame = 0.0;
         int64_t qp_freq, qp_start, qp_end;
         QueryPerformanceFrequency((LARGE_INTEGER *)&qp_freq);
