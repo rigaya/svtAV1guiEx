@@ -83,7 +83,8 @@
     </Link>
     <PostBuildEvent>
       <Command>copy /y svtAV1guiEx.ini "$(OutDir)"
-copy /y svtAV1guiEx.en.ini "$(OutDir)"</Command>
+copy /y svtAV1guiEx.en.ini "$(OutDir)"
+copy /y svtAV1guiEx.zh.ini "$(OutDir)"</Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>
@@ -132,7 +133,8 @@ copy /y svtAV1guiEx.en.ini "$(OutDir)"</Command>
     </Link>
     <PostBuildEvent>
       <Command>copy /y svtAV1guiEx.ini "$(OutDir)"
-copy /y svtAV1guiEx.en.ini "$(OutDir)"</Command>
+copy /y svtAV1guiEx.en.ini "$(OutDir)"
+copy /y svtAV1guiEx.zh.ini "$(OutDir)"</Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>
