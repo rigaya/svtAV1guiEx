@@ -1373,9 +1373,10 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgTSSettings = (gcnew System::Windows::Forms::ToolStripDropDownButton());
             this->fcgTSBCMDOnly = (gcnew System::Windows::Forms::ToolStripButton());
             this->toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+            this->fcgTSLanguage = (gcnew System::Windows::Forms::ToolStripDropDownButton());
+            this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
             this->fcgTSBBitrateCalc = (gcnew System::Windows::Forms::ToolStripButton());
             this->toolStripSeparator5 = (gcnew System::Windows::Forms::ToolStripSeparator());
-            this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
             this->fcgTSBOtherSettings = (gcnew System::Windows::Forms::ToolStripButton());
             this->fcgTSLSettingsNotes = (gcnew System::Windows::Forms::ToolStripLabel());
             this->fcgTSTSettingsNotes = (gcnew System::Windows::Forms::ToolStripTextBox());
@@ -1485,7 +1486,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgPNHideTabControlAudio = (gcnew System::Windows::Forms::Panel());
             this->fcgPNHideTabControlMux = (gcnew System::Windows::Forms::Panel());
             this->fcgPNHideToolStripBorder = (gcnew System::Windows::Forms::Panel());
-            this->fcgTSLanguage = (gcnew System::Windows::Forms::ToolStripDropDownButton());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
@@ -1772,7 +1772,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBEnableCDEF
             // 
             this->fcgCBEnableCDEF->AutoSize = true;
-            this->fcgCBEnableCDEF->Location = System::Drawing::Point(285, 310);
+            this->fcgCBEnableCDEF->Location = System::Drawing::Point(300, 310);
             this->fcgCBEnableCDEF->Name = L"fcgCBEnableCDEF";
             this->fcgCBEnableCDEF->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableCDEF->TabIndex = 258;
@@ -1867,7 +1867,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBEnableDLF
             // 
             this->fcgCBEnableDLF->AutoSize = true;
-            this->fcgCBEnableDLF->Location = System::Drawing::Point(285, 286);
+            this->fcgCBEnableDLF->Location = System::Drawing::Point(300, 286);
             this->fcgCBEnableDLF->Name = L"fcgCBEnableDLF";
             this->fcgCBEnableDLF->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableDLF->TabIndex = 232;
@@ -1886,7 +1886,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBEnableRestorationFilter
             // 
             this->fcgCBEnableRestorationFilter->AutoSize = true;
-            this->fcgCBEnableRestorationFilter->Location = System::Drawing::Point(285, 335);
+            this->fcgCBEnableRestorationFilter->Location = System::Drawing::Point(300, 335);
             this->fcgCBEnableRestorationFilter->Name = L"fcgCBEnableRestorationFilter";
             this->fcgCBEnableRestorationFilter->Size = System::Drawing::Size(15, 14);
             this->fcgCBEnableRestorationFilter->TabIndex = 230;
@@ -2822,6 +2822,23 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->toolStripSeparator3->Name = L"toolStripSeparator3";
             this->toolStripSeparator3->Size = System::Drawing::Size(6, 25);
             // 
+            // fcgTSLanguage
+            // 
+            this->fcgTSLanguage->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+            this->fcgTSLanguage->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+            this->fcgTSLanguage->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"fcgTSLanguage.Image")));
+            this->fcgTSLanguage->ImageTransparentColor = System::Drawing::Color::Magenta;
+            this->fcgTSLanguage->Name = L"fcgTSLanguage";
+            this->fcgTSLanguage->Size = System::Drawing::Size(44, 22);
+            this->fcgTSLanguage->Text = L"言語";
+            this->fcgTSLanguage->DropDownItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &frmConfig::fcgTSLanguage_DropDownItemClicked);
+            // 
+            // toolStripSeparator2
+            // 
+            this->toolStripSeparator2->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
+            this->toolStripSeparator2->Name = L"toolStripSeparator2";
+            this->toolStripSeparator2->Size = System::Drawing::Size(6, 25);
+            // 
             // fcgTSBBitrateCalc
             // 
             this->fcgTSBBitrateCalc->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
@@ -2839,12 +2856,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->toolStripSeparator5->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
             this->toolStripSeparator5->Name = L"toolStripSeparator5";
             this->toolStripSeparator5->Size = System::Drawing::Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this->toolStripSeparator2->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
-            this->toolStripSeparator2->Name = L"toolStripSeparator2";
-            this->toolStripSeparator2->Size = System::Drawing::Size(6, 25);
             // 
             // fcgTSBOtherSettings
             // 
@@ -3364,9 +3375,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgLBBatAfterPath->AutoSize = true;
             this->fcgLBBatAfterPath->Location = System::Drawing::Point(40, 158);
             this->fcgLBBatAfterPath->Name = L"fcgLBBatAfterPath";
-            this->fcgLBBatAfterPath->Size = System::Drawing::Size(61, 14);
+            this->fcgLBBatAfterPath->Size = System::Drawing::Size(0, 14);
             this->fcgLBBatAfterPath->TabIndex = 9;
-            this->fcgLBBatAfterPath->Text = LOAD_CLI_STRING(AUO_CONFIG_BAT_FILE);
             // 
             // fcgCBWaitForBatAfter
             // 
@@ -3425,9 +3435,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgLBBatBeforePath->AutoSize = true;
             this->fcgLBBatBeforePath->Location = System::Drawing::Point(40, 65);
             this->fcgLBBatBeforePath->Name = L"fcgLBBatBeforePath";
-            this->fcgLBBatBeforePath->Size = System::Drawing::Size(61, 14);
+            this->fcgLBBatBeforePath->Size = System::Drawing::Size(0, 14);
             this->fcgLBBatBeforePath->TabIndex = 2;
-            this->fcgLBBatBeforePath->Text = LOAD_CLI_STRING(AUO_CONFIG_BAT_FILE);
             // 
             // fcgCBWaitForBatBefore
             // 
@@ -3536,7 +3545,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgTTX264->IsBalloon = true;
             this->fcgTTX264->ReshowDelay = 40;
             this->fcgTTX264->ShowAlways = true;
-            this->fcgTTX264->ToolTipTitle = L"x264 options...";
+            this->fcgTTX264->ToolTipTitle = L"SVT-AV1 options...";
             this->fcgTTX264->UseAnimation = false;
             this->fcgTTX264->UseFading = false;
             // 
@@ -3558,7 +3567,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgTTX264Version->InitialDelay = 200;
             this->fcgTTX264Version->IsBalloon = true;
             this->fcgTTX264Version->ReshowDelay = 50;
-            this->fcgTTX264Version->ToolTipTitle = L"x264 バージョン情報...";
+            this->fcgTTX264Version->ToolTipTitle = L"SVT-AV1 バージョン情報...";
             this->fcgTTX264Version->UseAnimation = false;
             this->fcgTTX264Version->UseFading = false;
             // 
@@ -3648,7 +3657,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBAudioEncTiming
             // 
             this->fcgCBAudioEncTiming->AutoSize = true;
-            this->fcgCBAudioEncTiming->Location = System::Drawing::Point(242, 54);
+            this->fcgCBAudioEncTiming->Location = System::Drawing::Point(228, 54);
             this->fcgCBAudioEncTiming->Name = L"fcgCBAudioEncTiming";
             this->fcgCBAudioEncTiming->Size = System::Drawing::Size(40, 14);
             this->fcgCBAudioEncTiming->TabIndex = 53;
@@ -3923,9 +3932,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgLBBatAfterAudioPath->AutoSize = true;
             this->fcgLBBatAfterAudioPath->Location = System::Drawing::Point(40, 236);
             this->fcgLBBatAfterAudioPath->Name = L"fcgLBBatAfterAudioPath";
-            this->fcgLBBatAfterAudioPath->Size = System::Drawing::Size(61, 14);
+            this->fcgLBBatAfterAudioPath->Size = System::Drawing::Size(0, 14);
             this->fcgLBBatAfterAudioPath->TabIndex = 57;
-            this->fcgLBBatAfterAudioPath->Text = LOAD_CLI_STRING(AUO_CONFIG_BAT_FILE);
             // 
             // fcgCBRunBatAfterAudio
             // 
@@ -3973,9 +3981,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgLBBatBeforeAudioPath->AutoSize = true;
             this->fcgLBBatBeforeAudioPath->Location = System::Drawing::Point(40, 167);
             this->fcgLBBatBeforeAudioPath->Name = L"fcgLBBatBeforeAudioPath";
-            this->fcgLBBatBeforeAudioPath->Size = System::Drawing::Size(61, 14);
+            this->fcgLBBatBeforeAudioPath->Size = System::Drawing::Size(0, 14);
             this->fcgLBBatBeforeAudioPath->TabIndex = 50;
-            this->fcgLBBatBeforeAudioPath->Text = LOAD_CLI_STRING(AUO_CONFIG_BAT_FILE);
             // 
             // fcgCBRunBatBeforeAudio
             // 
@@ -4038,17 +4045,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgPNHideToolStripBorder->Size = System::Drawing::Size(1020, 4);
             this->fcgPNHideToolStripBorder->TabIndex = 16;
             this->fcgPNHideToolStripBorder->Visible = false;
-            // 
-            // fcgTSLanguage
-            // 
-            this->fcgTSLanguage->Alignment = System::Windows::Forms::ToolStripItemAlignment::Right;
-            this->fcgTSLanguage->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-            this->fcgTSLanguage->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"fcgTSLanguage.Image")));
-            this->fcgTSLanguage->ImageTransparentColor = System::Drawing::Color::Magenta;
-            this->fcgTSLanguage->Name = L"fcgTSLanguage";
-            this->fcgTSLanguage->Size = System::Drawing::Size(44, 22);
-            this->fcgTSLanguage->Text = L"言語";
-            this->fcgTSLanguage->DropDownItemClicked += gcnew System::Windows::Forms::ToolStripItemClickedEventHandler(this, &frmConfig::fcgTSLanguage_DropDownItemClicked);
             // 
             // frmConfig
             // 
