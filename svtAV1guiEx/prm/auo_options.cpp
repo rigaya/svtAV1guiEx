@@ -40,6 +40,7 @@
 #include "auo_conf.h"
 #include "auo_options.h"
 
+#include "shellapi.h"
 #pragma comment(lib, "Shell32.lib")
 
 

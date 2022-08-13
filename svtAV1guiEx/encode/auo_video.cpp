@@ -25,6 +25,8 @@
 //
 // --------------------------------------------------------------------------------------------
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 #pragma comment(lib, "user32.lib") //WaitforInputIdle
 #include <stdlib.h>
@@ -1128,7 +1130,7 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
             switch (pe->current_pass) {
                 case 1: {
                     enc.pass = 1;
-                    enc.preset = max(enc.preset, 8);
+                    enc.preset = std::max(enc.preset, 8);
                     break;
                 }
                 case 2:

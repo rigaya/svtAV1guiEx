@@ -25,6 +25,8 @@
 //
 // --------------------------------------------------------------------------------------------
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <Windows.h>
 #include <cmath>
 #include <float.h>
@@ -1340,7 +1342,7 @@ static AUO_RESULT get_duration_from_timecode(double *duration, const char *tc_fi
             case 0: //1フレームのみ
                 *duration = 1.0 / fps; break;
             default: //フレーム時間を求める((avg_frames-1)フレーム分から平均をとる)
-                int div = 0, n = min(frame, avg_frames);
+                int div = 0, n = std::min(frame, avg_frames);
                 double sum = 0.0;
                 for (int i = 0; i < n; i++) {
                     sum += timecode[i];
