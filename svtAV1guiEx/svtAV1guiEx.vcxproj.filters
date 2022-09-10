@@ -136,6 +136,11 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="SvtAv1GuiEx.ini" />
+    <None Include="svtAV1guiEx.en.ini" />
+    <None Include="svtAV1guiEx.en.lng" />
+    <None Include="svtAV1guiEx.ja.lng" />
+    <None Include="svtAV1guiEx.zh.ini" />
+    <None Include="svtAV1guiEx.zh.lng" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auo.h">

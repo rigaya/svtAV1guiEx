@@ -313,7 +313,12 @@ copy /y svtAV1guiEx.zh.ini "$(OutDir)"</Command>
   <ItemGroup>
     <None Include="svtAV1guiEx.def" />
     <None Include="image\folder_open.ico" />
+    <None Include="svtAV1guiEx.en.ini" />
+    <None Include="svtAV1guiEx.en.lng" />
     <None Include="svtAV1guiEx.ini" />
+    <None Include="svtAV1guiEx.ja.lng" />
+    <None Include="svtAV1guiEx.zh.ini" />
+    <None Include="svtAV1guiEx.zh.lng" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auo.h" />
