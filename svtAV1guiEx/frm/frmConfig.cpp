@@ -1111,7 +1111,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBTransfer);
     LOAD_CLI_TEXT(fcgLBColorPrim);
     LOAD_CLI_TEXT(fcgLBColorMatrix);
-    LOAD_CLI_TEXT(fcggroupBoxAepectRatio);
+    LOAD_CLI_TEXT(fcgGroupBoxAspectRatio);
     LOAD_CLI_TEXT(fcgLBAspectRatio);
     LOAD_CLI_TEXT(fcgLBKbps);
     LOAD_CLI_TEXT(fcgLBRC);

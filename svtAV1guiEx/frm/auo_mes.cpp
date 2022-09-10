@@ -492,7 +492,7 @@ static const char * AUO_MES_ID_NAME_STR[] = {
 "AuofcgLBTransfer",
 "AuofcgLBColorPrim",
 "AuofcgLBColorMatrix",
-"AuofcggroupBoxAepectRatio",
+"AuofcgGroupBoxAspectRatio",
 "AuofcgLBAspectRatio",
 "AuofcgLBKbps",
 "AuofcgLBRC",

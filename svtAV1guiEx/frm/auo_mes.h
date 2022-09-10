@@ -571,7 +571,7 @@ enum AuoMes {
         AuofcgLBTransfer,
         AuofcgLBColorPrim,
         AuofcgLBColorMatrix,
-        AuofcggroupBoxAepectRatio,
+        AuofcgGroupBoxAspectRatio,
         AuofcgLBAspectRatio,
         AuofcgLBKbps,
         AuofcgLBRC,
