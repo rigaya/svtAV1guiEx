@@ -1003,7 +1003,7 @@ private: System::Windows::Forms::Label ^fcgLBColorFormat;
 
 
 
-private: System::Windows::Forms::CheckBox ^fcgCBAfs24fpsMode;
+
 
 
 
@@ -1363,7 +1363,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgCXX264Priority = (gcnew System::Windows::Forms::ComboBox());
             this->fcgLBX264Priority = (gcnew System::Windows::Forms::Label());
             this->fcggroupBoxExSettings = (gcnew System::Windows::Forms::GroupBox());
-            this->fcgCBAfs24fpsMode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAuoTcfileout = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAFSBitrateCorrection = (gcnew System::Windows::Forms::CheckBox());
             this->fcgCBAFS = (gcnew System::Windows::Forms::CheckBox());
@@ -2678,7 +2677,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // 
             // fcggroupBoxExSettings
             // 
-            this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAfs24fpsMode);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAuoTcfileout);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFSBitrateCorrection);
             this->fcggroupBoxExSettings->Controls->Add(this->fcgCBAFS);
@@ -2688,17 +2686,6 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcggroupBoxExSettings->TabIndex = 0;
             this->fcggroupBoxExSettings->TabStop = false;
             this->fcggroupBoxExSettings->Text = L"拡張設定";
-            // 
-            // fcgCBAfs24fpsMode
-            // 
-            this->fcgCBAfs24fpsMode->AutoSize = true;
-            this->fcgCBAfs24fpsMode->Location = System::Drawing::Point(34, 77);
-            this->fcgCBAfs24fpsMode->Name = L"fcgCBAfs24fpsMode";
-            this->fcgCBAfs24fpsMode->Size = System::Drawing::Size(67, 18);
-            this->fcgCBAfs24fpsMode->TabIndex = 2;
-            this->fcgCBAfs24fpsMode->Tag = L"chValue";
-            this->fcgCBAfs24fpsMode->Text = L"24fps化";
-            this->fcgCBAfs24fpsMode->UseVisualStyleBackColor = true;
             // 
             // fcgCBAuoTcfileout
             // 
@@ -2959,7 +2946,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // 
             // fcgBTTC2MP4Path
             // 
-            this->fcgBTTC2MP4Path->Location = System::Drawing::Point(340, 87);
+            this->fcgBTTC2MP4Path->Location = System::Drawing::Point(340, 94);
             this->fcgBTTC2MP4Path->Name = L"fcgBTTC2MP4Path";
             this->fcgBTTC2MP4Path->Size = System::Drawing::Size(30, 23);
             this->fcgBTTC2MP4Path->TabIndex = 6;
@@ -2970,9 +2957,9 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgTXTC2MP4Path
             // 
             this->fcgTXTC2MP4Path->AllowDrop = true;
-            this->fcgTXTC2MP4Path->Location = System::Drawing::Point(136, 88);
+            this->fcgTXTC2MP4Path->Location = System::Drawing::Point(145, 95);
             this->fcgTXTC2MP4Path->Name = L"fcgTXTC2MP4Path";
-            this->fcgTXTC2MP4Path->Size = System::Drawing::Size(202, 21);
+            this->fcgTXTC2MP4Path->Size = System::Drawing::Size(193, 21);
             this->fcgTXTC2MP4Path->TabIndex = 5;
             this->fcgTXTC2MP4Path->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXTC2MP4Path_TextChanged);
             this->fcgTXTC2MP4Path->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &frmConfig::fcgSetDragDropFilename_DragDrop);
@@ -2993,9 +2980,9 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgTXMP4MuxerPath
             // 
             this->fcgTXMP4MuxerPath->AllowDrop = true;
-            this->fcgTXMP4MuxerPath->Location = System::Drawing::Point(136, 66);
+            this->fcgTXMP4MuxerPath->Location = System::Drawing::Point(145, 66);
             this->fcgTXMP4MuxerPath->Name = L"fcgTXMP4MuxerPath";
-            this->fcgTXMP4MuxerPath->Size = System::Drawing::Size(202, 21);
+            this->fcgTXMP4MuxerPath->Size = System::Drawing::Size(193, 21);
             this->fcgTXMP4MuxerPath->TabIndex = 3;
             this->fcgTXMP4MuxerPath->Tag = L"";
             this->fcgTXMP4MuxerPath->TextChanged += gcnew System::EventHandler(this, &frmConfig::fcgTXMP4MuxerPath_TextChanged);
@@ -3007,7 +2994,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgLBTC2MP4Path
             // 
             this->fcgLBTC2MP4Path->AutoSize = true;
-            this->fcgLBTC2MP4Path->Location = System::Drawing::Point(4, 91);
+            this->fcgLBTC2MP4Path->Location = System::Drawing::Point(4, 98);
             this->fcgLBTC2MP4Path->Name = L"fcgLBTC2MP4Path";
             this->fcgLBTC2MP4Path->Size = System::Drawing::Size(49, 14);
             this->fcgLBTC2MP4Path->TabIndex = 4;

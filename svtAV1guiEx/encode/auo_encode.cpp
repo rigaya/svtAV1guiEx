@@ -269,11 +269,7 @@ static BOOL check_muxer_matched_with_ini(const MUXER_SETTINGS *mux_stg) {
 }
 
 bool is_afsvfr(const CONF_GUIEX *conf) {
-#if ENCODER_SVTAV1
-    return (conf->vid.afs != 0 && !conf->vid.afs_24fps);
-#else
     return conf->vid.afs != 0;
-#endif
 }
 
 static BOOL check_amp(CONF_GUIEX *conf) {
@@ -615,19 +611,19 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
     //muxer
     switch (pe->muxer_to_be_used) {
         case MUXER_TC2MP4:
-            if (ENCODER_SVTAV1) {
-                if (!str_has_char(exstg->s_mux[pe->muxer_to_be_used].base_cmd)) {
-                    error_tc2mp4_afs_not_supported();
-                    check = FALSE;
-                }
-            } else {
-                check &= check_muxer_exist(&exstg->s_mux[MUXER_TC2MP4], aviutl_dir, exstg->s_local.get_relative_path, exeFiles);
-            }
+            check &= check_muxer_exist(&exstg->s_mux[MUXER_TC2MP4], aviutl_dir, exstg->s_local.get_relative_path, exeFiles);
             //下へフォールスルー
         case MUXER_MP4:
             check &= check_muxer_exist(&exstg->s_mux[MUXER_MP4], aviutl_dir, exstg->s_local.get_relative_path, exeFiles);
             if (str_has_char(exstg->s_mux[MUXER_MP4_RAW].base_cmd)) {
-                check &= check_muxer_exist(&exstg->s_mux[MUXER_MP4_RAW], aviutl_dir, exstg->s_local.get_relative_path, exeFiles);
+                if (wcscmp(exstg->s_mux[MUXER_MP4].dispname, exstg->s_mux[MUXER_MP4_RAW].dispname) == 0) { // mp4box使用で同じ名前の場合
+                    if (!str_has_char(exstg->s_mux[MUXER_MP4_RAW].fullpath) || !PathFileExists(exstg->s_mux[MUXER_MP4_RAW].fullpath)) {
+                        // MUXER_MP4_RAW の指定がない場合は、MUXER_MP4の指定で代用
+                        strcpy_s(exstg->s_mux[MUXER_MP4_RAW].fullpath, exstg->s_mux[MUXER_MP4].fullpath);
+                    }
+                } else {
+                    check &= check_muxer_exist(&exstg->s_mux[MUXER_MP4_RAW], aviutl_dir, exstg->s_local.get_relative_path, exeFiles);
+                }
             }
             check &= check_muxer_matched_with_ini(exstg->s_mux);
             break;
@@ -1088,12 +1084,6 @@ void cmd_replace(char *cmd, size_t nSize, const PRM_ENC *pe, const SYSTEM_DATA *
     //%{fps_rate}
     int fps_rate = oip->rate;
     int fps_scale = oip->scale;
-#if ENCODER_SVTAV1
-    if (conf->vid.afs && conf->vid.afs_24fps) {
-        fps_rate *= 4;
-        fps_scale *= 5;
-    }
-#endif
 #ifdef MSDK_SAMPLE_VERSION
     if (conf->qsv.vpp.nDeinterlace == MFX_DEINTERLACE_IT)
         fps_rate = (fps_rate * 4) / 5;

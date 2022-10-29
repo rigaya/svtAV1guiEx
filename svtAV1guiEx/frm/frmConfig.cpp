@@ -974,7 +974,8 @@ System::Void frmConfig::fcgChangeMuxerVisible(System::Object^  sender, System::E
     fcgLBTC2MP4Path->Visible = enable_tc2mp4_muxer;
     fcgBTTC2MP4Path->Visible = enable_tc2mp4_muxer;
     //mp4 rawのチェック
-    const bool enable_mp4raw_muxer = (0 != str_has_char(sys_dat->exstg->s_mux[MUXER_MP4_RAW].base_cmd));
+    const bool enable_mp4raw_muxer = (0 != str_has_char(sys_dat->exstg->s_mux[MUXER_MP4_RAW].base_cmd))
+        && wcscmp(sys_dat->exstg->s_mux[MUXER_MP4].dispname, sys_dat->exstg->s_mux[MUXER_MP4_RAW].dispname) != 0;
     fcgTXMP4RawPath->Visible = enable_mp4raw_muxer;
     fcgLBMP4RawPath->Visible = enable_mp4raw_muxer;
     fcgBTMP4RawPath->Visible = enable_mp4raw_muxer;
@@ -1147,7 +1148,6 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgBTCmdEx);
     LOAD_CLI_TEXT(fcgLBX264Priority);
     LOAD_CLI_TEXT(fcggroupBoxExSettings);
-    LOAD_CLI_TEXT(fcgCBAfs24fpsMode);
     LOAD_CLI_TEXT(fcgCBAuoTcfileout);
     LOAD_CLI_TEXT(fcgCBAFSBitrateCorrection);
     LOAD_CLI_TEXT(fcgCBAFS);
@@ -1313,7 +1313,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
 
         fcgCBAFS->Checked                  = cnf->vid.afs != 0;
         fcgCBAFSBitrateCorrection->Checked = cnf->vid.afs_bitrate_correction != 0;
-        fcgCBAfs24fpsMode->Checked         = cnf->vid.afs_24fps != 0;
         SetCXIndex(fcgCXX264Priority,        cnf->vid.priority);
         SetCXIndex(fcgCXTempDir,             cnf->oth.temp_dir);
 
@@ -1423,7 +1422,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     GetCHARfromString(cnf->vid.stats, fcgTXStatusFile->Text);
     cnf->vid.afs                    = fcgCBAFS->Checked;
     cnf->vid.afs_bitrate_correction = fcgCBAFSBitrateCorrection->Checked;
-    cnf->vid.afs_24fps              = fcgCBAfs24fpsMode->Checked;
     cnf->vid.priority               = fcgCXX264Priority->SelectedIndex;
     cnf->oth.temp_dir               = fcgCXTempDir->SelectedIndex;
     GetCHARfromString(cnf->vid.cmdex, fcgTXCmdEx->Text);
