@@ -1129,6 +1129,8 @@ private: System::Windows::Forms::Panel^  fcgPNHideTabControlAudio;
 private: System::Windows::Forms::Panel^  fcgPNHideTabControlMux;
 private: System::Windows::Forms::Panel^  fcgPNHideToolStripBorder;
 private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
+private: System::Windows::Forms::Label^  fcgLBLookahead;
+private: System::Windows::Forms::NumericUpDown^  fcgNULookahead;
 
 
 
@@ -1257,6 +1259,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(frmConfig::typeid));
             this->fcgtabControlVideo = (gcnew System::Windows::Forms::TabControl());
             this->fcgtabPageSVTAV1_1 = (gcnew System::Windows::Forms::TabPage());
+            this->fcgLBLookahead = (gcnew System::Windows::Forms::Label());
+            this->fcgNULookahead = (gcnew System::Windows::Forms::NumericUpDown());
             this->fcgLBFastDecode = (gcnew System::Windows::Forms::Label());
             this->fcgCBFastDecode = (gcnew System::Windows::Forms::CheckBox());
             this->fcgLBTune = (gcnew System::Windows::Forms::Label());
@@ -1491,6 +1495,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgPNHideToolStripBorder = (gcnew System::Windows::Forms::Panel());
             this->fcgtabControlVideo->SuspendLayout();
             this->fcgtabPageSVTAV1_1->SuspendLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNULookahead))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUOverShootPct))->BeginInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUUnderShootPct))->BeginInit();
@@ -1547,6 +1552,8 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // 
             // fcgtabPageSVTAV1_1
             // 
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBLookahead);
+            this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgNULookahead);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBFastDecode);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgCBFastDecode);
             this->fcgtabPageSVTAV1_1->Controls->Add(this->fcgLBTune);
@@ -1620,10 +1627,31 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgtabPageSVTAV1_1->Text = L"SVT-AV1 (1)";
             this->fcgtabPageSVTAV1_1->UseVisualStyleBackColor = true;
             // 
+            // fcgLBLookahead
+            // 
+            this->fcgLBLookahead->AutoSize = true;
+            this->fcgLBLookahead->Location = System::Drawing::Point(415, 179);
+            this->fcgLBLookahead->Name = L"fcgLBLookahead";
+            this->fcgLBLookahead->Size = System::Drawing::Size(65, 14);
+            this->fcgLBLookahead->TabIndex = 276;
+            this->fcgLBLookahead->Text = L"Lookahead";
+            // 
+            // fcgNULookahead
+            // 
+            this->fcgNULookahead->Location = System::Drawing::Point(526, 177);
+            this->fcgNULookahead->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 120, 0, 0, 0 });
+            this->fcgNULookahead->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
+            this->fcgNULookahead->Name = L"fcgNULookahead";
+            this->fcgNULookahead->Size = System::Drawing::Size(64, 21);
+            this->fcgNULookahead->TabIndex = 275;
+            this->fcgNULookahead->Tag = L"reCmd";
+            this->fcgNULookahead->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            this->fcgNULookahead->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, System::Int32::MinValue });
+            // 
             // fcgLBFastDecode
             // 
             this->fcgLBFastDecode->AutoSize = true;
-            this->fcgLBFastDecode->Location = System::Drawing::Point(416, 199);
+            this->fcgLBFastDecode->Location = System::Drawing::Point(416, 225);
             this->fcgLBFastDecode->Name = L"fcgLBFastDecode";
             this->fcgLBFastDecode->Size = System::Drawing::Size(72, 14);
             this->fcgLBFastDecode->TabIndex = 274;
@@ -1632,7 +1660,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBFastDecode
             // 
             this->fcgCBFastDecode->AutoSize = true;
-            this->fcgCBFastDecode->Location = System::Drawing::Point(526, 201);
+            this->fcgCBFastDecode->Location = System::Drawing::Point(526, 227);
             this->fcgCBFastDecode->Name = L"fcgCBFastDecode";
             this->fcgCBFastDecode->Size = System::Drawing::Size(15, 14);
             this->fcgCBFastDecode->TabIndex = 273;
@@ -1899,7 +1927,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgLBSceneChangeDetection
             // 
             this->fcgLBSceneChangeDetection->AutoSize = true;
-            this->fcgLBSceneChangeDetection->Location = System::Drawing::Point(416, 178);
+            this->fcgLBSceneChangeDetection->Location = System::Drawing::Point(416, 204);
             this->fcgLBSceneChangeDetection->Name = L"fcgLBSceneChangeDetection";
             this->fcgLBSceneChangeDetection->Size = System::Drawing::Size(83, 14);
             this->fcgLBSceneChangeDetection->TabIndex = 228;
@@ -1908,7 +1936,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             // fcgCBSceneChangeDetection
             // 
             this->fcgCBSceneChangeDetection->AutoSize = true;
-            this->fcgCBSceneChangeDetection->Location = System::Drawing::Point(526, 180);
+            this->fcgCBSceneChangeDetection->Location = System::Drawing::Point(526, 206);
             this->fcgCBSceneChangeDetection->Name = L"fcgCBSceneChangeDetection";
             this->fcgCBSceneChangeDetection->Size = System::Drawing::Size(15, 14);
             this->fcgCBSceneChangeDetection->TabIndex = 227;
@@ -4066,6 +4094,7 @@ private: System::Windows::Forms::ToolStripDropDownButton^  fcgTSLanguage;
             this->fcgtabControlVideo->ResumeLayout(false);
             this->fcgtabPageSVTAV1_1->ResumeLayout(false);
             this->fcgtabPageSVTAV1_1->PerformLayout();
+            (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNULookahead))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUBiasPct))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUOverShootPct))->EndInit();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->fcgNUUnderShootPct))->EndInit();

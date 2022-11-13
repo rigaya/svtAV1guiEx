@@ -137,6 +137,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
+    OPT_NUM("lookahead", lookahead);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
@@ -235,6 +236,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("hierarchical-levels", hierarchical_levels);
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
+    OPT_NUM("lookahead", lookahead);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);

@@ -458,6 +458,7 @@ AuofcgLBHierarchicalLevels=分层级别
 AuofcgLBTile2=x
 AuofcgLBTile=瓦片
 AuofcgLBIntraRefreshType=帧内刷新类型
+AuofcgLBLookahead=码率控制预测帧数
 AuofcgLBKeyint=关键帧间隔
 AuofcgLBThreads=线程数
 AuofcgCBUsehighbit=高比特位深

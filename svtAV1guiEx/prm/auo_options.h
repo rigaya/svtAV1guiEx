@@ -243,6 +243,7 @@ typedef struct {
     int     intra_refresh_type;  //irefresh-type
     int     keyint;        //keyint
     int     lp;         //lp (LogicalProcessorNumber)
+    int     lookahead;
     int     matrix_coefficients; //--matrix-coefficients
     int     max_qp;
     int     maxsection_pct; //--maxsection-pct

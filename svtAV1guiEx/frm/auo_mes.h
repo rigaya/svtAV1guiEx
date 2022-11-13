@@ -588,6 +588,7 @@ enum AuoMes {
         AuofcgLBTile2,
         AuofcgLBTile,
         AuofcgLBIntraRefreshType,
+        AuofcgLBLookahead,
         AuofcgLBKeyint,
         AuofcgLBThreads,
         AuofcgCBUsehighbit,

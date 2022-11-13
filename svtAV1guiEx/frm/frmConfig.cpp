@@ -1129,6 +1129,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBTile2);
     LOAD_CLI_TEXT(fcgLBTile);
     LOAD_CLI_TEXT(fcgLBIntraRefreshType);
+    LOAD_CLI_TEXT(fcgLBLookahead);
     LOAD_CLI_TEXT(fcgLBKeyint);
     LOAD_CLI_TEXT(fcgLBThreads);
     LOAD_CLI_TEXT(fcgCBUsehighbit);
@@ -1286,6 +1287,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
     SetNUValue(fcgNUThreads, enc.lp);         //lp (LogicalProcessorNumber)
+    SetNUValue(fcgNULookahead, enc.lookahead);
     SetCXIndex(fcgCXColorMatrix, get_cx_index(list_colormatrix, enc.matrix_coefficients));
     SetNUValue(fcgNUMaxQP, enc.max_qp);
     SetNUValue(fcgNUMaxSectionPct, enc.maxsection_pct);
@@ -1397,6 +1399,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
     enc.keyint = (int)fcgNUKeyint->Value;
     enc.lp = (int)fcgNUThreads->Value;
+    enc.lookahead = (int)fcgNULookahead->Value;
     enc.matrix_coefficients = list_colormatrix[fcgCXColorMatrix->SelectedIndex].value;
     enc.max_qp = (int)fcgNUMaxQP->Value;
     enc.maxsection_pct = (int)fcgNUMaxSectionPct->Value;

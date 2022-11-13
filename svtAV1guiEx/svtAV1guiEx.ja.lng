@@ -457,6 +457,7 @@ AuofcgLBHierarchicalLevels=hierarchical levels
 AuofcgLBTile2=x
 AuofcgLBTile=tile
 AuofcgLBIntraRefreshType=intra refresh type
+AuofcgLBLookahead=Lookahead
 AuofcgLBKeyint=keyint
 AuofcgLBThreads=threads
 AuofcgCBUsehighbit=highbit depth

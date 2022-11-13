@@ -509,6 +509,7 @@ static const char * AUO_MES_ID_NAME_STR[] = {
 "AuofcgLBTile2",
 "AuofcgLBTile",
 "AuofcgLBIntraRefreshType",
+"AuofcgLBLookahead",
 "AuofcgLBKeyint",
 "AuofcgLBThreads",
 "AuofcgCBUsehighbit",
