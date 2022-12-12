@@ -442,7 +442,8 @@ const CX_DESC_AUO list_enc_mode[] = {
     { L"9",                AUO_OPTION_ENC_MODE_09,  9 },
     { L"10",               AUO_OPTION_ENC_MODE_10, 10 },
     { L"11",               AUO_OPTION_ENC_MODE_11, 11 },
-    { L"12 - fast",        AUO_OPTION_ENC_MODE_12, 12 },
+    { L"12",               AUO_OPTION_ENC_MODE_12, 12 },
+    { L"13 - fast",        AUO_OPTION_ENC_MODE_13, 13 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const CX_DESC_AUO list_aq[] = {

@@ -482,6 +482,7 @@ enum AuoMes {
         AUO_OPTION_ENC_MODE_10,
         AUO_OPTION_ENC_MODE_11,
         AUO_OPTION_ENC_MODE_12,
+        AUO_OPTION_ENC_MODE_13,
         AUO_OPTION_AQ_0,
         AUO_OPTION_AQ_1,
         AUO_OPTION_AQ_2,
