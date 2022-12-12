@@ -202,14 +202,21 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("input-depth", bit_depth);
     if (cx->rc == get_cx_value(list_rc, L"CRF")) {
         cmd << " --crf " << (int)(cx->qp);
+        if (save_disabled_prm) {
+            OPT_NUM("tbr", bitrate);
+        }
     } else {
         OPT_NUM("rc", rc);
-        if ((cx->qp) != (encPrmDefault.qp)) cmd << " -q " << (int)(cx->qp);
+        if (cx->rc == get_cx_value(list_rc, L"CQP") || save_disabled_prm) {
+            cmd << " -q " << (int)(cx->qp);
+        }
+        if (cx->rc == get_cx_value(list_rc, L"VBR") || save_disabled_prm) {
+            OPT_NUM("tbr", bitrate);
+        }
     }
     OPT_NUM("color-format", output_csp);
     OPT_NUM("profile", profile);
     OPT_NUM("pass", pass);
-    OPT_NUM("tbr", bitrate);
     OPT_NUM("lp", lp);
 
     if (cx->rc == get_cx_value(list_rc, L"CQP")) {
