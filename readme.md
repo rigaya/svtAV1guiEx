@@ -8,7 +8,7 @@ by rigaya
 [こちら＞＞](https://github.com/rigaya/svtAV1guiEx/releases)
 
 ## 想定動作環境
-Windows 8.1/10/11 (x64)  
+Windows 10/11 (x64)  
 Aviutl 1.00 以降 推奨
 
 x86(32bit)環境では動作しません。
