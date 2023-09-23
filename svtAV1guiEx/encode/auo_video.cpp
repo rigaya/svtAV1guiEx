@@ -799,7 +799,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     remove(pe->temp_filename); //ファイルサイズチェックの時に旧ファイルを参照してしまうのを回避
 
     //jitter用領域確保
-    if ((jitter = (int *)calloc(oip->n + 1, sizeof(int))) == NULL) {
+    if (afs && ((jitter = (int *)calloc(oip->n + 1, sizeof(int))) == NULL)) {
         ret |= AUO_RESULT_ERROR; error_malloc_tc();
     //Aviutl(afs)からのフレーム読み込み
     } else if (!setup_afsvideo(oip, sys_dat, conf, pe)) {
@@ -912,7 +912,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
                 //標準入力への書き込みを開始
                 SetEvent(thread_data.he_out_start);
             } else {
-                *(next_jitter - 1) = DROP_FRAME_FLAG;
+                if (jitter) *(next_jitter - 1) = DROP_FRAME_FLAG;
                 pe->drop_count++;
                 //次のフレームの変換を許可
                 SetEvent(thread_data.he_out_fin);
