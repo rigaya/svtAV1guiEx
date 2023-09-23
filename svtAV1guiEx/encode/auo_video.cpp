@@ -1135,7 +1135,7 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
                         enc.bitrate = (enc.bitrate * oip->n) / (oip->n - pe->drop_count);
                     //下へフォールスルー
                 default:
-                    open_log_window(oip->savefile, sys_dat, pe->current_pass, pe->total_pass);
+                    open_log_window(oip, sys_dat, pe->current_pass, pe->total_pass);
                     //if (pe->current_x264_pass == pe->total_x264_pass)
                     //    enc.nul_out = FALSE;
                     //enc.pass = 2;
