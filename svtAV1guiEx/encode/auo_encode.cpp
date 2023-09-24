@@ -38,6 +38,7 @@
 #include <vector>
 #include <string>
 #include <filesystem>
+#include <unordered_map>
 #include <memory>
 #include <functional>
 
@@ -81,6 +82,7 @@ static void avoid_exsisting_tmp_file(char *buf, size_t size) {
     }
 }
 
+#if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1
 #pragma warning (push)
 #pragma warning (disable: 4244)
 #pragma warning (disable: 4996)
@@ -90,6 +92,7 @@ static inline std::string tolowercase(const std::string& str) {
     return str_copy;
 }
 #pragma warning (pop)
+#endif
 
 static std::vector<std::filesystem::path> find_exe_files(const char *target_dir) {
     std::vector<std::filesystem::path> ret;
@@ -200,6 +203,13 @@ std::filesystem::path find_latest_videnc(const std::vector<std::filesystem::path
         }
 #elif ENCODER_SVTAV1
         if (get_svtav1_rev(path.string().c_str(), value) == 0) {
+            if (version_a_larger_than_b(value, version) > 0) {
+                memcpy(version, value, sizeof(version));
+                ret = path;
+            }
+        }
+#elif ENCODER_QSV || ENCODER_NVENC || ENCODER_VCEENC
+        if (get_exe_version_info(path.string().c_str(), value) == 0) {
             if (version_a_larger_than_b(value, version) > 0) {
                 memcpy(version, value, sizeof(version));
                 ret = path;
@@ -528,7 +538,9 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
         const bool default_audenc_auo_avail = (DEFAULT_AUDIO_ENCODER < exstg->s_aud_count
                 && str_has_char(exstg->s_aud[DEFAULT_AUDIO_ENCODER].filename));
         if ((conf->aud.encoder < 0 || exstg->s_aud_count <= conf->aud.encoder)) {
-            if (default_audenc_cnf_avail) {
+            if (default_audenc_cnf_avail
+                && 0 <= exstg->s_local.default_audio_encoder && exstg->s_local.default_audio_encoder < exstg->s_aud_count
+                && muxer_supports_audio_format(pe->muxer_to_be_used, &exstg->s_aud[exstg->s_local.default_audio_encoder])) {
                 conf->aud.encoder = exstg->s_local.default_audio_encoder;
                 warning_use_default_audio_encoder(exstg->s_aud[conf->aud.encoder].dispname);
             } else if (default_audenc_auo_avail) {
@@ -536,8 +548,35 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
                 warning_use_default_audio_encoder(exstg->s_aud[conf->aud.encoder].dispname);
             }
         }
-        if (0 <= conf->aud.encoder && conf->aud.encoder < exstg->s_aud_count) {
+        for (;;) {
+            if (conf->aud.encoder < 0 || exstg->s_aud_count <= conf->aud.encoder) {
+                error_invalid_ini_file();
+                check = FALSE;
+                break;
+            }
             AUDIO_SETTINGS *aud_stg = &exstg->s_aud[conf->aud.encoder];
+            if (!muxer_supports_audio_format(pe->muxer_to_be_used, aud_stg)) {
+                const int orig_encoder = conf->aud.encoder;
+                if (default_audenc_cnf_avail
+                    && orig_encoder != exstg->s_local.default_audio_encoder
+                    && 0 <= exstg->s_local.default_audio_encoder && exstg->s_local.default_audio_encoder < exstg->s_aud_count
+                    && muxer_supports_audio_format(pe->muxer_to_be_used, &exstg->s_aud[exstg->s_local.default_audio_encoder])) {
+                    conf->aud.encoder = exstg->s_local.default_audio_encoder;
+                } else if (default_audenc_auo_avail) {
+                    conf->aud.encoder = DEFAULT_AUDIO_ENCODER;
+                }
+                error_unsupported_audio_format_by_muxer(pe->video_out_type,
+                    exstg->s_aud[orig_encoder].dispname,
+                    (orig_encoder != conf->aud.encoder) ? exstg->s_aud[conf->aud.encoder].dispname : nullptr);
+                // 同じエンコーダあるいはデフォルトエンコーダがうまく取得できな場合は再チェックしても意味がない
+                if (orig_encoder == conf->aud.encoder) {
+                    check = FALSE;
+                    break;
+                }
+                // デフォルトエンコーダに戻して再チェック
+                warning_use_default_audio_encoder(exstg->s_aud[conf->aud.encoder].dispname);
+                continue;
+            }
             if (!audio_encoder_exe_exists(conf, exstg)) {
                 //とりあえず、exe_filesを探す
                 {
@@ -551,7 +590,9 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
                     }
                 }
                 //みつからなければ、デフォルトエンコーダを探す
-                if (!PathFileExists(aud_stg->fullpath) && default_audenc_cnf_avail) {
+                if (!PathFileExists(aud_stg->fullpath) && default_audenc_cnf_avail
+                    && 0 <= exstg->s_local.default_audio_encoder && exstg->s_local.default_audio_encoder < exstg->s_aud_count
+                    && muxer_supports_audio_format(pe->muxer_to_be_used, &exstg->s_aud[exstg->s_local.default_audio_encoder])) {
                     conf->aud.encoder = exstg->s_local.default_audio_encoder;
                     aud_stg = &exstg->s_aud[conf->aud.encoder];
                     if (!PathFileExists(aud_stg->fullpath)) {
@@ -586,25 +627,39 @@ BOOL check_output(CONF_GUIEX *conf, OUTPUT_INFO *oip, const PRM_ENC *pe, guiEx_s
                     if (conf->aud.encoder != exstg->s_aud_faw_index) {
                         error_no_exe_file(aud_stg->dispname, aud_stg->fullpath);
                         check = FALSE;
+                        break;
                     }
                 }
             }
             if (str_has_char(aud_stg->filename) && (conf->aud.encoder != exstg->s_aud_faw_index)) {
+                std::wstring exe_message;
+                if (!check_audenc_output(aud_stg, exe_message)) {
+                    const int orig_encoder = conf->aud.encoder;
+                    if (default_audenc_cnf_avail
+                        && orig_encoder != exstg->s_local.default_audio_encoder
+                        && 0 <= exstg->s_local.default_audio_encoder && exstg->s_local.default_audio_encoder < exstg->s_aud_count
+                        && muxer_supports_audio_format(pe->muxer_to_be_used, &exstg->s_aud[exstg->s_local.default_audio_encoder])) {
+                        conf->aud.encoder = exstg->s_local.default_audio_encoder;
+                    } else if (default_audenc_auo_avail) {
+                        conf->aud.encoder = DEFAULT_AUDIO_ENCODER;
+                    }
+                    error_failed_to_run_audio_encoder(
+                        exstg->s_aud[orig_encoder].dispname,
+                        exe_message.c_str(),
+                        (orig_encoder != conf->aud.encoder) ? exstg->s_aud[conf->aud.encoder].dispname : nullptr);
+                    // 同じエンコーダあるいはデフォルトエンコーダがうまく取得できな場合は再チェックしても意味がない
+                    if (orig_encoder == conf->aud.encoder) {
+                        check = FALSE;
+                        break;
+                    }
+                    // デフォルトエンコーダに戻して再チェック
+                    warning_use_default_audio_encoder(exstg->s_aud[conf->aud.encoder].dispname);
+                    continue;
+                }
                 info_use_exe_found(aud_stg->dispname, aud_stg->fullpath);
             }
-            if (!muxer_supports_audio_format(pe->muxer_to_be_used, aud_stg)) {
-                AUDIO_SETTINGS *aud_default = nullptr;
-                if (default_audenc_cnf_avail) {
-                    aud_default = &exstg->s_aud[exstg->s_local.default_audio_encoder];
-                } else if (default_audenc_auo_avail) {
-                    aud_default = &exstg->s_aud[DEFAULT_AUDIO_ENCODER];
-                }
-                error_unsupported_audio_format_by_muxer(pe->video_out_type, aud_stg->dispname, (aud_default) ? aud_default->dispname : nullptr);
-                check = FALSE;
-            }
-        } else {
-            error_invalid_ini_file();
-            check = FALSE;
+            // ここまで来たらエンコーダの確認終了なのでbreak
+            break;
         }
     }
 
@@ -1415,7 +1470,7 @@ double get_duration(const CONF_GUIEX *conf, const SYSTEM_DATA *sys_dat, const PR
 
 double get_amp_margin_bitrate(double base_bitrate, double margin_multi) {
     double clamp_offset = (margin_multi < 0.0) ? 0.2 : 0.0;
-    return base_bitrate * clamp(1.0 - margin_multi / sqrt(max(base_bitrate, 1.0) / 100.0), 0.8 + clamp_offset, 1.0 + clamp_offset);
+    return base_bitrate * clamp(1.0 - margin_multi / std::sqrt(std::max(base_bitrate, 1.0) / 100.0), 0.8 + clamp_offset, 1.0 + clamp_offset);
 }
 
 static AUO_RESULT amp_move_old_file(const char *muxout, const char *savefile) {
@@ -1645,9 +1700,9 @@ int amp_check_file(CONF_GUIEX *conf, const SYSTEM_DATA *sys_dat, PRM_ENC *pe, co
         //まずビットレートの上限を計算
         double limit_bitrate_upper = DBL_MAX;
         if (status & AMPLIMIT_FILE_SIZE)
-            limit_bitrate_upper = min(limit_bitrate_upper, (conf->vid.amp_limit_file_size * 1024*1024)*8.0/1000 / duration);
+            limit_bitrate_upper = std::min(limit_bitrate_upper, (conf->vid.amp_limit_file_size * 1024*1024)*8.0/1000 / duration);
         if (status & AMPLIMIT_BITRATE_UPPER)
-            limit_bitrate_upper = min(limit_bitrate_upper, conf->vid.amp_limit_bitrate_upper);
+            limit_bitrate_upper = std::min(limit_bitrate_upper, conf->vid.amp_limit_bitrate_upper);
         //次にビットレートの下限を計算
         double limit_bitrate_lower = (status & AMPLIMIT_BITRATE_LOWER) ? conf->vid.amp_limit_bitrate_lower : 0.0;
         //上限・下限チェック
@@ -1723,7 +1778,7 @@ int amp_check_file(CONF_GUIEX *conf, const SYSTEM_DATA *sys_dat, PRM_ENC *pe, co
                 double bitrate_limit_upper = (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) ? conf->enc.bitrate - 0.5 * (file_bitrate - conf->vid.amp_limit_bitrate_upper) : DBL_MAX;
                 double bitrate_limit_lower = (conf->vid.amp_check & AMPLIMIT_BITRATE_LOWER) ? conf->enc.bitrate + 0.5 * (conf->vid.amp_limit_bitrate_lower - file_bitrate) : 0.0;
                 double filesize_limit = (conf->vid.amp_check & AMPLIMIT_FILE_SIZE) ? conf->enc.bitrate - 0.5 * ((filesize - conf->vid.amp_limit_file_size*1024*1024))* 8.0/1000.0 / get_duration(conf, sys_dat, pe, oip) : conf->enc.bitrate;
-                conf->enc.bitrate = (int)(0.5 + max(min(margin_bitrate, min(filesize_limit, bitrate_limit_upper)), bitrate_limit_lower));
+                conf->enc.bitrate = (int)(0.5 + std::max(std::min(margin_bitrate, std::min(filesize_limit, bitrate_limit_upper)), bitrate_limit_lower));
                 if (conf->vid.amp_check & AMPLIMIT_BITRATE_LOWER) {
                     AUO_RESULT ret = amp_adjust_lower_bitrate_from_bitrate(&conf->enc, &conf->vid, sys_dat, pe, oip, duration, file_bitrate);
                     if (ret == AUO_RESULT_WARNING) {
