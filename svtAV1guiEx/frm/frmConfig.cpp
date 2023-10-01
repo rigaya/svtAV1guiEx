@@ -900,6 +900,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXHierarchicalLevels, list_hierarchical_levels);
 
     setComboBox(fcgCXProfileAV1,     list_profile_av1);
+    fcgCXProfileAV1->Enabled = false;
 
     setComboBox(fcgCXAudioEncTiming, audio_enc_timing_desc);
     setComboBox(fcgCXAudioDelayCut,  AUDIO_DELAY_CUT_MODE);
@@ -1286,7 +1287,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUMinQP, enc.min_qp);
     SetNUValue(fcgNUMinSectionPct, enc.minsection_pct);
     SetNUValue(fcgNUOverShootPct, enc.overshoot_pct);
-    SetCXIndex(fcgCXProfileAV1, get_cx_index(list_profile_av1, enc.profile));
+    SetCXIndex(fcgCXProfileAV1, get_cx_index(list_profile_av1, 0 /*enc.profile*/));
     fcgCBRestrictedMV->Checked = enc.rmv != 0;
     fcgCBSceneChangeDetection->Checked = enc.scd != 0;  //scd
     SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
