@@ -590,6 +590,7 @@ enum AuoMes {
         AuofcgLBEnableOverlay,
         AuofcgLBEnableDLF,
         AuofcgLBSceneChangeDetection,
+        AuofcgLBEnableVarianceBoost,
         AuofcggroupBoxColorMatrix,
         AuofcgLBInputRange,
         AuofcgLBTransfer,

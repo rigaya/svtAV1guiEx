@@ -237,6 +237,7 @@ typedef struct {
     int     enable_stat_report;
     int     enable_tf;
     int     enable_tpl_la;
+    int     enable_variance_boost;
     int     fast_decode;
     int     film_grain; //--film-grain
     int     hierarchical_levels; //hierarchical-levels
@@ -258,6 +259,7 @@ typedef struct {
     int     transfer_characteristics; // --transfer-characteristics
     int     tune; //tune
     int     undershoot_pct; //--undershoot-pct
+    int     variance_boost_strength; //--variance-boost-strength
 } CONF_ENCODER;
 #pragma pack(pop)
 

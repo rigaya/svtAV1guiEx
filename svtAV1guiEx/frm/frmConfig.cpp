@@ -1100,6 +1100,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBEnableOverlay);
     LOAD_CLI_TEXT(fcgLBEnableDLF);
     LOAD_CLI_TEXT(fcgLBSceneChangeDetection);
+    LOAD_CLI_TEXT(fcgLBEnableVarianceBoost);
     LOAD_CLI_TEXT(fcggroupBoxColorMatrix);
     LOAD_CLI_TEXT(fcgLBInputRange);
     LOAD_CLI_TEXT(fcgLBTransfer);
@@ -1274,6 +1275,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBEnableRestorationFilter->Checked = enc.enable_restoration != 0;
     fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
     fcgCBEnableTF->Checked = enc.enable_tf != 0;
+    SetNUValue(fcgNUVarianceBoostStrength, enc.enable_variance_boost ? enc.variance_boost_strength : 0);
     fcgCBFastDecode->Checked = enc.fast_decode != 0;
     SetNUValue(fcgNUFilmGrain, enc.film_grain);
     SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
@@ -1385,6 +1387,8 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
 
     enc.enable_stat_report = fcgCBEnableStatReport->Checked;
     enc.enable_tf = fcgCBEnableTF->Checked;
+    enc.variance_boost_strength = (int)fcgNUVarianceBoostStrength->Value;
+    enc.enable_variance_boost = enc.variance_boost_strength != 0 ? 1 : 0;
 
     enc.fast_decode = fcgCBFastDecode->Checked;
     enc.film_grain = (int)fcgNUFilmGrain->Value;

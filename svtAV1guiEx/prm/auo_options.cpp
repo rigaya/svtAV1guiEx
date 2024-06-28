@@ -132,6 +132,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("enable-stat-report", enable_stat_report);
     OPT_NUM("enable-tf", enable_tf);
     OPT_NUM("enable-tpl-la", enable_tpl_la);
+    OPT_NUM("enable-variance-boost", enable_variance_boost);
     OPT_NUM("fast-decode", fast_decode);
     OPT_NUM("film-grain", film_grain);
     OPT_NUM("hierarchical-levels", hierarchical_levels);
@@ -152,6 +153,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("transfer-characteristics", transfer_characteristics);
     OPT_NUM("tune", tune);
     OPT_NUM("undershoot-pct", undershoot_pct);
+    OPT_NUM("variance-boost-strength", variance_boost_strength);
     return 1;
 #undef OPT_NUM
 #undef IS_OPTION
@@ -258,6 +260,10 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("transfer-characteristics", transfer_characteristics);
     OPT_NUM("tune", tune);
     OPT_NUM("undershoot-pct", undershoot_pct);
+    OPT_NUM("enable-variance-boost", enable_variance_boost);
+    if (cx->enable_variance_boost) {
+        OPT_NUM("variance-boost-strength", variance_boost_strength);
+    }
 
     return cmd.str();
 }

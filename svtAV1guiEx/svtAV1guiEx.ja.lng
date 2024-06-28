@@ -458,6 +458,7 @@ AuofcgLBEnableTF=EnableTF
 AuofcgLBEnableOverlay=EnableOverlay
 AuofcgLBEnableDLF=EnableDLF
 AuofcgLBSceneChangeDetection=Scene Change
+AuofcgLBEnableVarianceBoost=VarianceBoost
 AuofcggroupBoxColorMatrix=色空間
 AuofcgLBInputRange=color range
 AuofcgLBTransfer=transfer
