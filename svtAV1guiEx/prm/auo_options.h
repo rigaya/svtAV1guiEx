@@ -225,7 +225,6 @@ typedef struct {
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
     int     aq;
-    int     bias_pct; //--bias-pct
     int     color_primaries; //--color-primaries
     int     color_range; //--color_range
     int     enable_cdef; //--enable-cdef
@@ -245,21 +244,24 @@ typedef struct {
     int     keyint;        //keyint
     int     lp;         //lp (LogicalProcessorNumber)
     int     lookahead;
+    int     luminance_qp_bias; //--luminance-qp-bias
     int     matrix_coefficients; //--matrix-coefficients
     int     max_qp;
     int     maxsection_pct; //--maxsection-pct
     int     min_qp;
     int     minsection_pct; //--minsection-pct
     int     overshoot_pct; //--overshoot-pct
-    int     rmv;        //--rmv
+    int     sharpness; // sharpness
     int     scd;        //scd (scene change detection)
     int     scm;        //scm (list_scm)
+    int     tf_strength; // --tf-strength
     int     tile_rows;   //tile-rows
     int     tile_columns; //tile-columns
     int     transfer_characteristics; // --transfer-characteristics
     int     tune; //tune
     int     undershoot_pct; //--undershoot-pct
     int     variance_boost_strength; //--variance-boost-strength
+    int     variance_octile; // --variance-octile
 } CONF_ENCODER;
 #pragma pack(pop)
 

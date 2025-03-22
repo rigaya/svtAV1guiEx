@@ -120,7 +120,6 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("lp", lp);
 
     OPT_NUM("aq-mode", aq);
-    OPT_NUM("bias-pct", bias_pct);
     OPT_NUM("color-primaries", color_primaries);
     OPT_NUM("color-range", color_range);
     OPT_NUM("enable-cdef", enable_cdef);
@@ -139,21 +138,24 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
     OPT_NUM("lookahead", lookahead);
+    OPT_NUM("luminance-qp-bias", luminance_qp_bias);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
     OPT_NUM("min-qp", min_qp);
     OPT_NUM("minsection-pct", minsection_pct);
     OPT_NUM("overshoot-pct", overshoot_pct);
-    OPT_NUM("rmv", rmv);
+    OPT_NUM("sharpness", sharpness);
     OPT_NUM("scd", scd);
     OPT_NUM("scm", scm);
+    OPT_NUM("tf-strength", tf_strength);
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
     OPT_NUM("transfer-characteristics", transfer_characteristics);
     OPT_NUM("tune", tune);
     OPT_NUM("undershoot-pct", undershoot_pct);
     OPT_NUM("variance-boost-strength", variance_boost_strength);
+    OPT_NUM("variance-octile", variance_octile);
     return 1;
 #undef OPT_NUM
 #undef IS_OPTION
@@ -228,7 +230,6 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     } else {
         OPT_NUM("aq-mode", aq);
     }
-    OPT_NUM("bias-pct", bias_pct);
     OPT_NUM("color-primaries", color_primaries);
     OPT_NUM("color-range", color_range);
     OPT_NUM("enable-cdef", enable_cdef);
@@ -246,15 +247,17 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     OPT_NUM("irefresh-type", intra_refresh_type);
     OPT_NUM("keyint", keyint);
     OPT_NUM("lookahead", lookahead);
+    OPT_NUM("luminance-qp-bias", luminance_qp_bias);
     OPT_NUM("matrix-coefficients", matrix_coefficients);
     OPT_NUM("max-qp", max_qp);
     OPT_NUM("maxsection-pct", maxsection_pct);
     OPT_NUM("min-qp", min_qp);
     OPT_NUM("minsection-pct", minsection_pct);
     OPT_NUM("overshoot-pct", overshoot_pct);
-    OPT_NUM("rmv", rmv);
+    OPT_NUM("sharpness", sharpness);
     OPT_NUM("scd", scd);
     OPT_NUM("scm", scm);
+    OPT_NUM("tf-strength", tf_strength);
     OPT_NUM("tile-rows", tile_rows);
     OPT_NUM("tile-columns", tile_columns);
     OPT_NUM("transfer-characteristics", transfer_characteristics);
@@ -264,6 +267,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     if (cx->enable_variance_boost) {
         OPT_NUM("variance-boost-strength", variance_boost_strength);
     }
+    OPT_NUM("variance-octile", variance_octile);
 
     return cmd.str();
 }

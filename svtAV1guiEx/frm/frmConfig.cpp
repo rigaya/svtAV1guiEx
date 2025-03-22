@@ -1078,20 +1078,18 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgtabPageSVTAV1_1);
     LOAD_CLI_TEXT(fcgLBFastDecode);
     LOAD_CLI_TEXT(fcgLBTune);
-    LOAD_CLI_TEXT(fcgLBBiasPct);
     LOAD_CLI_TEXT(fcgLBOverShootPct);
     LOAD_CLI_TEXT(fcgLBUnderShootPct);
     LOAD_CLI_TEXT(fcgLBMaxSectionPct);
     LOAD_CLI_TEXT(fcgLBMinSectionPct);
     LOAD_CLI_TEXT(fcgLBScm);
     LOAD_CLI_TEXT(fcgLBEnableCDEF);
-    LOAD_CLI_TEXT(fcgLBFilmGrain);
-    LOAD_CLI_TEXT(fcgLBRestrictedMV);
     LOAD_CLI_TEXT(fcgLBEnableTF);
     LOAD_CLI_TEXT(fcgLBEnableOverlay);
     LOAD_CLI_TEXT(fcgLBEnableDLF);
-    LOAD_CLI_TEXT(fcgLBSceneChangeDetection);
     LOAD_CLI_TEXT(fcgLBEnableVarianceBoost);
+    LOAD_CLI_TEXT(fcgLBEnableRestortionFiltering);
+    LOAD_CLI_TEXT(fcgLBFilmGrain);
     LOAD_CLI_TEXT(fcggroupBoxColorMatrix);
     LOAD_CLI_TEXT(fcgLBInputRange);
     LOAD_CLI_TEXT(fcgLBTransfer);
@@ -1105,17 +1103,21 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLB2pasAuto);
     LOAD_CLI_TEXT(fcgLBProfileAV1);
     LOAD_CLI_TEXT(fcgLBColorFormat);
-    LOAD_CLI_TEXT(fcgLBEnableRestortionFiltering);
+    LOAD_CLI_TEXT(fcgLBAQ);
+    LOAD_CLI_TEXT(fcgLBIntraRefreshType);
+    LOAD_CLI_TEXT(fcgLBHierarchicalLevels);
+    LOAD_CLI_TEXT(fcgLBKeyint);
+    LOAD_CLI_TEXT(fcgLBLookahead);
+    LOAD_CLI_TEXT(fcgLBLumaQPBias);
     LOAD_CLI_TEXT(fcgLBMaxQP);
     LOAD_CLI_TEXT(fcgLBMinQP);
     LOAD_CLI_TEXT(fcgLBMfmv);
-    LOAD_CLI_TEXT(fcgLBAQ);
-    LOAD_CLI_TEXT(fcgLBHierarchicalLevels);
+    LOAD_CLI_TEXT(fcgLBSceneChangeDetection);
+    LOAD_CLI_TEXT(fcgLBSharpness);
+    LOAD_CLI_TEXT(fcgLBTFStrength);
     LOAD_CLI_TEXT(fcgLBTile2);
     LOAD_CLI_TEXT(fcgLBTile);
-    LOAD_CLI_TEXT(fcgLBIntraRefreshType);
-    LOAD_CLI_TEXT(fcgLBLookahead);
-    LOAD_CLI_TEXT(fcgLBKeyint);
+    LOAD_CLI_TEXT(fcgLBVarianceOctile);
     LOAD_CLI_TEXT(fcgLBThreads);
     LOAD_CLI_TEXT(fcgCBUsehighbit);
     LOAD_CLI_TEXT(fcgBTX264Path);
@@ -1250,7 +1252,6 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCB2PassAuto->Checked = enc.pass > 0;
 
     SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
-    SetNUValue(fcgNUBiasPct, enc.bias_pct);
     SetCXIndex(fcgCXColorFormat, get_cx_index(list_color_format, enc.output_csp));
     SetCXIndex(fcgCXColorPrim, get_cx_index(list_colorprim, enc.color_primaries));
     SetCXIndex(fcgCXColorRange, get_cx_index(list_color_range, enc.color_range));
@@ -1260,8 +1261,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     fcgCBEnableOverlay->Checked = enc.enable_overlays != 0;
     fcgCBEnableRestorationFilter->Checked = enc.enable_restoration != 0;
     fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
-    fcgCBEnableTF->Checked = enc.enable_tf != 0;
-    SetNUValue(fcgNUVarianceBoostStrength, enc.enable_variance_boost ? enc.variance_boost_strength : 0);
+    SetNUValue(fcgNUEnableTF, enc.enable_tf);
     fcgCBFastDecode->Checked = enc.fast_decode != 0;
     SetNUValue(fcgNUFilmGrain, enc.film_grain);
     SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
@@ -1269,6 +1269,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
     SetNUValue(fcgNUThreads, enc.lp);         //lp (LogicalProcessorNumber)
     SetNUValue(fcgNULookahead, enc.lookahead);
+    SetNUValue(fcgNULumaQPBias, enc.luminance_qp_bias);
     SetCXIndex(fcgCXColorMatrix, get_cx_index(list_colormatrix, enc.matrix_coefficients));
     SetNUValue(fcgNUMaxQP, enc.max_qp);
     SetNUValue(fcgNUMaxSectionPct, enc.maxsection_pct);
@@ -1276,14 +1277,17 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUMinSectionPct, enc.minsection_pct);
     SetNUValue(fcgNUOverShootPct, enc.overshoot_pct);
     SetCXIndex(fcgCXProfileAV1, get_cx_index(list_profile_av1, 0 /*enc.profile*/));
-    fcgCBRestrictedMV->Checked = enc.rmv != 0;
+    SetNUValue(fcgNUSharpness, enc.sharpness);
     fcgCBSceneChangeDetection->Checked = enc.scd != 0;  //scd
     SetCXIndex(fcgCXSCM, get_cx_index(list_scm, enc.scm));        //scm
+    SetNUValue(fcgNUTFStrength, enc.tf_strength);
     SetNUValue(fcgNUTileRows, enc.tile_rows);   //tile-rows
     SetNUValue(fcgNUTileColumns, enc.tile_columns); //tile-columns
     SetCXIndex(fcgCXTune, get_cx_index(list_tune, enc.tune));
     SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
     SetNUValue(fcgNUUnderShootPct, enc.undershoot_pct);
+    SetNUValue(fcgNUVarianceBoostStrength, enc.enable_variance_boost ? enc.variance_boost_strength : 0);
+    SetNUValue(fcgNUVarianceOctile, enc.variance_octile);
 
     if (cnf->vid.sar_x * cnf->vid.sar_y < 0)
         cnf->vid.sar_x = cnf->vid.sar_y = 0;
@@ -1357,7 +1361,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.pass                 = (int)fcgCB2PassAuto->Checked ? 2 : 0;
 
     enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;
-    enc.bias_pct = (int)fcgNUBiasPct->Value;
     enc.output_csp = list_color_format[fcgCXColorFormat->SelectedIndex].value;
     enc.color_primaries = list_colorprim[fcgCXColorPrim->SelectedIndex].value;
     enc.color_range = list_color_range[fcgCXColorRange->SelectedIndex].value;
@@ -1370,9 +1373,8 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_restoration = fcgCBEnableRestorationFilter->Checked;
 
     enc.enable_stat_report = fcgCBEnableStatReport->Checked;
-    enc.enable_tf = fcgCBEnableTF->Checked;
-    enc.variance_boost_strength = (int)fcgNUVarianceBoostStrength->Value;
-    enc.enable_variance_boost = enc.variance_boost_strength != 0 ? 1 : 0;
+    enc.enable_tf = (int)fcgNUEnableTF->Value;
+    enc.enable_variance_boost = ((int)fcgNUVarianceBoostStrength->Value) != 0 ? 1 : 0;
 
     enc.fast_decode = fcgCBFastDecode->Checked;
     enc.film_grain = (int)fcgNUFilmGrain->Value;
@@ -1381,6 +1383,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.keyint = (int)fcgNUKeyint->Value;
     enc.lp = (int)fcgNUThreads->Value;
     enc.lookahead = (int)fcgNULookahead->Value;
+    enc.luminance_qp_bias = (int)fcgNULumaQPBias->Value;
     enc.matrix_coefficients = list_colormatrix[fcgCXColorMatrix->SelectedIndex].value;
     enc.max_qp = (int)fcgNUMaxQP->Value;
     enc.maxsection_pct = (int)fcgNUMaxSectionPct->Value;
@@ -1389,15 +1392,18 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
 
     enc.overshoot_pct = (int)fcgNUOverShootPct->Value;
     enc.profile = list_profile_av1[fcgCXProfileAV1->SelectedIndex].value;
-    enc.rmv = fcgCBRestrictedMV->Checked;
+    enc.sharpness = (int)fcgNUSharpness->Value;
     enc.scd = fcgCBSceneChangeDetection->Checked;
     enc.scm = list_scm[fcgCXSCM->SelectedIndex].value;
 
+    enc.tf_strength = (int)fcgNUTFStrength->Value;
     enc.tile_rows = (int)fcgNUTileRows->Value;
     enc.tile_columns = (int)fcgNUTileColumns->Value;
     enc.transfer_characteristics = list_transfer[fcgCXTransfer->SelectedIndex].value;
     enc.tune = list_tune[fcgCXTune->SelectedIndex].value;
     enc.undershoot_pct = (int)fcgNUUnderShootPct->Value;
+    enc.variance_boost_strength = (int)fcgNUVarianceBoostStrength->Value;
+    enc.variance_octile = (int)fcgNUVarianceOctile->Value;
 
     cnf->vid.sar_x = (int)fcgNUAspectRatioX->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);
     cnf->vid.sar_y = (int)fcgNUAspectRatioY->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);
