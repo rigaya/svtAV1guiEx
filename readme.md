@@ -31,6 +31,13 @@ x86(32bit)環境では動作しません。
 
 中身をすべてAviutlフォルダにコピーします。
 
+> [!IMPORTANT]
+> Aviutl2では、
+> - exe_filesフォルダをAviutlフォルダの中に、
+> - pluginsフォルダは```C:\ProgramData\aviutl2```の中に
+>
+> それぞれコピーしてください。
+
 ![中身のコピー](./data/svtAV1guiEx_1_00_install_03.png)
 
 更新時には、下記のように上書きするか聞いてくることがあります。
