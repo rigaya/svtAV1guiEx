@@ -34,7 +34,7 @@ x86(32bit)環境では動作しません。
 > [!IMPORTANT]
 > Aviutl2では、
 > - exe_filesフォルダをAviutlフォルダの中に、
-> - pluginsフォルダは```C:\ProgramData\aviutl2```の中に
+> - ```plugins```フォルダの**中身**を全て```C:\ProgramData\aviutl2\Plugin```の中に
 >
 > それぞれコピーしてください。
 
