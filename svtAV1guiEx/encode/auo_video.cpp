@@ -85,13 +85,25 @@ static const char * specify_input_csp(int output_csp) {
     return specify_csp[output_csp];
 }
 
+int get_encoder_send_bitdepth(const CONF_ENCODER *cnf) {
+    //if (is_aviutl2()) {
+    //    if (cnf->output_csp == OUT_CSP_YUV444) {
+    //        return cnf->use_highbit_depth ? 16 : 8;
+    //    }
+    //    return 8;
+    //}
+    return cnf->bit_depth;
+}
+
 int get_aviutl_color_format(int bit_depth, int output_csp, int input_as_lw48) {
     //Aviutlからの入力に使用するフォーマット
+
+    const bool isAviutl2 = is_aviutl2();
 
     const int cf_aviutl_pixel48 = (input_as_lw48) ? CF_LW48 : CF_YC48;
     switch (output_csp) {
         case OUT_CSP_YUV444:
-            return cf_aviutl_pixel48;
+            return (isAviutl2) ? CF_RGB : cf_aviutl_pixel48;
         case OUT_CSP_RGB:
             return CF_RGB;
         case OUT_CSP_NV12:
@@ -101,7 +113,7 @@ int get_aviutl_color_format(int bit_depth, int output_csp, int input_as_lw48) {
         case OUT_CSP_YUV422:
         case OUT_CSP_YUV400:
         default:
-            return (bit_depth > 8) ? cf_aviutl_pixel48 : CF_YUY2;
+            return (isAviutl2) ? CF_YUY2 : ((bit_depth > 8) ? cf_aviutl_pixel48 : CF_YUY2);
     }
 }
 
@@ -652,12 +664,12 @@ static UINT64 get_amp_filesize_limit(const CONF_GUIEX *conf, const OUTPUT_INFO *
     if (conf->enc.use_auto_npass) {
         //上限ファイルサイズのチェック
         if (conf->vid.amp_check & AMPLIMIT_FILE_SIZE) {
-            filesize_limit = min(filesize_limit, (UINT64)(conf->vid.amp_limit_file_size*1024*1024));
+            filesize_limit = std::min(filesize_limit, (UINT64)(conf->vid.amp_limit_file_size*1024*1024));
         }
         //上限ビットレートのチェック
         if (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) {
             const double duration = get_duration(conf, sys_dat, pe, oip);
-            filesize_limit = min(filesize_limit, (UINT64)(conf->vid.amp_limit_bitrate_upper * 1000 / 8 * duration));
+            filesize_limit = std::min(filesize_limit, (UINT64)(conf->vid.amp_limit_bitrate_upper * 1000 / 8 * duration));
         }
     }
     //音声のサイズはここでは考慮しない

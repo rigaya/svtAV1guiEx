@@ -28,9 +28,9 @@
 #ifndef _AUO_VERSION_H_
 #define _AUO_VERSION_H_
 
-#define AUO_VERSION         0,1,28,0
-#define AUO_VERSION_STR      "1.28"
-#define AUO_VERSION_STR_W   L"1.28"
+#define AUO_VERSION         0,1,29,0
+#define AUO_VERSION_STR      "1.29"
+#define AUO_VERSION_STR_W   L"1.29"
 #define AUO_NAME_R            svtAV1guiEx
 #define AUO_NAME_WITHOUT_EXT "svtAV1guiEx"
 #define AUO_NAME_WITHOUT_EXT_W L"svtAV1guiEx"
