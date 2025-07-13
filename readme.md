@@ -17,7 +17,42 @@ x86(32bit)環境では動作しません。
 無保証です。自己責任で使用してください。  
 拡張 SVT-AV1 出力(GUI) Exを使用したことによる、いかなる損害・トラブルについても責任を負いません。  
 
-## svtAV1guiEx の Aviutl への導入・更新
+## svtAV1guiEx の AviUtl2 への導入・更新
+
+> [!IMPORTANT]
+> AviUtl(無印) 向けには、後述の[AviUtl (無印) への導入・更新](#svtAV1guiEx-の-aviutl-無印-への導入・更新)をご覧ください。
+
+### ダウンロード
+
+まず、AviUtl**2**_svtAV1guiEx_x.xx_install.exe を[こちら](https://github.com/rigaya/svtAV1guiEx/releases)からダウンロードします。
+
+### AviUtl2 への導入・更新
+
+ダウンロードしたexeファイルをダブルクリックして開きます。
+
+![exeのダブルクリック](./data/svtAV1guiEx_1_29_install_aviutl2_01.png)
+
+インストールしますか? とでたら [はい] をクリックします。
+
+![インストールしますか](./data/svtAV1guiEx_1_29_install_aviutl2_02.png)
+
+自動的にアーカイブが展開され、インストールが開始されます。
+
+![exeのダブルクリック](./data/svtAV1guiEx_1_29_install_aviutl2_03.png)
+
+svtAV1guiExの動作に必要な追加モジュール(VC runtime)の導入が追加で必要な環境では、ユーザーアカウント制御画面が表示されます。
+その場合は、 [はい] をクリックします。
+_環境によっては準備が不要な場合があり、その場合は表示されません。_
+
+<img src="./data/svtAV1guiEx_1_29_install_aviutl2_04.png" width="360px">
+
+下記のような画面になり、「svtAV1guiEx を使用する準備が完了しました。」と出れば終了です。
+ウィンドウを閉じ、AviUtl2を起動してsvtAV1guiExが追加されているか確認してください。
+
+![インストール完了](./data/svtAV1guiEx_1_29_install_aviutl2_05.png)
+
+
+## svtAV1guiEx の Aviutl (無印) への導入・更新
 
 ### ダウンロード
 
