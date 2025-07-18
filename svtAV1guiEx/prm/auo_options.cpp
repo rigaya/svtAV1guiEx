@@ -87,7 +87,7 @@ std::vector<std::string> sep_cmd(const std::string &cmd) {
     return std::move(args);
 }
 
-int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vector<std::string>& argv, int &i, int nArgNum) {
+int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, int nArgNum) {
 #define IS_OPTION(x) (std::string(x) == option_name)
     auto to_int = [](int *value, const std::string& argv) {
         try {
@@ -161,7 +161,7 @@ int parse_one_option(CONF_ENCODER *cx, const char *option_name, const std::vecto
 #undef IS_OPTION
 }
 
-int set_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err) {
+int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
     auto args = sep_cmd(cmd);
     for (int i = 0; i < args.size(); i++) {
         const char *option_name = nullptr;
@@ -185,21 +185,21 @@ int set_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err) {
     return 0;
 }
 
-CONF_ENCODER get_default_prm() {
-    CONF_ENCODER prm;
+CONF_ENC get_default_prm() {
+    CONF_ENC prm;
     memset(&prm, 0, sizeof(prm));
     set_cmd(&prm, ex_stg->s_enc.default_cmd, true);
     return prm;
 }
 
-int parse_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err) {
+int parse_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
     *cx = get_default_prm();
     return set_cmd(cx, cmd, ignore_parse_err);
 }
 
-std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
+std::string gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     std::stringstream cmd;
-    CONF_ENCODER encPrmDefault = get_default_prm();
+    CONF_ENC encPrmDefault = get_default_prm();
 #define OPT_NUM(str, opt) if ((cx->opt) != (encPrmDefault.opt)) cmd << " --" << (str) << " " << (int)(cx->opt);
 
     OPT_NUM("preset", preset);
@@ -272,7 +272,7 @@ std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm) {
     return cmd.str();
 }
 
-void set_auto_colormatrix(CONF_ENCODER *cx, int height) {
+void set_auto_colormatrix(CONF_ENC *cx, int height) {
     if (cx->matrix_coefficients == COLOR_MATRIX_AUTO)
         cx->matrix_coefficients = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colormatrix, L"bt709") : get_cx_value(list_colormatrix, L"bt601");
     if (cx->color_primaries == COLOR_MATRIX_AUTO)

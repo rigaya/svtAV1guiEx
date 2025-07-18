@@ -262,7 +262,7 @@ typedef struct {
     int     undershoot_pct; //--undershoot-pct
     int     variance_boost_strength; //--variance-boost-strength
     int     variance_octile; // --variance-octile
-} CONF_ENCODER;
+} CONF_ENC;
 #pragma pack(pop)
 
 static const wchar_t *get_chr_from_value(const CX_DESC_AUO *list, int v) {
@@ -499,11 +499,11 @@ typedef struct {
 void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height);
 
 //コマンドラインの解析・生成
-int set_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err);
-int parse_cmd(CONF_ENCODER *cx, const char *cmd, const bool ignore_parse_err);
-std::string gen_cmd(const CONF_ENCODER *cx, bool save_disabled_prm);
-CONF_ENCODER get_default_prm();
+int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err);
+int parse_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err);
+std::string gen_cmd(const CONF_ENC *cx, bool save_disabled_prm);
+CONF_ENC get_default_prm();
 void set_ex_stg_ptr(guiEx_settings *_ex_stg);
-void set_auto_colormatrix(CONF_ENCODER *cx, int height);
+void set_auto_colormatrix(CONF_ENC *cx, int height);
 
 #endif //_AUO_OPTIONS_H_

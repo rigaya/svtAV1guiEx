@@ -826,7 +826,7 @@ static void set_aud_delay_cut(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *
 bool use_auto_npass(const CONF_GUIEX *conf) {
 #if ENCODER_SVTAV1	
     if (!conf->oth.disable_guicmd) {
-        CONF_ENCODER enc = get_default_prm();
+        CONF_ENC enc = get_default_prm();
         set_cmd(&enc, conf->enc.cmd, true);
         return enc.pass > 1;
     }

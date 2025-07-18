@@ -85,7 +85,7 @@ static const char * specify_input_csp(int output_csp) {
     return specify_csp[output_csp];
 }
 
-int get_encoder_send_bitdepth(const CONF_ENCODER *cnf) {
+int get_encoder_send_bitdepth(const CONF_ENC *cnf) {
     //if (is_aviutl2()) {
     //    if (cnf->output_csp == OUT_CSP_YUV444) {
     //        return cnf->use_highbit_depth ? 16 : 8;
@@ -134,7 +134,7 @@ BOOL setup_afsvideo(const OUTPUT_INFO *oip, const SYSTEM_DATA *sys_dat, CONF_GUI
     if (pe->afs_init || pe->video_out_type == VIDEO_OUTPUT_DISABLED || !conf->vid.afs)
         return TRUE;
 
-    CONF_ENCODER enc = get_default_prm();
+    CONF_ENC enc = get_default_prm();
     if (!conf->oth.disable_guicmd) {
         set_cmd(&enc, conf->enc.cmd, true);
     }
@@ -172,7 +172,7 @@ void close_afsvideo(PRM_ENC *pe) {
 
 static AUO_RESULT check_cmdex(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
     DWORD ret = AUO_RESULT_SUCCESS;
-    CONF_ENCODER enc = get_default_prm();
+    CONF_ENC enc = get_default_prm();
     if (!conf->oth.disable_guicmd) {
         set_cmd(&enc, conf->enc.cmd, true);
     }
@@ -458,7 +458,7 @@ static void append_cmdex(char *cmd, size_t nSize, const char *cmdex, BOOL disble
 #endif
 
 static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, const SYSTEM_DATA *sys_dat, const char *input) {
-    CONF_ENCODER enc = get_default_prm();
+    CONF_ENC enc = get_default_prm();
     if (!conf->oth.disable_guicmd) {
         set_cmd(&enc, conf->enc.cmd, true);
     }
@@ -522,7 +522,7 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --progress 2");
 }
 
-static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENCODER *enc, int w, int h) {
+static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENC *enc, int w, int h) {
     const int byte_per_pixel = (enc->bit_depth > 8) ? sizeof(short) : sizeof(BYTE);
     ZeroMemory(pixel_data, sizeof(CONVERT_CF_DATA));
     switch (enc->output_csp) {
@@ -763,7 +763,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     video_output_thread_t thread_data = { 0 };
     thread_data.repeat = pe->delay_cut_additional_vframe;
 
-    CONF_ENCODER enc = get_default_prm();
+    CONF_ENC enc = get_default_prm();
     if (!conf->oth.disable_guicmd) {
         set_cmd(&enc, conf->enc.cmd, true);
     }
@@ -1142,14 +1142,14 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
 
     bool use_auto_npass = false;
     if (!conf->oth.disable_guicmd) {
-        CONF_ENCODER enc = get_default_prm();
+        CONF_ENC enc = get_default_prm();
         set_cmd(&enc, conf->enc.cmd, true);
         use_auto_npass = enc.pass == 2;
     }
 
     for (; !ret && pe->current_pass <= pe->total_pass; pe->current_pass++) {
         if (use_auto_npass) {
-            CONF_ENCODER enc = get_default_prm();
+            CONF_ENC enc = get_default_prm();
             set_cmd(&enc, conf->enc.cmd, true);
             //自動npass出力
             switch (pe->current_pass) {

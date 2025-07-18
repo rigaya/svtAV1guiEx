@@ -1241,7 +1241,7 @@ System::Void frmConfig::LoadLangText() {
 /////////////         データ <-> GUI     /////////////
 System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     //ひたすら書くだけ。めんどい
-    CONF_ENCODER enc;
+    CONF_ENC enc;
     parse_cmd(&enc, cnf->enc.cmd, true);
     this->SuspendLayout();
     fcgCBUsehighbit->Checked = enc.bit_depth > 8;
@@ -1350,7 +1350,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
 
 String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     //これもひたすら書くだけ。めんどい
-    CONF_ENCODER enc = get_default_prm();
+    CONF_ENC enc = get_default_prm();
     //x264部
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
     enc.rc                   = list_rc[fcgCXRC->SelectedIndex].value;
