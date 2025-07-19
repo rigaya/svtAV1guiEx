@@ -178,7 +178,7 @@ System::Void frmConfig::CloseBitrateCalc() {
 System::Void frmConfig::fcgTSBBitrateCalc_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
     if (fcgTSBBitrateCalc->Checked) {
         int videoBitrate = (int)fcgNUBitrate->Value;
-        bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == X264_RC_BITRATE);
+        bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == ENC_RC_BITRATE);
 
         frmBitrateCalculator::Instance::get()->Init(
             (videoBitrateMode) ? videoBitrate : 0,
@@ -203,7 +203,7 @@ System::Void frmConfig::SetfbcBTVBEnable(bool enable) {
 }
 
 System::Void frmConfig::SetVideoBitrate(int bitrate) {
-    if (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == X264_RC_BITRATE)
+    if (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == ENC_RC_BITRATE)
         fcgNUBitrate->Value = bitrate;
 }
 
@@ -1017,7 +1017,7 @@ System::Void frmConfig::AdjustLocation() {
 }
 
 System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, System::EventArgs ^e) {
-    const bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == X264_RC_BITRATE);
+    const bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == ENC_RC_BITRATE);
     fcgNUBitrate->Visible = videoBitrateMode;
     fcgLBKbps->Visible = videoBitrateMode;
     fcgNUQP->Visible = !videoBitrateMode;

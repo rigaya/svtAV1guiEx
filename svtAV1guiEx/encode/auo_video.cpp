@@ -1025,7 +1025,7 @@ static void set_window_title_x264(const PRM_ENC *pe) {
 
 #if ENABLE_AMP
 static AUO_RESULT check_amp(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
-    if (!(conf->enc.use_auto_npass && conf->enc.rc_mode == X264_RC_BITRATE) || !conf->vid.amp_check)
+    if (!(conf->enc.use_auto_npass && conf->enc.rc_mode == ENC_RC_BITRATE) || !conf->vid.amp_check)
         return AUO_RESULT_SUCCESS; //上限確認付きcrfはここで抜ける
     //音声ファイルサイズ取得
     double aud_bitrate = 0.0;

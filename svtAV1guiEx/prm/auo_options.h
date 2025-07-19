@@ -40,16 +40,22 @@
 
 //エンコードモード
 enum {
-    X264_RC_QP = 0,
-    X264_RC_BITRATE,
+    ENC_RC_QP = 0,
+    ENC_RC_BITRATE,
 };
 
 //QPの最大値
-const int X264_QP_MAX_8BIT  = 69;
-const int X264_QP_MAX_10BIT = 81;
+const int ENC_QP_MAX_8BIT  = 69;
+const int ENC_QP_MAX_10BIT = 81;
 
 //差がこのくらいなら等しいとみなす(オプション用なのでこのくらいで十分)
 const float EPS_FLOAT = 1.0e-4f;
+
+#if ENCODER_X265
+static const int AUO_KEYINT_MAX_AUTO = 0;
+#elif ENCODER_X264 || ENCODER_SVTAV1
+static const int AUO_KEYINT_MAX_AUTO = -1;
+#endif
 
 //マクロブロックタイプの一般的なオプション
 enum {
@@ -495,6 +501,8 @@ typedef struct {
     BOOL ret;           //構造体に読み込まれたかどうか
     BOOL type_mediainfo; //MediaInfoの書式だったかどうか
 } CMD_ARG;
+
+static bool ishighbitdepth(const CONF_ENC *enc) { return enc->bit_depth > 8; }
 
 void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height);
 
