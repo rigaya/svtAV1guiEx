@@ -58,7 +58,7 @@
 #include "auo_convert.h"
 #include "auo_system.h"
 #include "auo_version.h"
-#include "auo_chapter.h"
+#include "rgy_chapter.h"
 #include "auo_mes.h"
 
 #include "auo_encode.h"
@@ -66,6 +66,7 @@
 #include "auo_audio_parallel.h"
 #include "cpu_info.h"
 #include "rgy_thread_affinity.h"
+#include "rgy_simd.h"
 
 const int DROP_FRAME_FLAG = INT_MAX;
 
@@ -121,8 +122,8 @@ static int calc_input_frame_size(int width, int height, int color_format, int& b
     width = (color_format == CF_RGB) ? (width+3) & ~3 : (width+1) & ~1;
     //widthが割り切れない場合、多めにアクセスが発生するので、そのぶんを確保しておく
     const DWORD pixel_size = COLORFORMATS[color_format].size;
-    const DWORD simd_check = get_availableSIMD();
-    const DWORD align_size = (simd_check & AUO_SIMD_SSE2) ? ((simd_check & AUO_SIMD_AVX2) ? 64 : 32) : 1;
+    const auto simd_check = get_availableSIMD();
+    const DWORD align_size = ((simd_check & RGY_SIMD::SSE2) != RGY_SIMD::NONE) ? (((simd_check & RGY_SIMD::AVX2) != RGY_SIMD::NONE) ? 64 : 32) : 1;
 #define ALIGN_NEXT(i, align) (((i) + (align-1)) & (~(align-1))) //alignは2の累乗(1,2,4,8,16,32...)
     buf_size = ALIGN_NEXT(width * height * pixel_size + (ALIGN_NEXT(width, align_size / pixel_size) - width) * 2 * pixel_size, align_size);
 #undef ALIGN_NEXT
@@ -273,24 +274,24 @@ static AUO_RESULT set_keyframe_from_chapter(std::vector<int> *keyframe_list, con
         strcpy_s(chap_file, _countof(chap_file), muxer_mode->chap_file);
         cmd_replace(chap_file, _countof(chap_file), pe, sys_dat, conf, oip);
 
-        chapter_file chapter;
+        ChapterRW chapter;
         if (!str_has_char(chap_file) || !PathFileExists(chap_file)) {
             write_log_auo_line(LOG_INFO, g_auo_mes.get(AUO_VIDEO_SET_KEYFRAME_NO_CHAPTER));
         //チャプターリストを取得
         } else if (AUO_CHAP_ERR_NONE != chapter.read_file(chap_file, CODE_PAGE_UNSET, 0.0)) {
             ret |= AUO_RESULT_ERROR; write_log_auo_line(LOG_WARNING, g_auo_mes.get(AUO_VIDEO_SET_KEYFRAME_NO_CHAPTER));
         //チャプターがない場合
-        } else if (0 == chapter.chapters.size()) {
+        } else if (0 == chapter.chapterlist().size()) {
             write_log_auo_line(LOG_WARNING, g_auo_mes.get(AUO_VIDEO_SET_KEYFRAME_CHAPTER_READ_ERROR));
         } else {
             const double fps = oip->rate / (double)oip->scale;
             //QPファイルを出力
-            for (const auto& chap : chapter.chapters) {
+            for (const auto& chap : chapter.chapterlist()) {
                 double chap_time_s = chap->get_ms() / 1000.0;
                 int i_frame = (int)(chap_time_s * fps + 0.5);
                 keyframe_list->push_back(i_frame);
             }
-            write_log_auo_line_fmt(LOG_INFO, g_auo_mes.get(AUO_VIDEO_SET_KEYFRAME_RESULT), chapter.chapters.size());
+            write_log_auo_line_fmt(LOG_INFO, g_auo_mes.get(AUO_VIDEO_SET_KEYFRAME_RESULT), chapter.chapterlist().size());
         }
     }
     return ret;
@@ -510,7 +511,7 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
 #else
     const int rate = oip->rate;
     const int scale = oip->scale;
-    const int gcd = get_gcd(rate, scale);
+    const int gcd = rgy_gcd(rate, scale);
     sprintf_s(cmd + strlen(cmd), nSize - strlen(cmd), " --fps-num %d --fps-denom %d", rate / gcd, scale / gcd);
 #endif
     //出力ファイル
@@ -757,7 +758,6 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     char x264args[MAX_CMD_LEN] = { 0 };
     char x264dir[MAX_PATH_LEN] = { 0 };
 
-    const DWORD simd_avail = get_availableSIMD();
     const BOOL afs = conf->vid.afs != 0;
     CONVERT_CF_DATA pixel_data = { 0 };
     video_output_thread_t thread_data = { 0 };

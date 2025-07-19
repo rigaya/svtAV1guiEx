@@ -55,7 +55,7 @@ void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height) {
         int x = -1 * *sar_x * height;
         int y = -1 * *sar_y * width;
         if (abs(y - x) > -16 * *sar_y) {
-            int gcd = get_gcd(x, y);
+            int gcd = rgy_gcd(x, y);
             *sar_x = x / gcd;
             *sar_y = y / gcd;
         } else {
@@ -64,27 +64,6 @@ void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height) {
     } else if (*sar_x * *sar_y < 0) {
         *sar_x = *sar_y = 0;
     }
-}
-
-std::vector<std::wstring> sep_cmd(const std::wstring &cmd) {
-    std::vector<std::wstring> args;
-    int argc = 0;
-    auto ptr = CommandLineToArgvW(cmd.c_str(), &argc);
-    for (int i = 0; i < argc; i++) {
-        args.push_back(ptr[i]);
-    }
-    args.push_back(L"");
-    LocalFree(ptr);
-    return std::move(args);
-}
-
-std::vector<std::string> sep_cmd(const std::string &cmd) {
-    std::vector<std::string> args;
-    std::wstring wcmd = char_to_wstring(cmd);
-    for (const auto &warg : sep_cmd(wcmd)) {
-        args.push_back(wstring_to_string(warg));
-    }
-    return std::move(args);
 }
 
 int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, int nArgNum) {
