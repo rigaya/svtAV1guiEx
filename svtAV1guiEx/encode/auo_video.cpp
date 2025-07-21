@@ -70,8 +70,6 @@
 
 const int DROP_FRAME_FLAG = INT_MAX;
 
-static const char *VID_NAMED_PIPE = R"(\\.\pipe\aviutl_%d\svtav1out)";
-
 typedef struct video_output_thread_t {
     CONVERT_CF_DATA *pixel_data;
     FILE *f_out;
@@ -80,20 +78,29 @@ typedef struct video_output_thread_t {
     HANDLE he_out_start;
     HANDLE he_out_fin;
     int repeat;
+    int interlaced;
 } video_output_thread_t;
+
+static int get_encoder_send_field([[maybe_unused]] const CONF_ENC *cnf) {
+#if ENCODER_X265
+    return cnf->interlaced != 0;
+#else
+    return 0;
+#endif
+}
 
 static const char * specify_input_csp(int output_csp) {
     return specify_csp[output_csp];
 }
 
-int get_encoder_send_bitdepth(const CONF_ENC *cnf) {
-    //if (is_aviutl2()) {
-    //    if (cnf->output_csp == OUT_CSP_YUV444) {
-    //        return cnf->use_highbit_depth ? 16 : 8;
-    //    }
-    //    return 8;
-    //}
+static int get_encoder_send_bitdepth(const CONF_ENC *cnf) {
+#if ENCODER_X264
+    return cnf->use_highbit_depth ? 16 : 8;
+#elif ENCODER_X265
+    return cnf->bit_depth > 8 ? 16 : 8;
+#elif ENCODER_SVTAV1
     return cnf->bit_depth;
+#endif
 }
 
 int get_aviutl_color_format(int bit_depth, int output_csp, int input_as_lw48) {
@@ -363,7 +370,7 @@ static AUO_RESULT adjust_keyframe_as_afs_24fps(std::vector<int> &keyframe_list, 
     return ret;
 }
 
-#if 0
+#if ENCODER_X264 || ENCODER_X265
 static AUO_RESULT set_keyframe(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, const PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
     AUO_RESULT ret = AUO_RESULT_SUCCESS;
     std::vector<int> keyframe_list;
@@ -524,22 +531,39 @@ static void build_full_cmd(char *cmd, size_t nSize, const CONF_GUIEX *conf, cons
 }
 
 static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENC *enc, int w, int h) {
-    const int byte_per_pixel = (enc->bit_depth > 8) ? sizeof(short) : sizeof(BYTE);
-    ZeroMemory(pixel_data, sizeof(CONVERT_CF_DATA));
+	ZeroMemory(pixel_data, sizeof(CONVERT_CF_DATA));
+    pixel_data->byte_per_pixel = get_encoder_send_bitdepth(enc) > 8 ? sizeof(short) : sizeof(BYTE);
     switch (enc->output_csp) {
-        case OUT_CSP_YUV422: //yuv422 (YUV422)
-            pixel_data->count = 3;
-            pixel_data->size[0] = w * h * byte_per_pixel;
-            pixel_data->size[1] = pixel_data->size[0] / 2;
-            pixel_data->size[2] = pixel_data->size[0] / 2;
+        case OUT_CSP_NV16: //nv16 (YUV422)
+            pixel_data->count = 2;
+            pixel_data->w[0] = w;
+            pixel_data->w[1] = pixel_data->w[0];
+            pixel_data->h[0] = h;
+            pixel_data->h[1] = pixel_data->h[0];
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel;
+            pixel_data->pitch[1] = pixel_data->pitch[0];
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel;
+            pixel_data->size[1] = pixel_data->size[0];
             break;
         case OUT_CSP_YUY2: //yuy2 (YUV422)
             pixel_data->count = 1;
-            pixel_data->size[0] = w * h * byte_per_pixel * 2;
+            pixel_data->w[0] = w;
+            pixel_data->h[0] = h;
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel * 2;
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel * 2;
             break;
         case OUT_CSP_YUV444: //i444 (YUV444 planar)
             pixel_data->count = 3;
-            pixel_data->size[0] = w * h * byte_per_pixel;
+            pixel_data->w[0] = w;
+            pixel_data->w[1] = pixel_data->w[0];
+            pixel_data->w[2] = pixel_data->w[0];
+            pixel_data->h[0] = h;
+            pixel_data->h[1] = pixel_data->h[0];
+            pixel_data->h[2] = pixel_data->h[0];
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel;
+            pixel_data->pitch[1] = pixel_data->pitch[0];
+            pixel_data->pitch[2] = pixel_data->pitch[0];
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel;
             pixel_data->size[1] = pixel_data->size[0];
             pixel_data->size[2] = pixel_data->size[0];
             break;
@@ -547,16 +571,48 @@ static void set_pixel_data(CONVERT_CF_DATA *pixel_data, const CONF_ENC *enc, int
             pixel_data->count = 1;
             pixel_data->size[0] = w * h * 3 * sizeof(BYTE); //8bit only
             break;
-        case OUT_CSP_NV12: //nv12 (YUV420)
-            pixel_data->count = 2;
-            pixel_data->size[0] = w * h * byte_per_pixel;
-            pixel_data->size[1] = pixel_data->size[0] / 2;
-        case OUT_CSP_YV12: //nv12 (YUV420)
-        default:
+        case OUT_CSP_YV12: //i420 (YUV420 planar)
             pixel_data->count = 3;
-            pixel_data->size[0] = w * h * byte_per_pixel;
+            pixel_data->w[0] = w;
+            pixel_data->w[1] = pixel_data->w[0] / 2;
+            pixel_data->w[2] = pixel_data->w[0] / 2;
+            pixel_data->h[0] = h;
+            pixel_data->h[1] = pixel_data->h[0] / 2;
+            pixel_data->h[2] = pixel_data->h[0] / 2;
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel;
+            pixel_data->pitch[1] = pixel_data->pitch[0] / 2;
+            pixel_data->pitch[2] = pixel_data->pitch[0] / 2;
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel;
             pixel_data->size[1] = pixel_data->size[0] / 4;
             pixel_data->size[2] = pixel_data->size[0] / 4;
+            break;
+        case OUT_CSP_YUV422: //i422 (YUV422 planar)
+            pixel_data->count = 3;
+            pixel_data->w[0] = w;
+            pixel_data->w[1] = pixel_data->w[0] / 2;
+            pixel_data->w[2] = pixel_data->w[0] / 2;
+            pixel_data->h[0] = h;
+            pixel_data->h[1] = pixel_data->h[0];
+            pixel_data->h[2] = pixel_data->h[0];
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel;
+            pixel_data->pitch[1] = pixel_data->pitch[0] / 2;
+            pixel_data->pitch[2] = pixel_data->pitch[0] / 2;
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel;
+            pixel_data->size[1] = pixel_data->size[0] / 2;
+            pixel_data->size[2] = pixel_data->size[0] / 2;
+            break;
+        case OUT_CSP_NV12: //nv12 (YUV420)
+            pixel_data->count = 2;
+            pixel_data->w[0] = w;
+            pixel_data->w[1] = pixel_data->w[0];
+            pixel_data->h[0] = h;
+            pixel_data->h[1] = pixel_data->h[0] / 2;
+            pixel_data->pitch[0] = w * pixel_data->byte_per_pixel;
+            pixel_data->pitch[1] = pixel_data->pitch[0];
+            pixel_data->size[0] = w * h * pixel_data->byte_per_pixel;
+            pixel_data->size[1] = pixel_data->size[0] / 2;
+            break;
+        default:
             break;
     }
     //サイズの総和計算
@@ -570,16 +626,11 @@ static inline void check_enc_priority(HANDLE h_aviutl, HANDLE h_x264, DWORD prio
     SetPriorityClass(h_x264, priority);
 }
 
-//static inline HANDLE create_named_pipe(HANDLE h_aviutl) {
-//    DWORD pid = GetProcessId(h_aviutl);
-//    char pipename[256];
-//    sprintf_s(pipename, VID_NAMED_PIPE, pid);
-//    HANDLE hPipe = CreateNamedPipe(pipename, PIPE_ACCESS_DUPLEX, PIPE_TYPE_BYTE, 1, 0, 0, 1000, NULL);
-//    if (hPipe == INVALID_HANDLE_VALUE) {
-//        return NULL;
-//    }
-//    return hPipe;
-//}
+static inline void sync_thread_affinity(HANDLE h_aviutl, HANDLE h_x264) {
+    DWORD_PTR mask_process = 0x00, mask_system = 0x00;
+    GetProcessAffinityMask(h_aviutl, &mask_process, &mask_system);
+    SetProcessAffinityMask(h_x264, mask_process);
+}
 
 //並列処理時に音声データを取得する
 static AUO_RESULT aud_parallel_task(const OUTPUT_INFO *oip, PRM_ENC *pe) {
@@ -660,23 +711,23 @@ static AUO_RESULT exit_audio_parallel_control(const OUTPUT_INFO *oip, PRM_ENC *p
 }
 
 #if ENABLE_AMP
-static UINT64 get_amp_filesize_limit(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
-    UINT64 filesize_limit = MAXUINT64;
+static uint64_t get_amp_filesize_limit(const CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
+    uint64_t filesize_limit = UINT64_MAX;
     if (conf->enc.use_auto_npass) {
         //上限ファイルサイズのチェック
         if (conf->vid.amp_check & AMPLIMIT_FILE_SIZE) {
-            filesize_limit = std::min(filesize_limit, (UINT64)(conf->vid.amp_limit_file_size*1024*1024));
+            filesize_limit = std::min(filesize_limit, (uint64_t)(conf->vid.amp_limit_file_size*1024*1024));
         }
         //上限ビットレートのチェック
         if (conf->vid.amp_check & AMPLIMIT_BITRATE_UPPER) {
             const double duration = get_duration(conf, sys_dat, pe, oip);
-            filesize_limit = std::min(filesize_limit, (UINT64)(conf->vid.amp_limit_bitrate_upper * 1000 / 8 * duration));
+            filesize_limit = std::min(filesize_limit, (uint64_t)(conf->vid.amp_limit_bitrate_upper * 1000 / 8 * duration));
         }
     }
     //音声のサイズはここでは考慮しない
     //音声のサイズも考慮してしまうと、のちの判定で面倒なことになる
     //(muxをしないファイルを評価してしまい、上限をクリアしていると判定されてしまう)
-    return (MAXUINT64 == filesize_limit) ? 0 : filesize_limit;
+    return (UINT64_MAX == filesize_limit) ? 0 : filesize_limit;
 }
 #endif
 
@@ -686,9 +737,24 @@ static unsigned __stdcall video_output_thread_func(void *prm) {
     WaitForSingleObject(thread_data->he_out_start, INFINITE);
     while (false == thread_data->abort) {
         //映像データをパイプに
-        for (int i = 0; i < 1 + thread_data->repeat; i++)
-            for (int j = 0; j < pixel_data->count; j++)
-                _fwrite_nolock((void *)pixel_data->data[j], 1, pixel_data->size[j], thread_data->f_out);
+        for (int i = 0; i < 1 + thread_data->repeat; i++) {
+            if (thread_data->interlaced) {
+                for (int ifield = 0; ifield < 2; ifield++) {
+                    for (int j = 0; j < pixel_data->count; j++) {
+                        const int pitch = pixel_data->pitch[j];
+                        const int width_in_byte = pixel_data->w[j] * pixel_data->byte_per_pixel;
+                        const int height = pixel_data->h[j];
+                        uint8_t *base_ptr = pixel_data->data[j];
+                        for (int y = (ifield + thread_data->interlaced + 1) & 1; y < height; y += 2) {
+                            _fwrite_nolock((void *)(base_ptr + pitch * y), 1, width_in_byte, thread_data->f_out);
+                        }
+                    }
+                }
+            } else {
+                for (int j = 0; j < pixel_data->count; j++)
+                    _fwrite_nolock((void *)pixel_data->data[j], 1, pixel_data->size[j], thread_data->f_out);
+            }
+        }
 
         thread_data->repeat = 0;
         SetEvent(thread_data->he_out_fin);
@@ -697,17 +763,20 @@ static unsigned __stdcall video_output_thread_func(void *prm) {
     return 0;
 }
 
-static int video_output_create_thread(video_output_thread_t *thread_data, CONVERT_CF_DATA *pixel_data, FILE *pipe_handle) {
+static int video_output_create_thread(video_output_thread_t *thread_data, CONVERT_CF_DATA *pixel_data, int interlaced, FILE *pipe_stdin) {
     AUO_RESULT ret = AUO_RESULT_SUCCESS;
     thread_data->abort = false;
     thread_data->pixel_data = pixel_data;
-    thread_data->f_out = pipe_handle;
+    thread_data->interlaced = interlaced;
+    thread_data->f_out = pipe_stdin;
     if (   NULL == (thread_data->he_out_start = (HANDLE)CreateEvent(NULL, false, false, NULL))
         || NULL == (thread_data->he_out_fin   = (HANDLE)CreateEvent(NULL, false, true,  NULL))
         || NULL == (thread_data->thread       = (HANDLE)_beginthreadex(NULL, 0, video_output_thread_func, thread_data, 0, NULL))) {
         ret = AUO_RESULT_ERROR;
     }
-    SetEvent(thread_data->he_out_fin);
+    if (ENCODER_SVTAV1) {
+        SetEvent(thread_data->he_out_fin);
+    }
     return ret;
 }
 
@@ -749,14 +818,14 @@ static void error_videnc_failed(const PRM_ENC *pe) {
     }
 }
 
-static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
+static AUO_RESULT enc_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe, const SYSTEM_DATA *sys_dat) {
     AUO_RESULT ret = AUO_RESULT_SUCCESS;
     PIPE_SET pipes = { 0 };
     PROCESS_INFORMATION pi_enc = { 0 };
 
-    char x264cmd[MAX_CMD_LEN]  = { 0 };
-    char x264args[MAX_CMD_LEN] = { 0 };
-    char x264dir[MAX_PATH_LEN] = { 0 };
+    char enccmd[MAX_CMD_LEN]  = { 0 };
+    char encargs[MAX_CMD_LEN] = { 0 };
+    char encdir[MAX_PATH_LEN] = { 0 };
 
     const BOOL afs = conf->vid.afs != 0;
     CONVERT_CF_DATA pixel_data = { 0 };
@@ -776,7 +845,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     int *jitter = NULL;
     int rp_ret = 0;
 
-    //svt-av1優先度関連の初期化
+    //エンコーダ優先度関連の初期化
     DWORD set_priority = (pe->h_p_aviutl || conf->vid.priority != AVIUTLSYNC_PRIORITY_CLASS) ? priority_table[conf->vid.priority].value : NORMAL_PRIORITY_CLASS;
 
     //プロセス用情報準備
@@ -784,7 +853,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         ret |= AUO_RESULT_ERROR; error_no_exe_file(ENCODER_NAME_W, sys_dat->exstg->s_enc.fullpath);
         return ret;
     }
-    PathGetDirectory(x264dir, _countof(x264dir), sys_dat->exstg->s_enc.fullpath);
+    PathGetDirectory(encdir, _countof(encdir), sys_dat->exstg->s_enc.fullpath);
 
     //YUY2/YC48->NV12/YUV444, RGBコピー用関数
     const int input_csp_idx = get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE);
@@ -805,33 +874,46 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     pipes.stdIn.bufferSize = pixel_data.total_size * 2;
 
     //コマンドライン生成
-    build_full_cmd(x264cmd, _countof(x264cmd), conf, oip, pe, sys_dat, PIPE_FN);
+    build_full_cmd(enccmd, _countof(enccmd), conf, oip, pe, sys_dat, PIPE_FN);
     write_log_auo_line_fmt(LOG_INFO, L"%s options...", ENCODER_NAME_W);
-    write_args(x264cmd);
-    sprintf_s(x264args, _countof(x264args), "\"%s\" %s", sys_dat->exstg->s_enc.fullpath, x264cmd);
-    remove(pe->temp_filename); //ファイルサイズチェックの時に旧ファイルを参照してしまうのを回避
+    write_args(enccmd);
+    sprintf_s(encargs, _countof(encargs), "\"%s\" %s", sys_dat->exstg->s_enc.fullpath, enccmd);
+    if (PathFileExists(pe->temp_filename)) {
+        //ファイルサイズチェックの時に旧ファイルを参照してしまうのを回避
+        if (!DeleteFile(pe->temp_filename)) { auto err = GetLastError(); error_failed_remove_file((pe->temp_filename), err); return AUO_RESULT_ERROR; }
+    }
 
+    //エンコードするフレーム数
+    const int frames_to_enc = oip->n;
+
+#if ENCODER_X264 || ENCODER_X265
+    if (conf->vid.afs && conf->enc.interlaced) {
+        ret |= AUO_RESULT_ERROR; error_afs_interlace_stg();
+    } else
+#endif
     //jitter用領域確保
-    if (afs && ((jitter = (int *)calloc(oip->n + 1, sizeof(int))) == NULL)) {
+    if (afs && ((jitter = (int *)calloc(frames_to_enc + 1, sizeof(int))) == NULL)) {
         ret |= AUO_RESULT_ERROR; error_malloc_tc();
     //Aviutl(afs)からのフレーム読み込み
     } else if (!setup_afsvideo(oip, sys_dat, conf, pe)) {
         ret |= AUO_RESULT_ERROR; //Aviutl(afs)からのフレーム読み込みに失敗
-    //svt-av1プロセス開始
-    } else if ((rp_ret = RunProcess(x264args, x264dir, &pi_enc, &pipes, (set_priority == AVIUTLSYNC_PRIORITY_CLASS) ? GetPriorityClass(pe->h_p_aviutl) : set_priority, TRUE, FALSE)) != RP_SUCCESS) {
+    //エンコードプロセス開始
+    } else if ((rp_ret = RunProcess(encargs, encdir, &pi_enc, &pipes, (set_priority == AVIUTLSYNC_PRIORITY_CLASS) ? GetPriorityClass(pe->h_p_aviutl) : set_priority, TRUE, FALSE)) != RP_SUCCESS) {
         ret |= AUO_RESULT_ERROR; error_run_process(ENCODER_NAME_W, rp_ret);
-        //書き込みスレッドを開始
-    } else if (video_output_create_thread(&thread_data, &pixel_data, pipes.f_stdin)) {
+    //書き込みスレッドを開始
+    } else if (video_output_create_thread(&thread_data, &pixel_data, get_encoder_send_field(&enc), pipes.f_stdin)) {
         ret |= AUO_RESULT_ERROR; error_video_output_thread_start();
     } else {
         //全て正常
-        int i = 0;
+        int i = 0;        //エンコードするフレーム (0からカウント)
+        int i_frame = 0;  //エンコードするフレームID
         void *frame = NULL;
         int *next_jitter = NULL;
 #if ENABLE_AMP
-        UINT64 amp_filesize_limit = (UINT64)(1.02 * get_amp_filesize_limit(conf, oip, pe, sys_dat));
+        uint64_t amp_filesize_limit = (uint64_t)(1.02 * get_amp_filesize_limit(conf, oip, pe, sys_dat));
 #endif
-        BOOL enc_pause = FALSE, copy_frame = FALSE, drop = FALSE;
+        bool enc_pause = false;
+        BOOL copy_frame = FALSE, drop = FALSE;
         const DWORD aviutl_color_fmt = COLORFORMATS[get_aviutl_color_format(enc.bit_depth, enc.output_csp, FALSE)].FOURCC;
         double time_get_frame = 0.0;
         int64_t qp_freq, qp_start, qp_end;
@@ -848,20 +930,23 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
             SetThreadPowerThrottolingModeForModule(GetCurrentProcessId(), nullptr, thread_pthrottling_mode);
         }
 
-        //svt-av1が待機に入るまでこちらも待機
+        //エンコーダが待機に入るまでこちらも待機
         while (WaitForInputIdle(pi_enc.hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
             log_process_events();
 
         //ログウィンドウ側から制御を可能に
         DWORD tm_vid_enc_start = timeGetTime();
-        enable_x264_control(&set_priority, &enc_pause, afs, TRUE, tm_vid_enc_start, oip->n);
+        enable_enc_control(&set_priority, &enc_pause, afs, TRUE, tm_vid_enc_start, frames_to_enc);
+
+        //開始フレーム
+        i_frame = 0;
 
         //------------メインループ------------
-        for (i = 0, next_jitter = jitter + 1, pe->drop_count = 0; i < oip->n; i++, next_jitter++) {
+        for (i = 0, next_jitter = jitter + 1, pe->drop_count = 0; i < frames_to_enc; i++, i_frame++, next_jitter++) {
             //中断を確認
             ret |= (oip->func_is_abort()) ? AUO_RESULT_ABORT : AUO_RESULT_SUCCESS;
 
-            //svt-av1が実行中なら、メッセージを取得・ログウィンドウに表示
+            //エンコーダが実行中なら、メッセージを取得・ログウィンドウに表示
             if (ReadLogEnc(&pipes, pe->drop_count, i, oip->n) < 0) {
                 //勝手に死んだ...
                 ret |= AUO_RESULT_ERROR; error_videnc_failed(pe);
@@ -870,7 +955,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
 
             if (!(i & 7)) {
                 //Aviutlの進捗表示を更新
-                oip->func_rest_time_disp(i + oip->n * (pe->current_pass - 1), oip->n * pe->total_pass);
+                oip->func_rest_time_disp(i + frames_to_enc * (pe->current_pass - 1), frames_to_enc * pe->total_pass);
 
                 //svt-av1優先度
                 check_enc_priority(pe->h_p_aviutl, pi_enc.hProcess, set_priority);
@@ -889,8 +974,8 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
                 if (!(i & 63)
                     && amp_filesize_limit //上限設定が存在する
                     && !(1 == pe->current_pass && 1 < pe->total_pass)) { //multi passエンコードの1pass目でない
-                    UINT64 current_filesize = 0;
-                    if (GetFileSizeUInt64(pe->temp_filename, &current_filesize) && current_filesize > amp_filesize_limit) {
+                    uint64_t current_filesize = 0;
+                    if (rgy_get_filesize(pe->temp_filename, &current_filesize) && current_filesize > amp_filesize_limit) {
                         warning_amp_filesize_over_limit();
                         pe->muxer_to_be_used = MUXER_DISABLED; //muxをスキップ
                         break;
@@ -917,11 +1002,11 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
                 break;
 
             //コピーフレームフラグ処理
-            copy_frame = (!!i & (oip->func_get_flag(i) & OUTPUT_INFO_FRAME_FLAG_COPYFRAME));
+            copy_frame = (!!i_frame & (oip->func_get_flag(i_frame) & OUTPUT_INFO_FRAME_FLAG_COPYFRAME));
 
             //Aviutl(afs)からフレームをもらう
             QueryPerformanceCounter((LARGE_INTEGER *)&qp_start);
-            if (NULL == (frame = ((afs) ? afs_get_video((OUTPUT_INFO *)oip, i, &drop, next_jitter) : oip->func_get_video_ex(i, aviutl_color_fmt)))) {
+            if (NULL == (frame = ((afs) ? afs_get_video((OUTPUT_INFO *)oip, i_frame, &drop, next_jitter) : oip->func_get_video_ex(i_frame, aviutl_color_fmt)))) {
                 ret |= AUO_RESULT_ERROR; error_afs_get_frame();
                 break;
             }
@@ -953,13 +1038,13 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         //書き込みスレッドを終了
         video_output_close_thread(&thread_data, ret);
 
-        //ログウィンドウからのsvt-av1制御を無効化
-        disable_x264_control();
+        //ログウィンドウからのエンコーダ制御を無効化
+        disable_enc_control();
 
         //パイプを閉じる
         CloseStdIn(&pipes);
 
-        if (!ret) oip->func_rest_time_disp(oip->n * pe->current_pass, oip->n * pe->total_pass);
+        if (!ret) oip->func_rest_time_disp(frames_to_enc * pe->current_pass, frames_to_enc * pe->total_pass);
 
         //音声の同時処理を終了させる
         ret |= finish_aud_parallel_task(oip, pe, ret);
@@ -968,7 +1053,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
 
         //タイムコード出力
         if (!ret && (afs || conf->vid.auo_tcfile_out))
-            tcfile_out(jitter, oip->n, (double)oip->rate / (double)oip->scale, afs, pe);
+            tcfile_out(jitter, frames_to_enc, (double)oip->rate / (double)oip->scale, afs, pe);
 
         //エンコーダ終了待機
         while (WaitForSingleObject(pi_enc.hProcess, LOG_UPDATE_INTERVAL) == WAIT_TIMEOUT)
@@ -986,7 +1071,7 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
         if (!(ret & AUO_RESULT_ERROR) && afs)
             write_log_auo_line_fmt(LOG_INFO, L"drop %d / %d frames", pe->drop_count, i);
 
-        write_log_auo_line_fmt(LOG_INFO, L"%s: Aviutl: %.2f%% / svt-av1: %.2f%%", g_auo_mes.get(AUO_VIDEO_CPU_USAGE), GetProcessAvgCPUUsage(pe->h_p_aviutl, &time_aviutl), GetProcessAvgCPUUsage(pi_enc.hProcess));
+        write_log_auo_line_fmt(LOG_INFO, L"%s: Aviutl: %.2f%% / %s: %.2f%%", g_auo_mes.get(AUO_VIDEO_CPU_USAGE), GetProcessAvgCPUUsage(pe->h_p_aviutl, &time_aviutl), ENCODER_NAME_W, GetProcessAvgCPUUsage(pi_enc.hProcess));
         write_log_auo_line_fmt(LOG_INFO, L"Aviutl %s: %.3f ms", g_auo_mes.get(AUO_VIDEO_AVIUTL_PROC_AVG_TIME), time_get_frame * 1000.0 / i);
         write_log_auo_enc_time(g_auo_mes.get(AUO_VIDEO_ENCODE_TIME), tm_vid_enc_fin - tm_vid_enc_start);
     }
@@ -1005,13 +1090,88 @@ static AUO_RESULT x264_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe
     return ret;
 }
 
-BOOL check_videnc_mp4_output(const char *exe_path, const char *temp_filename) {
-    UNREFERENCED_PARAMETER(exe_path);
-    UNREFERENCED_PARAMETER(temp_filename);
-    return FALSE;
+BOOL check_videnc_mp4_output([[maybe_unused]] const char *exe_path, [[maybe_unused]] const char *temp_filename) {
+    BOOL ret = FALSE;
+#if ENCODER_X264
+    std::string exe_message;
+    PROCESS_INFORMATION pi = { 0 };
+
+    const int TEST_WIDTH = 160;
+    const int TEST_HEIGHT = 120;
+    std::vector<char> test_buffer(TEST_WIDTH * TEST_HEIGHT * 3 / 2, 0);
+
+    PIPE_SET pipes = { 0 };
+    InitPipes(&pipes);
+    pipes.stdIn.mode  = AUO_PIPE_ENABLE;
+    pipes.stdOut.mode = AUO_PIPE_DISABLE;
+    pipes.stdErr.mode = AUO_PIPE_ENABLE;
+    pipes.stdIn.bufferSize = test_buffer.size();
+
+    char test_path[1024] = { 0 };
+    for (int i = 0; !i || PathFileExists(test_path); i++) {
+        char test_filename[32] = { 0 };
+        sprintf_s(test_filename, _countof(test_filename), "_test_%d.mp4", i);
+        PathCombineLong(test_path, _countof(test_path), temp_filename, test_filename);
+    }
+
+    char exe_dir[1024] = { 0 };
+    strcpy_s(exe_dir, _countof(exe_dir), exe_path);
+    PathRemoveFileSpecFixed(exe_dir);
+
+    char fullargs[8192] = { 0 };
+    sprintf_s(fullargs, _countof(fullargs), "\"%s\" --fps 1 --frames 1 --input-depth 8 --input-res %dx%d -o \"%s\" --input-csp nv12 -", exe_path, TEST_WIDTH, TEST_HEIGHT, test_path);
+    if ((ret = RunProcess(fullargs, exe_dir, &pi, &pipes, NORMAL_PRIORITY_CLASS, TRUE, FALSE)) == RP_SUCCESS) {
+
+        while (WAIT_TIMEOUT == WaitForInputIdle(pi.hProcess, LOG_UPDATE_INTERVAL))
+            log_process_events();
+
+        _fwrite_nolock(&test_buffer[0], 1, test_buffer.size(), pipes.f_stdin);
+
+        auto read_stderr = [](PIPE_SET *pipes) {
+            DWORD pipe_read = 0;
+            if (!PeekNamedPipe(pipes->stdErr.h_read, NULL, 0, NULL, &pipe_read, NULL))
+                return -1;
+            if (pipe_read) {
+                ReadFile(pipes->stdErr.h_read, pipes->read_buf + pipes->buf_len, sizeof(pipes->read_buf) - pipes->buf_len - 1, &pipe_read, NULL);
+                pipes->buf_len += pipe_read;
+                pipes->read_buf[pipes->buf_len] = '\0';
+            }
+            return (int)pipe_read;
+        };
+
+        while (WAIT_TIMEOUT == WaitForSingleObject(pi.hProcess, 10)) {
+            if (read_stderr(&pipes)) {
+                exe_message += pipes.read_buf;
+                pipes.buf_len = 0;
+            } else {
+                log_process_events();
+            }
+        }
+
+        CloseStdIn(&pipes);
+
+        while (read_stderr(&pipes) > 0) {
+            exe_message += pipes.read_buf;
+            pipes.buf_len = 0;
+        }
+        log_process_events();
+
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+
+        if (std::string::npos == exe_message.find("not compiled with MP4 output"))
+            ret = TRUE;
+    }
+
+    if (pipes.stdIn.mode)  CloseHandle(pipes.stdIn.h_read);
+    if (pipes.stdOut.mode) CloseHandle(pipes.stdOut.h_read);
+    if (pipes.stdErr.mode) CloseHandle(pipes.stdErr.h_read);
+    if (PathFileExists(test_path)) remove(test_path);
+#endif
+    return ret;
 }
 
-static void set_window_title_x264(const PRM_ENC *pe) {
+static void set_window_title_enc(const PRM_ENC *pe) {
     wchar_t mes[256] = { 0 };
     swprintf_s(mes, _countof(mes), L"%s%s", ENCODER_NAME_W, g_auo_mes.get(AUO_VIDEO_ENCODE));
     if (pe->total_pass > 1)
@@ -1030,7 +1190,7 @@ static AUO_RESULT check_amp(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *p
     //音声ファイルサイズ取得
     double aud_bitrate = 0.0;
     const double duration = get_duration(conf, sys_dat, pe, oip);
-    UINT64 aud_filesize = 0;
+    uint64_t aud_filesize = 0;
     if (oip->flag & OUTPUT_INFO_FLAG_AUDIO) {
         if (!str_has_char(pe->append.aud[0])) { //音声エンコがまだ終了していない
             info_amp_do_aud_enc_first(conf->vid.amp_check);
@@ -1040,12 +1200,12 @@ static AUO_RESULT check_amp(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *p
             char aud_file[MAX_PATH_LEN];
             apply_appendix(aud_file, _countof(aud_file), pe->temp_filename, pe->append.aud[i_aud]);
             if (!PathFileExists(aud_file)) {
-                error_no_aud_file();
+                error_no_aud_file(aud_file);
                 return AUO_RESULT_ERROR;
             }
-            UINT64 filesize_tmp = 0;
-            if (!GetFileSizeUInt64(aud_file, &filesize_tmp)) {
-                warning_failed_get_aud_size(); warning_amp_failed();
+            uint64_t filesize_tmp = 0;
+            if (!rgy_get_filesize(aud_file, &filesize_tmp)) {
+                warning_failed_get_aud_size(aud_file); warning_amp_failed();
                 return AUO_RESULT_ERROR;
             }
             aud_filesize += filesize_tmp;
@@ -1172,11 +1332,11 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
             }
             CONF_GUIEX conf_tmp = *conf;
             strcpy_s(conf_tmp.enc.cmd, gen_cmd(&enc, false).c_str());
-            set_window_title_x264(pe);
-            ret |= x264_out(&conf_tmp, oip, pe, sys_dat);
+            set_window_title_enc(pe);
+            ret |= enc_out(&conf_tmp, oip, pe, sys_dat);
         } else {
-            set_window_title_x264(pe);
-            ret |= x264_out(conf, oip, pe, sys_dat);
+            set_window_title_enc(pe);
+            ret |= enc_out(conf, oip, pe, sys_dat);
         }
     }
 
