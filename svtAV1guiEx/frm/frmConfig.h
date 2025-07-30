@@ -4418,7 +4418,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
         System::Int32 GetCurrentAudioDefaultBitrate();
         delegate System::Void qualityTimerChangeDelegate();
         System::Void InitComboBox();
-        System::Void setAudioDisplay();
+        System::Void setAudioExtDisplay();
         System::Void AudioEncodeModeChanged();
         System::Void InitStgFileList();
         System::Void RebuildStgFileDropDown(String^ stgDir);
@@ -4492,6 +4492,13 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
         System::Void SetAudioBitrate(int bitrate);
         System::Void InformfbcClosed();
     private:
+        System::Boolean useAudioExt() {
+            #if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1
+                return true;
+            #else
+                return fcgCBAudioUseExt->Checked;
+            #endif
+        }
         System::Void fcgTSItem_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
             EnableSettingsNoteChange(false);
         }
@@ -5177,7 +5184,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             array<ExeControls>^ ControlList = {
                 { fcgBTX264Path->Name,           fcgTXX264Path->Text,           sys_dat->exstg->s_enc.help_cmd },
                 { fcgBTX264PathSub->Name,        fcgTXX264PathSub->Text,        sys_dat->exstg->s_enc.help_cmd },
-                { fcgBTAudioEncoderPath->Name,   fcgTXAudioEncoderPath->Text,   sys_dat->exstg->s_aud[fcgCXAudioEncoder->SelectedIndex].cmd_help },
+                { fcgBTAudioEncoderPath->Name,   fcgTXAudioEncoderPath->Text,   sys_dat->exstg->s_aud_ext[fcgCXAudioEncoder->SelectedIndex].cmd_help },
                 { fcgBTMP4MuxerPath->Name,       fcgTXMP4MuxerPath->Text,       sys_dat->exstg->s_mux[MUXER_MP4].help_cmd },
                 { fcgBTTC2MP4Path->Name,         fcgTXTC2MP4Path->Text,         sys_dat->exstg->s_mux[MUXER_TC2MP4].help_cmd },
                 { fcgBTMP4RawPath->Name,         fcgTXMP4RawPath->Text,         sys_dat->exstg->s_mux[MUXER_MP4_RAW].help_cmd },

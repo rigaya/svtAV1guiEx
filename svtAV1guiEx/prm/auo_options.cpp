@@ -50,22 +50,6 @@ void set_ex_stg_ptr(guiEx_settings *_ex_stg) {
     ex_stg = _ex_stg;
 }
 
-void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height) {
-    if (width > 0 && height > 0 && *sar_x < 0 && *sar_y < 0) {
-        int x = -1 * *sar_x * height;
-        int y = -1 * *sar_y * width;
-        if (abs(y - x) > -16 * *sar_y) {
-            int gcd = rgy_gcd(x, y);
-            *sar_x = x / gcd;
-            *sar_y = y / gcd;
-        } else {
-            *sar_x = *sar_y = 1;
-        }
-    } else if (*sar_x * *sar_y < 0) {
-        *sar_x = *sar_y = 0;
-    }
-}
-
 int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, int nArgNum) {
 #define IS_OPTION(x) (std::string(x) == option_name)
     auto to_int = [](int *value, const std::string& argv) {
