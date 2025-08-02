@@ -68,7 +68,7 @@ void guiEx_config::write_conf_header(CONF_GUIEX *save_conf) {
 
 //設定ファイルサイズを自動拡張する
 //拡張できない場合 FALSEを返す
-BOOL guiEx_config::adjust_conf_size(CONF_GUIEX *conf_buf, void *old_data, int old_size) {
+BOOL guiEx_config::adjust_conf_size(CONF_GUIEX *conf_buf, void *old_data, [[maybe_unused]] int old_size) {
     BOOL ret = FALSE;
     init_CONF_GUIEX(conf_buf, FALSE);
     if (((CONF_GUIEX *)old_data)->size_all != CONF_INITIALIZED)

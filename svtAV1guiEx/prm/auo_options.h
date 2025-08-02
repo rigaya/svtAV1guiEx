@@ -76,7 +76,10 @@ enum {
     OUT_CSP_RGB,
     OUT_CSP_YUY2,
     OUT_CSP_NV12,
-    OUT_CSP_NV16
+    OUT_CSP_NV16,
+    OUT_CSP_P010,
+    OUT_CSP_YUV444_16,
+    OUT_CSP_RGBA,
 };
 
 enum {

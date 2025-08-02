@@ -50,7 +50,7 @@ void set_ex_stg_ptr(guiEx_settings *_ex_stg) {
     ex_stg = _ex_stg;
 }
 
-int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, int nArgNum) {
+int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, [[maybe_unused]] int nArgNum) {
 #define IS_OPTION(x) (std::string(x) == option_name)
     auto to_int = [](int *value, const std::string& argv) {
         try {
@@ -126,7 +126,7 @@ int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<st
 
 int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
     auto args = sep_cmd(cmd);
-    for (int i = 0; i < args.size(); i++) {
+    for (int i = 0; i < (int)args.size(); i++) {
         const char *option_name = nullptr;
         if (args[i][0] == '|') {
             break;

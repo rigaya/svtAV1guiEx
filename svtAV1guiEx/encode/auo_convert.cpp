@@ -362,19 +362,19 @@ static const COVERT_FUNC_INFO FUNC_TABLE[] = {
     //Copy RGB
     { CF_RGB,  OUT_CSP_RGB,    BIT_8, A,  1,  SSSE3|SSE2,           sort_to_rgb_ssse3 },
     { CF_RGB,  OUT_CSP_RGB,    BIT_8, A,  1,  NONE,                 sort_to_rgb },
-    //Convert RGB to YUV444
-    { CF_RGB,  OUT_CSP_YUV444, BIT_8, A,  1,  AVX2|AVX,             convert_rgb_to_yuv444_avx2 },
-    { CF_RGB,  OUT_CSP_YUV444, BIT_8, A,  1,  NONE,                 convert_rgb_to_yuv444 },
-    { CF_RGB,  OUT_CSP_YUV444, BIT16, A,  1,  AVX2|AVX,             convert_rgb_to_yuv444_16bit_avx2 },
-    { CF_RGB,  OUT_CSP_YUV444, BIT16, A,  1,  NONE,                 convert_rgb_to_yuv444_16bit },
 #elif ENCODER_FFMPEG
     //Copy RGB
     { CF_RGB,  OUT_CSP_RGB,    BIT_8, A,  1,  SSE2,                 copy_rgb_sse2 },
     { CF_RGB,  OUT_CSP_RGB,    BIT_8, A,  1,  NONE,                 copy_rgb },
     //Copy RGBA
-    //{ CF_RGBA,  OUT_CSP_RGBA,  BIT_8, A,  1,  SSE2,                 copy_rgba_sse2 },
-    //{ CF_RGBA,  OUT_CSP_RGBA,  BIT_8, A,  1,  NONE,                 copy_rgba },
+    { CF_RGBA,  OUT_CSP_RGBA,  BIT_8, A,  1,  SSE2,                 copy_rgba_sse2 },
+    { CF_RGBA,  OUT_CSP_RGBA,  BIT_8, A,  1,  NONE,                 copy_rgba },
 #endif
+    //Convert RGB to YUV444
+    { CF_RGB,  OUT_CSP_YUV444, BIT_8, A,  1,  AVX2|AVX,             convert_rgb_to_yuv444_avx2 },
+    { CF_RGB,  OUT_CSP_YUV444, BIT_8, A,  1,  NONE,                 convert_rgb_to_yuv444 },
+    { CF_RGB,  OUT_CSP_YUV444, BIT16, A,  1,  AVX2|AVX,             convert_rgb_to_yuv444_16bit_avx2 },
+    { CF_RGB,  OUT_CSP_YUV444, BIT16, A,  1,  NONE,                 convert_rgb_to_yuv444_16bit },
     { 0, 0, 0, A, 0, NONE, NULL }
 };
 
@@ -516,6 +516,7 @@ BOOL malloc_pixel_data(CONVERT_CF_DATA * const pixel_data, int width, int height
                 ret = FALSE;
             break;
         case OUT_CSP_NV12:
+        case OUT_CSP_P010:
         default:
             if (   ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size,             std::max(align_size, 16ul))) == NULL)
                 || ((pixel_data->data[1] = (BYTE *)_mm_malloc(frame_size / 2 + extra, std::max(align_size, 16ul))) == NULL))
@@ -536,6 +537,7 @@ BOOL malloc_pixel_data(CONVERT_CF_DATA * const pixel_data, int width, int height
             break;
 #endif
         case OUT_CSP_YUV444:
+        case OUT_CSP_YUV444_16:
             if (   ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size, std::max(align_size, 16ul))) == NULL)
                 || ((pixel_data->data[1] = (BYTE *)_mm_malloc(frame_size, std::max(align_size, 16ul))) == NULL)
                 || ((pixel_data->data[2] = (BYTE *)_mm_malloc(frame_size, std::max(align_size, 16ul))) == NULL))
@@ -543,6 +545,10 @@ BOOL malloc_pixel_data(CONVERT_CF_DATA * const pixel_data, int width, int height
             break;
         case OUT_CSP_RGB:
             if ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size * 3, std::max(align_size, 16ul))) == NULL)
+                ret = FALSE;
+            break;
+        case OUT_CSP_RGBA:
+            if ((pixel_data->data[0] = (BYTE *)_mm_malloc(frame_size * 4, std::max(align_size, 16ul))) == NULL)
                 ret = FALSE;
             break;
     }
