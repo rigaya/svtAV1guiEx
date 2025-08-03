@@ -1073,7 +1073,9 @@ void set_enc_prm(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *oip, const SY
     //ファイルの上書きを避ける
     avoid_exsisting_tmp_file(pe->temp_filename, _countof(pe->temp_filename));
 
-#if !ENCODER_FFMPEG
+    if (ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1) {
+        conf->mux.use_internal = FALSE;
+    }
     pe->muxer_to_be_used = check_muxer_to_be_used(conf, pe, sys_dat, pe->temp_filename, pe->video_out_type, (oip->flag & OUTPUT_INFO_FLAG_AUDIO) != 0);
     if (pe->muxer_to_be_used >= 0) {
         const MUXER_CMD_EX *muxer_mode = &sys_dat->exstg->s_mux[pe->muxer_to_be_used].ex_cmd[get_mux_excmd_mode(conf, pe)];
@@ -1093,7 +1095,6 @@ void set_enc_prm(CONF_GUIEX *conf, PRM_ENC *pe, const OUTPUT_INFO *oip, const SY
             }
         }
     }
-#endif
     //FAWチェックとオーディオディレイの修正
     const CONF_AUDIO_BASE *cnf_aud = (conf->aud.use_internal) ? &conf->aud.in : &conf->aud.ext;
     if (cnf_aud->faw_check)
@@ -1467,16 +1468,16 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
     if (!ENCODER_FFMPEG && str_has_char(pe->muxed_vid_filename) && PathFileExists(pe->muxed_vid_filename))
         remove_file(pe->muxed_vid_filename, L"映像一時ファイル");
     //mux後ファイル
-    if (pe->muxer_to_be_used >= 0) {
+    if (pe->muxer_to_be_used >= 0 && pe->muxer_to_be_used != MUXER_INTERNAL) {
         char muxout_appendix[MAX_APPENDIX_LEN];
         get_muxout_appendix(muxout_appendix, _countof(muxout_appendix), sys_dat, pe);
         move_temp_file(muxout_appendix, pe->temp_filename, oip->savefile, ret, FALSE, g_auo_mes.get(AUO_ENCODE_AFTER_MUX), FALSE);
     }
-    //qpファイル
-    move_temp_file(pe->append.qp,   pe->temp_filename, oip->savefile, ret, !sys_dat->exstg->s_local.keep_qp_file, L"qp", FALSE);
     //tcファイル
-    BOOL erase_tc = is_afsvfr(conf) && !conf->vid.auo_tcfile_out && pe->muxer_to_be_used != MUXER_DISABLED;
-    move_temp_file(pe->append.tc,   pe->temp_filename, oip->savefile, ret, erase_tc, g_auo_mes.get(AUO_ENCODE_TC_FILE), FALSE);
+    if (is_afsvfr(conf) || conf->vid.auo_tcfile_out) {
+        BOOL erase_tc = is_afsvfr(conf) && !conf->vid.auo_tcfile_out && pe->muxer_to_be_used != MUXER_DISABLED;
+        move_temp_file(pe->append.tc, pe->temp_filename, oip->savefile, ret, erase_tc, g_auo_mes.get(AUO_ENCODE_TC_FILE), FALSE);
+    }
     //チャプターファイル
     if (pe->muxer_to_be_used >= 0) {
         const MUXER_CMD_EX *muxer_mode = &sys_dat->exstg->s_mux[pe->muxer_to_be_used].ex_cmd[get_mux_excmd_mode(conf, pe)];
@@ -1489,8 +1490,12 @@ AUO_RESULT move_temporary_files(const CONF_GUIEX *conf, const PRM_ENC *pe, const
             move_temp_file(NULL, chap_apple, NULL, chapter_auf ? AUO_RESULT_SUCCESS : ret, TRUE, g_auo_mes.get(AUO_ENCODE_CHAPTER_APPLE_FILE), FALSE);
         }
     }
-    //ステータスファイル
 #if ENCODER_X264 || ENCODER_X265
+    //qpファイル
+    if (conf->vid.check_keyframe) {
+        move_temp_file(pe->append.qp, pe->temp_filename, oip->savefile, ret, !sys_dat->exstg->s_local.keep_qp_file, L"qp", FALSE);
+    }
+    //ステータスファイル
     if (use_auto_npass(conf) && sys_dat->exstg->s_local.auto_del_stats) {
         char stats[MAX_PATH_LEN];
         strcpy_s(stats, sizeof(stats), conf->vid.stats);
@@ -1590,6 +1595,7 @@ int check_muxer_to_be_used(const CONF_GUIEX *conf, const PRM_ENC *pe, const SYST
         muxer_to_be_used = is_afsvfr(conf) ? MUXER_TC2MP4 : MUXER_MP4;
     else if (video_output_type == VIDEO_OUTPUT_MKV && !conf->mux.disable_mkvext)
         muxer_to_be_used = MUXER_MKV;
+#else
     if (conf->mux.use_internal)
         muxer_to_be_used = MUXER_INTERNAL;
     else if (video_output_type == VIDEO_OUTPUT_MP4 && !conf->mux.disable_mp4ext)

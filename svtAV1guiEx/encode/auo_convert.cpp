@@ -54,6 +54,7 @@ func_audio_16to8 get_audio_16to8_func(BOOL split) {
     return FUNC_CONVERT_AUDIO[simdidx][!!split];
 }
 
+#if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1 || ENCODER_FFMPEG
 enum eInterlace {
     A = -1, //区別の必要なし
     P = 0,  //プログレッシブ用
@@ -562,3 +563,4 @@ void free_pixel_data(CONVERT_CF_DATA *pixel_data) {
             _mm_free(pixel_data->data[i]);
     ZeroMemory(pixel_data, sizeof(CONVERT_CF_DATA));
 }
+#endif
