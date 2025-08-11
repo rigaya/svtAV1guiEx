@@ -50,9 +50,9 @@ void set_ex_stg_ptr(guiEx_settings *_ex_stg) {
     ex_stg = _ex_stg;
 }
 
-int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<std::string>& argv, int &i, [[maybe_unused]] int nArgNum) {
-#define IS_OPTION(x) (std::string(x) == option_name)
-    auto to_int = [](int *value, const std::string& argv) {
+int parse_one_option(CONF_SVTAV1 *cx, const TCHAR *option_name, const std::vector<tstring>& argv, int &i, [[maybe_unused]] int nArgNum) {
+#define IS_OPTION(x) (tstring(x) == option_name)
+    auto to_int = [](int *value, const tstring& argv) {
         try {
             *value = std::stoi(argv);
         } catch (...) {
@@ -66,68 +66,68 @@ int parse_one_option(CONF_ENC *cx, const char *option_name, const std::vector<st
         return to_int(&cx->val, argv[i]); \
     }
 
-    OPT_NUM("preset", preset);
-    OPT_NUM("input-depth", bit_depth);
-    if (IS_OPTION("crf")) {
+    OPT_NUM(_T("preset"), preset);
+    OPT_NUM(_T("input-depth"), bit_depth);
+    if (IS_OPTION(_T("crf"))) {
         i++;
         int ret = to_int(&cx->qp, argv[i]);
         cx->rc = get_cx_value(list_rc, L"CRF");
         return ret;
     }
-    OPT_NUM("rc", rc);
-    OPT_NUM("q", qp);
-    OPT_NUM("color-format", output_csp);
-    OPT_NUM("profile", profile);
-    OPT_NUM("pass", pass);
-    OPT_NUM("tbr", bitrate);
-    OPT_NUM("lp", lp);
+    OPT_NUM(_T("rc"), rc);
+    OPT_NUM(_T("q"), qp);
+    OPT_NUM(_T("color-format"), output_csp);
+    OPT_NUM(_T("profile"), profile);
+    OPT_NUM(_T("pass"), pass);
+    OPT_NUM(_T("tbr"), bitrate);
+    OPT_NUM(_T("lp"), lp);
 
-    OPT_NUM("aq-mode", aq);
-    OPT_NUM("color-primaries", color_primaries);
-    OPT_NUM("color-range", color_range);
-    OPT_NUM("enable-cdef", enable_cdef);
-    OPT_NUM("enable-dlf", enable_dlf);
-    OPT_NUM("enable-hdr", enable_hdr);
-    OPT_NUM("enable-mfmv", enable_mfmv);
-    OPT_NUM("enable-overlays", enable_overlays);
-    OPT_NUM("enable-restoration", enable_restoration);
-    OPT_NUM("enable-stat-report", enable_stat_report);
-    OPT_NUM("enable-tf", enable_tf);
-    OPT_NUM("enable-tpl-la", enable_tpl_la);
-    OPT_NUM("enable-variance-boost", enable_variance_boost);
-    OPT_NUM("fast-decode", fast_decode);
-    OPT_NUM("film-grain", film_grain);
-    OPT_NUM("hierarchical-levels", hierarchical_levels);
-    OPT_NUM("irefresh-type", intra_refresh_type);
-    OPT_NUM("keyint", keyint);
-    OPT_NUM("lookahead", lookahead);
-    OPT_NUM("luminance-qp-bias", luminance_qp_bias);
-    OPT_NUM("matrix-coefficients", matrix_coefficients);
-    OPT_NUM("max-qp", max_qp);
-    OPT_NUM("maxsection-pct", maxsection_pct);
-    OPT_NUM("min-qp", min_qp);
-    OPT_NUM("minsection-pct", minsection_pct);
-    OPT_NUM("overshoot-pct", overshoot_pct);
-    OPT_NUM("sharpness", sharpness);
-    OPT_NUM("scd", scd);
-    OPT_NUM("scm", scm);
-    OPT_NUM("tf-strength", tf_strength);
-    OPT_NUM("tile-rows", tile_rows);
-    OPT_NUM("tile-columns", tile_columns);
-    OPT_NUM("transfer-characteristics", transfer_characteristics);
-    OPT_NUM("tune", tune);
-    OPT_NUM("undershoot-pct", undershoot_pct);
-    OPT_NUM("variance-boost-strength", variance_boost_strength);
-    OPT_NUM("variance-octile", variance_octile);
+    OPT_NUM(_T("aq-mode"), aq);
+    OPT_NUM(_T("color-primaries"), color_primaries);
+    OPT_NUM(_T("color-range"), color_range);
+    OPT_NUM(_T("enable-cdef"), enable_cdef);
+    OPT_NUM(_T("enable-dlf"), enable_dlf);
+    OPT_NUM(_T("enable-hdr"), enable_hdr);
+    OPT_NUM(_T("enable-mfmv"), enable_mfmv);
+    OPT_NUM(_T("enable-overlays"), enable_overlays);
+    OPT_NUM(_T("enable-restoration"), enable_restoration);
+    OPT_NUM(_T("enable-stat-report"), enable_stat_report);
+    OPT_NUM(_T("enable-tf"), enable_tf);
+    OPT_NUM(_T("enable-tpl-la"), enable_tpl_la);
+    OPT_NUM(_T("enable-variance-boost"), enable_variance_boost);
+    OPT_NUM(_T("fast-decode"), fast_decode);
+    OPT_NUM(_T("film-grain"), film_grain);
+    OPT_NUM(_T("hierarchical-levels"), hierarchical_levels);
+    OPT_NUM(_T("irefresh-type"), intra_refresh_type);
+    OPT_NUM(_T("keyint"), keyint);
+    OPT_NUM(_T("lookahead"), lookahead);
+    OPT_NUM(_T("luminance-qp-bias"), luminance_qp_bias);
+    OPT_NUM(_T("matrix-coefficients"), matrix_coefficients);
+    OPT_NUM(_T("max-qp"), max_qp);
+    OPT_NUM(_T("maxsection-pct"), maxsection_pct);
+    OPT_NUM(_T("min-qp"), min_qp);
+    OPT_NUM(_T("minsection-pct"), minsection_pct);
+    OPT_NUM(_T("overshoot-pct"), overshoot_pct);
+    OPT_NUM(_T("sharpness"), sharpness);
+    OPT_NUM(_T("scd"), scd);
+    OPT_NUM(_T("scm"), scm);
+    OPT_NUM(_T("tf-strength"), tf_strength);
+    OPT_NUM(_T("tile-rows"), tile_rows);
+    OPT_NUM(_T("tile-columns"), tile_columns);
+    OPT_NUM(_T("transfer-characteristics"), transfer_characteristics);
+    OPT_NUM(_T("tune"), tune);
+    OPT_NUM(_T("undershoot-pct"), undershoot_pct);
+    OPT_NUM(_T("variance-boost-strength"), variance_boost_strength);
+    OPT_NUM(_T("variance-octile"), variance_octile);
     return 1;
 #undef OPT_NUM
 #undef IS_OPTION
 }
 
-int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
+int set_cmd(CONF_SVTAV1 *cx, const TCHAR *cmd, const bool ignore_parse_err) {
     auto args = sep_cmd(cmd);
     for (int i = 0; i < (int)args.size(); i++) {
-        const char *option_name = nullptr;
+        const TCHAR *option_name = nullptr;
         if (args[i][0] == '|') {
             break;
         } else if (args[i][0] == '-' && args[i][1] == 'q') {
@@ -148,32 +148,32 @@ int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
     return 0;
 }
 
-CONF_ENC get_default_prm() {
-    CONF_ENC prm;
+CONF_SVTAV1 get_default_prm() {
+    CONF_SVTAV1 prm;
     memset(&prm, 0, sizeof(prm));
     set_cmd(&prm, ex_stg->s_enc.default_cmd, true);
     return prm;
 }
 
-int parse_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err) {
+int parse_cmd(CONF_SVTAV1 *cx, const TCHAR *cmd, const bool ignore_parse_err) {
     *cx = get_default_prm();
     return set_cmd(cx, cmd, ignore_parse_err);
 }
 
-std::string gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
-    std::stringstream cmd;
-    CONF_ENC encPrmDefault = get_default_prm();
+tstring gen_cmd(const CONF_SVTAV1 *cx, bool save_disabled_prm) {
+    std::basic_stringstream<TCHAR> cmd;
+    CONF_SVTAV1 encPrmDefault = get_default_prm();
 #define OPT_NUM(str, opt) if ((cx->opt) != (encPrmDefault.opt)) cmd << " --" << (str) << " " << (int)(cx->opt);
 
-    OPT_NUM("preset", preset);
-    OPT_NUM("input-depth", bit_depth);
+    OPT_NUM(_T("preset"), preset);
+    OPT_NUM(_T("input-depth"), bit_depth);
     if (cx->rc == get_cx_value(list_rc, L"CRF")) {
         cmd << " --crf " << (int)(cx->qp);
         if (save_disabled_prm) {
-            OPT_NUM("tbr", bitrate);
+            OPT_NUM(_T("tbr"), bitrate);
         }
     } else {
-        OPT_NUM("rc", rc);
+        OPT_NUM(_T("rc"), rc);
         if (cx->rc == get_cx_value(list_rc, L"CQP") || save_disabled_prm) {
             cmd << " -q " << (int)(cx->qp);
         }
@@ -181,61 +181,61 @@ std::string gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
             OPT_NUM("tbr", bitrate);
         }
     }
-    OPT_NUM("color-format", output_csp);
-    OPT_NUM("profile", profile);
-    OPT_NUM("pass", pass);
-    OPT_NUM("lp", lp);
+    OPT_NUM(_T("color-format"), output_csp);
+    OPT_NUM(_T("profile"), profile);
+    OPT_NUM(_T("pass"), pass);
+    OPT_NUM(_T("lp"), lp);
 
     if (cx->rc == get_cx_value(list_rc, L"CQP")) {
         cmd << " --aq-mode " << 0;
     } else if (cx->rc == get_cx_value(list_rc, L"CRF")) {
-        if (cx->aq != 0) OPT_NUM("aq-mode", aq);
+        if (cx->aq != 0) OPT_NUM(_T("aq-mode"), aq);
     } else {
-        OPT_NUM("aq-mode", aq);
+        OPT_NUM(_T("aq-mode"), aq);
     }
-    OPT_NUM("color-primaries", color_primaries);
-    OPT_NUM("color-range", color_range);
-    OPT_NUM("enable-cdef", enable_cdef);
-    OPT_NUM("enable-dlf", enable_dlf);
-    OPT_NUM("enable-hdr", enable_hdr);
-    OPT_NUM("enable-mfmv", enable_mfmv);
-    OPT_NUM("enable-overlays", enable_overlays);
-    OPT_NUM("enable-restoration", enable_restoration);
-    OPT_NUM("enable-stat-report", enable_stat_report);
-    OPT_NUM("enable-tf", enable_tf);
-    OPT_NUM("enable-tpl-la", enable_tpl_la);
-    OPT_NUM("fast-decode", fast_decode);
-    OPT_NUM("film-grain", film_grain);
-    OPT_NUM("hierarchical-levels", hierarchical_levels);
-    OPT_NUM("irefresh-type", intra_refresh_type);
-    OPT_NUM("keyint", keyint);
-    OPT_NUM("lookahead", lookahead);
-    OPT_NUM("luminance-qp-bias", luminance_qp_bias);
-    OPT_NUM("matrix-coefficients", matrix_coefficients);
-    OPT_NUM("max-qp", max_qp);
-    OPT_NUM("maxsection-pct", maxsection_pct);
-    OPT_NUM("min-qp", min_qp);
-    OPT_NUM("minsection-pct", minsection_pct);
-    OPT_NUM("overshoot-pct", overshoot_pct);
-    OPT_NUM("sharpness", sharpness);
-    OPT_NUM("scd", scd);
-    OPT_NUM("scm", scm);
-    OPT_NUM("tf-strength", tf_strength);
-    OPT_NUM("tile-rows", tile_rows);
-    OPT_NUM("tile-columns", tile_columns);
-    OPT_NUM("transfer-characteristics", transfer_characteristics);
-    OPT_NUM("tune", tune);
-    OPT_NUM("undershoot-pct", undershoot_pct);
-    OPT_NUM("enable-variance-boost", enable_variance_boost);
+    OPT_NUM(_T("color-primaries"), color_primaries);
+    OPT_NUM(_T("color-range"), color_range);
+    OPT_NUM(_T("enable-cdef"), enable_cdef);
+    OPT_NUM(_T("enable-dlf"), enable_dlf);
+    OPT_NUM(_T("enable-hdr"), enable_hdr);
+    OPT_NUM(_T("enable-mfmv"), enable_mfmv);
+    OPT_NUM(_T("enable-overlays"), enable_overlays);
+    OPT_NUM(_T("enable-restoration"), enable_restoration);
+    OPT_NUM(_T("enable-stat-report"), enable_stat_report);
+    OPT_NUM(_T("enable-tf"), enable_tf);
+    OPT_NUM(_T("enable-tpl-la"), enable_tpl_la);
+    OPT_NUM(_T("fast-decode"), fast_decode);
+    OPT_NUM(_T("film-grain"), film_grain);
+    OPT_NUM(_T("hierarchical-levels"), hierarchical_levels);
+    OPT_NUM(_T("irefresh-type"), intra_refresh_type);
+    OPT_NUM(_T("keyint"), keyint);
+    OPT_NUM(_T("lookahead"), lookahead);
+    OPT_NUM(_T("luminance-qp-bias"), luminance_qp_bias);
+    OPT_NUM(_T("matrix-coefficients"), matrix_coefficients);
+    OPT_NUM(_T("max-qp"), max_qp);
+    OPT_NUM(_T("maxsection-pct"), maxsection_pct);
+    OPT_NUM(_T("min-qp"), min_qp);
+    OPT_NUM(_T("minsection-pct"), minsection_pct);
+    OPT_NUM(_T("overshoot-pct"), overshoot_pct);
+    OPT_NUM(_T("sharpness"), sharpness);
+    OPT_NUM(_T("scd"), scd);
+    OPT_NUM(_T("scm"), scm);
+    OPT_NUM(_T("tf-strength"), tf_strength);
+    OPT_NUM(_T("tile-rows"), tile_rows);
+    OPT_NUM(_T("tile-columns"), tile_columns);
+    OPT_NUM(_T("transfer-characteristics"), transfer_characteristics);
+    OPT_NUM(_T("tune"), tune);
+    OPT_NUM(_T("undershoot-pct"), undershoot_pct);
+    OPT_NUM(_T("enable-variance-boost"), enable_variance_boost);
     if (cx->enable_variance_boost) {
-        OPT_NUM("variance-boost-strength", variance_boost_strength);
+        OPT_NUM(_T("variance-boost-strength"), variance_boost_strength);
     }
-    OPT_NUM("variance-octile", variance_octile);
+    OPT_NUM(_T("variance-octile"), variance_octile);
 
     return cmd.str();
 }
 
-void set_auto_colormatrix(CONF_ENC *cx, int height) {
+void set_auto_colormatrix(CONF_SVTAV1 *cx, int height) {
     if (cx->matrix_coefficients == COLOR_MATRIX_AUTO)
         cx->matrix_coefficients = (height >= COLOR_MATRIX_THRESHOLD) ? get_cx_value(list_colormatrix, L"bt709") : get_cx_value(list_colormatrix, L"bt601");
     if (cx->color_primaries == COLOR_MATRIX_AUTO)

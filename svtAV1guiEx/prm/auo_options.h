@@ -80,6 +80,7 @@ enum {
     OUT_CSP_P010,
     OUT_CSP_YUV444_16,
     OUT_CSP_RGBA,
+    OUT_CSP_RGBA_16,
 };
 
 enum {
@@ -96,22 +97,22 @@ enum {
 
 //x264のinput-cspとして使用するもの
 //OUT_CSP_NV12, OUT_CSP_YUV444, OUT_CSP_RGB に合わせる
-static const char * const specify_csp[] = {
-    "yuv400", //OUT_CSP_YUV400
-    "yuv420", //OUT_CSP_YV12
-    "yuv422", //OUT_CSP_YUV422
-    "yuv444", //OUT_CSP_YUV444
-    "rgb"   //OUT_CSP_RGB
+static const TCHAR * const specify_csp[] = {
+    _T("yuv400"), //OUT_CSP_YUV400
+    _T("yuv420"), //OUT_CSP_YV12
+    _T("yuv422"), //OUT_CSP_YUV422
+    _T( "yuv444"), //OUT_CSP_YUV444
+    _T("rgb")   //OUT_CSP_RGB
 };
 //文字列を引数にとるオプションの引数リスト
 //OUT_CSP_NV12, OUT_CSP_YUV444, OUT_CSP_RGB に合わせる
 const ENC_OPTION_STR list_output_csp[] = {
-    { "yuv400", AUO_MES_UNKNOWN, L"yuv400" },
-    { "yuv420", AUO_MES_UNKNOWN, L"yuv420" },
-    { "yuv422", AUO_MES_UNKNOWN, L"yuv422" },
-    { "yuv444", AUO_MES_UNKNOWN, L"yuv444" },
-    { "rgb",    AUO_MES_UNKNOWN, L"rgb"    },
-    { NULL,    AUO_MES_UNKNOWN, NULL      }
+    { _T("yuv400"), AUO_MES_UNKNOWN, L"yuv400" },
+    { _T("yuv420"), AUO_MES_UNKNOWN, L"yuv420" },
+    { _T("yuv422"), AUO_MES_UNKNOWN, L"yuv422" },
+    { _T("yuv444"), AUO_MES_UNKNOWN, L"yuv444" },
+    { _T("rgb"),    AUO_MES_UNKNOWN, L"rgb"    },
+    { nullptr,    AUO_MES_UNKNOWN, 0      }
 };
 
 typedef struct CX_DESC_AUO {
@@ -189,20 +190,20 @@ const CX_DESC_AUO list_colormatrix[] = {
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const ENC_OPTION_STR list_videoformat[] = {
-    { "undef",     AUO_OPTION_VUI_UNDEF, L"指定なし"  },
-    { "ntsc",      AUO_MES_UNKNOWN,      L"ntsc"      },
-    { "component", AUO_MES_UNKNOWN,      L"component" },
-    { "pal",       AUO_MES_UNKNOWN,      L"pal"       },
-    { "secam",     AUO_MES_UNKNOWN,      L"secam"     },
-    { "mac",       AUO_MES_UNKNOWN,      L"mac"       },
+    { _T("undef"),     AUO_OPTION_VUI_UNDEF, L"指定なし"  },
+    { _T("ntsc"),      AUO_MES_UNKNOWN,      L"ntsc"      },
+    { _T("component"), AUO_MES_UNKNOWN,      L"component" },
+    { _T("pal"),       AUO_MES_UNKNOWN,      L"pal"       },
+    { _T("secam"),     AUO_MES_UNKNOWN,      L"secam"     },
+    { _T("mac"),       AUO_MES_UNKNOWN,      L"mac"       },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const ENC_OPTION_STR list_log_type[] = {
-    { "none",    AUO_MES_UNKNOWN, L"none"    },
-    { "error",   AUO_MES_UNKNOWN, L"error"   },
-    { "warning", AUO_MES_UNKNOWN, L"warning" },
-    { "info",    AUO_MES_UNKNOWN, L"info"    },
-    { "debug",   AUO_MES_UNKNOWN, L"debug"   },
+    { _T("none"),    AUO_MES_UNKNOWN, L"none"    },
+    { _T("error"),   AUO_MES_UNKNOWN, L"error"   },
+    { _T("warning"), AUO_MES_UNKNOWN, L"warning" },
+    { _T("info"),    AUO_MES_UNKNOWN, L"info"    },
+    { _T("debug"),   AUO_MES_UNKNOWN, L"debug"   },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 
@@ -271,7 +272,7 @@ typedef struct {
     int     undershoot_pct; //--undershoot-pct
     int     variance_boost_strength; //--variance-boost-strength
     int     variance_octile; // --variance-octile
-} CONF_ENC;
+} CONF_SVTAV1;
 #pragma pack(pop)
 
 static const wchar_t *get_chr_from_value(const CX_DESC_AUO *list, int v) {
@@ -483,8 +484,8 @@ const CX_DESC_AUO list_palette[] = {
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 typedef struct {
-    char *long_name;
-    char *short_name;
+    TCHAR *long_name;
+    TCHAR *short_name;
     DWORD type;
     const ENC_OPTION_STR *list;
     size_t p_offset;
@@ -496,25 +497,25 @@ enum {
     ARG_TYPE_SHORT   = 2,
 };
 
-typedef struct {
+typedef struct CMD_ARG {
     int arg_type;       //LONGかSHORTか
-    char *option_name;  //オプション名(最初の"--"なし)
-    char *value;        //オプションの値
+    TCHAR *option_name;  //オプション名(最初の"--"なし)
+    TCHAR *value;        //オプションの値
     BOOL value_had_dQB; //前後に'"'があったか
     BOOL ret;           //構造体に読み込まれたかどうか
     BOOL type_mediainfo; //MediaInfoの書式だったかどうか
 } CMD_ARG;
 
-static bool ishighbitdepth(const CONF_ENC *enc) { return enc->bit_depth > 8; }
+bool ishighbitdepth(const CONF_SVTAV1 *enc);
 
 void set_guiEx_auto_sar(int *sar_x, int *sar_y, int width, int height);
 
 //コマンドラインの解析・生成
-int set_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err);
-int parse_cmd(CONF_ENC *cx, const char *cmd, const bool ignore_parse_err);
-std::string gen_cmd(const CONF_ENC *cx, bool save_disabled_prm);
-CONF_ENC get_default_prm();
+int set_cmd(CONF_SVTAV1 *cx, const TCHAR *cmd, const bool ignore_parse_err);
+int parse_cmd(CONF_SVTAV1 *cx, const TCHAR *cmd, const bool ignore_parse_err);
+tstring gen_cmd(const CONF_SVTAV1 *cx, bool save_disabled_prm);
+CONF_SVTAV1 get_default_prm();
 void set_ex_stg_ptr(guiEx_settings *_ex_stg);
-void set_auto_colormatrix(CONF_ENC *cx, int height);
+void set_auto_colormatrix(CONF_SVTAV1 *cx, int height);
 
 #endif //_AUO_OPTIONS_H_

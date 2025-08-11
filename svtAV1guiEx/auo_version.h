@@ -28,19 +28,26 @@
 #ifndef _AUO_VERSION_H_
 #define _AUO_VERSION_H_
 
-#define AUO_VERSION         0,1,29,0
-#define AUO_VERSION_STR      "1.29"
-#define AUO_VERSION_STR_W   L"1.29"
+#define AUO_VERSION         0,1,0,0
+#define AUO_VERSION_STR      "2.00"
+#define AUO_VERSION_STR_W   L"2.00"
 #define AUO_NAME_R            svtAV1guiEx
 #define AUO_NAME_WITHOUT_EXT "svtAV1guiEx"
 #define AUO_NAME_WITHOUT_EXT_W L"svtAV1guiEx"
+#if _M_X64
+#define AUO_NAME             "svtAV1guiEx.auo2"
+#define AUO_NAME_W          L"svtAV1guiEx.auo2"
+#else
 #define AUO_NAME             "svtAV1guiEx.auo"
 #define AUO_NAME_W          L"svtAV1guiEx.auo"
+#endif
 #define AUO_FULL_NAME        "拡張 SVT-AV1 出力(GUI) Ex"
 #define AUO_FULL_NAME_W     L"拡張 SVT-AV1 出力(GUI) Ex"
 #define AUO_VERSION_NAME     "拡張 SVT-AV1 出力(GUI) Ex " AUO_VERSION_STR
-#define AUO_VERSION_INFO     "拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) " AUO_VERSION_STR " by rigaya"
-#define AUO_EXT_FILTER       "All Support Formats (*.*)\0*.mkv;*.mp4;*.264;*.mp4\0mkv file (*.mkv)\0*.mkv\0mp4 file (*.mp4)\0*.mp4\0raw file (*.264)\0*.264\0"
+#define AUO_VERSION_INFO     "拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) " AUO_VERSION_STR
+#define AUO_VERSION_INFO_W   L"拡張 SVT-AV1 出力(GUI) Ex (svtAV1guiEx) " AUO_VERSION_STR_W
+#define AUO_EXT_FILTER       "All Support Formats (*.*)\0*.mkv;*.mp4;*.264;*.mp4\0mkv file (*.mkv)\0*.mkv\0mp4 file (*.mp4)\0*.mp4\0raw file (*.av1)\0*.av1\0"
+#define AUO_EXT_FILTER_W    L"All Support Formats (*.*)\0*.mkv;*.mp4;*.264;*.mp4\0mkv file (*.mkv)\0*.mkv\0mp4 file (*.mp4)\0*.mp4\0raw file (*.av1)\0*.av1\0"
 
 #define AUOSETUP_EVENT_ABORT "AUOSETUP_EVENT_ABORT"
 

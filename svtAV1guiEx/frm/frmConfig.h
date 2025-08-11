@@ -4393,7 +4393,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
 #pragma endregion
     private:
         const SYSTEM_DATA *sys_dat;
-        std::vector<std::string> *list_lng;
+        std::vector<tstring> *list_lng;
         CONF_GUIEX *conf;
         LocalSettings LocalStg;
         DarkenWindowStgReader *dwStgReader;
@@ -4442,8 +4442,8 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
         System::Void fcgTSTSettingsNotes_Leave(System::Object^  sender, System::EventArgs^  e);
         System::Void fcgTSTSettingsNotes_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
         System::Void fcgTSTSettingsNotes_TextChanged(System::Object^  sender, System::EventArgs^  e);
-        System::Void GetfcgTSLSettingsNotes(char *notes, int nSize);
-        System::Void SetfcgTSLSettingsNotes(const char *notes);
+        System::Void GetfcgTSLSettingsNotes(TCHAR *notes, int nSize);
+        System::Void SetfcgTSLSettingsNotes(const TCHAR *notes);
         System::Void SetfcgTSLSettingsNotes(String^ notes);
         System::Void fcgTSBSave_Click(System::Object^  sender, System::EventArgs^  e);
         System::Void fcgTSBSaveNew_Click(System::Object^  sender, System::EventArgs^  e);
@@ -4456,8 +4456,8 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
         System::Void CheckTSItemsEnabled(CONF_GUIEX *current_conf);
 
         System::Void InitLangList();
-        System::Void SaveSelectedLanguage(const char *language_text);
-        System::Void SetSelectedLanguage(const char *language_text);
+        System::Void SaveSelectedLanguage(const TCHAR *language_text);
+        System::Void SetSelectedLanguage(const TCHAR *language_text);
         System::Void CheckTSLanguageDropDownItem(ToolStripMenuItem^ mItem);
         System::Void fcgTSLanguage_DropDownItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e);
 
@@ -4915,13 +4915,13 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             CONF_GUIEX cnf;
             init_CONF_GUIEX(&cnf, fcgCBUsehighbit->Checked);
             FrmToConf(&cnf);
-            char cmdex[2048] = { 0 };
-            GetCHARfromString(cmdex, sizeof(cmdex), fcgTXCmdEx->Text);
-            CONF_ENC enc = get_default_prm();
+            TCHAR cmdex[2048] = { 0 };
+            GetWCHARfromString(cmdex, _countof(cmdex), fcgTXCmdEx->Text);
+            CONF_SVTAV1 enc = get_default_prm();
             set_cmd(&enc, cnf.enc.cmd, true);
             set_cmd(&enc, cmdex, true);
             auto cmd_read = gen_cmd(&enc, false);
-            strcpy_s(cnf.enc.cmd, cmd_read.c_str());
+            _tcscpy_s(cnf.enc.cmd, cmd_read.c_str());
             ConfToFrm(&cnf, false);
         }
     private:
@@ -4942,7 +4942,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             init_CONF_GUIEX(conf, fcgCBUsehighbit->Checked);
             FrmToConf(conf);
             SaveLocalStg();
-            ZeroMemory(conf->oth.notes, sizeof(conf->oth.notes));
+            ZeroMemory(conf->oth.notes, _countof(conf->oth.notes));
             this->Close();
         }
     private:
