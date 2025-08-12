@@ -111,7 +111,7 @@
       </AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>svtAV1guiEx.def2</ModuleDefinitionFile>
+      <ModuleDefinitionFile>svtAV1guiEx.def</ModuleDefinitionFile>
       <EmbedManagedResourceFile>.\image\folder_open.ico;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
@@ -198,7 +198,7 @@ copy /y svtAV1guiEx.zh.ini "$(OutDir)"</Command>
       </AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>svtAV1guiEx.def2</ModuleDefinitionFile>
+      <ModuleDefinitionFile>svtAV1guiEx.def</ModuleDefinitionFile>
       <EmbedManagedResourceFile>.\image\folder_open.ico;%(EmbedManagedResourceFile)</EmbedManagedResourceFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

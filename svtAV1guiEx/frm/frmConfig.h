@@ -4917,7 +4917,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             FrmToConf(&cnf);
             TCHAR cmdex[2048] = { 0 };
             GetWCHARfromString(cmdex, _countof(cmdex), fcgTXCmdEx->Text);
-            CONF_SVTAV1 enc = get_default_prm();
+            CONF_ENC enc = get_default_prm();
             set_cmd(&enc, cnf.enc.cmd, true);
             set_cmd(&enc, cmdex, true);
             auto cmd_read = gen_cmd(&enc, false);

@@ -530,7 +530,8 @@ int guiEx_config::load_guiEx_conf_legacy(CONF_GUIEX *conf, const TCHAR *stg_file
     char conf_name[CONF_NAME_BLOCK_LEN + 32];
     fread(&conf_name, sizeof(char), CONF_NAME_BLOCK_LEN, fp);
     if (   strcmp(CONF_NAME,       conf_name)
-        && strcmp(CONF_NAME_OLD_1, conf_name)) {
+        && strcmp(CONF_NAME_OLD_1, conf_name)
+        && strcmp(CONF_NAME_OLD_2, conf_name)) {
         fclose(fp);
         return CONF_ERROR_FILE_OPEN;
     }
