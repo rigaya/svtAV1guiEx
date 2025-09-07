@@ -129,6 +129,7 @@ jobs:
           7z x -oAviutl_svtAV1guiEx_release\Plugin\exe_files ffmpeg_audenc.7z
           del Aviutl_svtAV1guiEx_release\Plugin\exe_files\remuxer*.exe
           del Aviutl_svtAV1guiEx_release\Plugin\exe_files\muxer*.exe
+          del Aviutl_svtAV1guiEx_release\Plugin\exe_files\timelineeditor_x86.exe
           del Aviutl_svtAV1guiEx_release\Plugin\auo_setup.auf
           copy /y .\Release\${{ matrix.platform }}\svtAV1guiEx.auo2 Aviutl_svtAV1guiEx_release\Plugin\
           copy /y svtAV1guiEx\svtAV1guiEx.ini Aviutl_svtAV1guiEx_release\Plugin\
