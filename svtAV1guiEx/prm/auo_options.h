@@ -468,7 +468,9 @@ const CX_DESC_AUO list_aq[] = {
 };
 const CX_DESC_AUO list_tune[] = {
     { L"0: VQ",    AUO_MES_UNKNOWN, 0 },
-    { L"1: ssim",  AUO_MES_UNKNOWN, 1 },
+    { L"1: PSNR",  AUO_MES_UNKNOWN, 1 },
+    { L"2: SSIM",  AUO_MES_UNKNOWN, 2 },
+    { L"3: Image Quality",  AUO_MES_UNKNOWN, 3 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 
