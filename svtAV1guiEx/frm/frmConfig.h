@@ -2330,6 +2330,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             this->fcgNUQP->TabIndex = 65;
             this->fcgNUQP->Tag = L"reCmd";
             this->fcgNUQP->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+            this->fcgNUQP->ValueChanged += gcnew System::EventHandler(this, &frmConfig::fcgNUQP_ValueChanged);
             // 
             // fcgCXRC
             // 
@@ -4486,6 +4487,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
         System::Void fcgCXCmdExInsert_FontChanged(System::Object^  sender, System::EventArgs^  e);
         System::Void fcgCXCmdExInsert_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
         System::Void fcgCXRC_SelectedIndexChanged(System::Object ^sender, System::EventArgs ^e);
+        System::Void fcgNUQP_ValueChanged(System::Object^ sender, System::EventArgs^ e);
     public:
         System::Void InitData(CONF_GUIEX *set_config, const SYSTEM_DATA *system_data);
         System::Void SetVideoBitrate(int bitrate);

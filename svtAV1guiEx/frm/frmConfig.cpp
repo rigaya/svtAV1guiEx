@@ -1027,10 +1027,31 @@ System::Void frmConfig::AdjustLocation() {
 }
 
 System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, System::EventArgs ^e) {
+    int rc_mode = list_rc[fcgCXRC->SelectedIndex].value;
     const bool videoBitrateMode = (x264_encmode_to_RCint[fcgCXRC->SelectedIndex] == ENC_RC_BITRATE);
     fcgNUBitrate->Visible = videoBitrateMode;
     fcgLBKbps->Visible = videoBitrateMode;
     fcgNUQP->Visible = !videoBitrateMode;
+
+    if (rc_mode == -1) { // CRFモード
+        fcgNUQP->DecimalPlaces = 2;
+        fcgNUQP->Increment = (Decimal)0.25;
+    } else {
+        fcgNUQP->DecimalPlaces = 0;
+        fcgNUQP->Increment = 1;
+    }
+}
+
+System::Void frmConfig::fcgNUQP_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
+    int rc_mode = list_rc[fcgCXRC->SelectedIndex].value;
+    if (rc_mode == -1) { // CRFモード
+        // 0.25単位に丸める
+        Decimal value = fcgNUQP->Value;
+        Decimal rounded = Math::Round(value / (Decimal)0.25) * (Decimal)0.25;
+        if (value != rounded) {
+            fcgNUQP->Value = clamp(rounded, fcgNUQP->Minimum, fcgNUQP->Maximum);
+        }
+    }
 }
 
 System::Void frmConfig::InitForm() {
@@ -1367,7 +1388,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.enable_tpl_la        = (enc.rc == get_cx_value(list_rc, L"CQP")) ? 0 : 1;
     enc.preset               = list_enc_mode[fcgCXEncMode->SelectedIndex].value;
     enc.bitrate              = (int)fcgNUBitrate->Value;
-    enc.qp                   = (int)fcgNUQP->Value;
+    enc.qp                   = (float)fcgNUQP->Value;
     enc.pass                 = (int)fcgCB2PassAuto->Checked ? 2 : 0;
 
     enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;

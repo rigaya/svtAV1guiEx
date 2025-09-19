@@ -231,7 +231,7 @@ typedef struct {
     int     output_csp;        //color_format
     int     profile;
     int     pass;
-    int     qp;                  //q
+    float   qp;                  //q
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
     int     aq;

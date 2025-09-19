@@ -34,6 +34,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "h264_level.h"
 #include "auo_util.h"
@@ -60,22 +61,35 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
         }
         return 0;
     };
+    auto to_float = [](float *value, const tstring& argv) {
+        try {
+            *value = std::stof(argv);
+        } catch (...) {
+            return 1;
+        }
+        return 0;
+    };
 #define OPT_NUM(str, val) \
     if (IS_OPTION(str)) { \
         i++; \
         return to_int(&cx->val, argv[i]); \
+    }
+#define OPT_FLOAT(str, val) \
+    if (IS_OPTION(str)) { \
+        i++; \
+        return to_float(&cx->val, argv[i]); \
     }
 
     OPT_NUM(_T("preset"), preset);
     OPT_NUM(_T("input-depth"), bit_depth);
     if (IS_OPTION(_T("crf"))) {
         i++;
-        int ret = to_int(&cx->qp, argv[i]);
+        int ret = to_float(&cx->qp, argv[i]);
         cx->rc = get_cx_value(list_rc, L"CRF");
         return ret;
     }
     OPT_NUM(_T("rc"), rc);
-    OPT_NUM(_T("q"), qp);
+    OPT_FLOAT(_T("q"), qp);
     OPT_NUM(_T("color-format"), output_csp);
     OPT_NUM(_T("profile"), profile);
     OPT_NUM(_T("pass"), pass);
@@ -168,14 +182,15 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("preset"), preset);
     OPT_NUM(_T("input-depth"), bit_depth);
     if (cx->rc == get_cx_value(list_rc, L"CRF")) {
-        cmd << " --crf " << (int)(cx->qp);
+        const double rounded = (int)((double)cx->qp / 0.25 + 0.5) * 0.25;
+        cmd << " --crf " << std::setprecision(2) << rounded;
         if (save_disabled_prm) {
             OPT_NUM(_T("tbr"), bitrate);
         }
     } else {
         OPT_NUM(_T("rc"), rc);
         if (cx->rc == get_cx_value(list_rc, L"CQP") || save_disabled_prm) {
-            cmd << " -q " << (int)(cx->qp);
+            cmd << " -q " << (int)(cx->qp + 0.5);
         }
         if (cx->rc == get_cx_value(list_rc, L"VBR") || save_disabled_prm) {
             OPT_NUM("tbr", bitrate);
