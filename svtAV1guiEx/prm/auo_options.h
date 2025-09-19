@@ -257,6 +257,7 @@ typedef struct {
     int     luminance_qp_bias; //--luminance-qp-bias
     int     matrix_coefficients; //--matrix-coefficients
     int     max_qp;
+    int     max_tx_size;
     int     maxsection_pct; //--maxsection-pct
     int     min_qp;
     int     minsection_pct; //--minsection-pct
@@ -486,6 +487,13 @@ const CX_DESC_AUO list_palette[] = {
     { L"6 ",          AUO_OPTION_PALETTE_6,  6 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
+
+const CX_DESC_AUO list_max_tx_size[] = {
+    { L"32", AUO_MES_UNKNOWN, 32 },
+    { L"64", AUO_MES_UNKNOWN, 64 },
+    { nullptr, AUO_MES_UNKNOWN, 0 }
+};
+
 typedef struct {
     TCHAR *long_name;
     TCHAR *short_name;

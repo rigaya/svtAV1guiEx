@@ -901,6 +901,7 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXEnableMfmv, list_on_off_default);
 
     setComboBox(fcgCXHierarchicalLevels, list_hierarchical_levels);
+    setComboBox(fcgCXMaxTXSize, list_max_tx_size);
 
     setComboBox(fcgCXProfileAV1,     list_profile_av1);
     fcgCXProfileAV1->Enabled = false;
@@ -1143,6 +1144,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBMaxQP);
     LOAD_CLI_TEXT(fcgLBMinQP);
     LOAD_CLI_TEXT(fcgLBMfmv);
+    LOAD_CLI_TEXT(fcgLBMaxTXSize);
     LOAD_CLI_TEXT(fcgLBSceneChangeDetection);
     LOAD_CLI_TEXT(fcgLBSharpness);
     LOAD_CLI_TEXT(fcgLBTFStrength);
@@ -1303,6 +1305,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNULumaQPBias, enc.luminance_qp_bias);
     SetCXIndex(fcgCXColorMatrix, get_cx_index(list_colormatrix, enc.matrix_coefficients));
     SetNUValue(fcgNUMaxQP, enc.max_qp);
+    SetCXIndex(fcgCXMaxTXSize, get_cx_index(list_max_tx_size, enc.max_tx_size));
     SetNUValue(fcgNUMaxSectionPct, enc.maxsection_pct);
     SetNUValue(fcgNUMinQP, enc.min_qp);
     SetNUValue(fcgNUMinSectionPct, enc.minsection_pct);
@@ -1417,6 +1420,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.luminance_qp_bias = (int)fcgNULumaQPBias->Value;
     enc.matrix_coefficients = list_colormatrix[fcgCXColorMatrix->SelectedIndex].value;
     enc.max_qp = (int)fcgNUMaxQP->Value;
+    enc.max_tx_size = list_max_tx_size[fcgCXMaxTXSize->SelectedIndex].value;
     enc.maxsection_pct = (int)fcgNUMaxSectionPct->Value;
     enc.min_qp = (int)fcgNUMinQP->Value;
     enc.minsection_pct = (int)fcgNUMinSectionPct->Value;

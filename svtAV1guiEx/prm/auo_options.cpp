@@ -118,6 +118,7 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     OPT_NUM(_T("luminance-qp-bias"), luminance_qp_bias);
     OPT_NUM(_T("matrix-coefficients"), matrix_coefficients);
     OPT_NUM(_T("max-qp"), max_qp);
+    OPT_NUM(_T("max-tx-size"), max_tx_size);
     OPT_NUM(_T("maxsection-pct"), maxsection_pct);
     OPT_NUM(_T("min-qp"), min_qp);
     OPT_NUM(_T("minsection-pct"), minsection_pct);
@@ -228,6 +229,7 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("luminance-qp-bias"), luminance_qp_bias);
     OPT_NUM(_T("matrix-coefficients"), matrix_coefficients);
     OPT_NUM(_T("max-qp"), max_qp);
+    OPT_NUM(_T("max-tx-size"), max_tx_size);
     OPT_NUM(_T("maxsection-pct"), maxsection_pct);
     OPT_NUM(_T("min-qp"), min_qp);
     OPT_NUM(_T("minsection-pct"), minsection_pct);

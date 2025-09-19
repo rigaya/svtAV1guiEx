@@ -477,6 +477,7 @@ AuofcgLBEnableRestortionFiltering=EnableRestortion
 AuofcgLBMaxQP=-
 AuofcgLBMinQP=QP Min-Max
 AuofcgLBMfmv=MotionFieldMV
+AuofcgLBMaxTXSize=MaxTXSize
 AuofcgLBAQ=AQ
 AuofcgLBHierarchicalLevels=hierarchical levels
 AuofcgLBTile2=x
