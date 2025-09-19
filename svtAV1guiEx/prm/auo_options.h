@@ -442,7 +442,7 @@ const CX_DESC_AUO list_scm[] = {
     { L"0: off",                     AUO_OPTION_SCM_0, 0 },
     { L"1: Block Copy + Palette",    AUO_OPTION_SCM_1, 1 },
     { L"2: Auto",                    AUO_OPTION_SCM_2, 2 },
-    { L"2: Auto (anti-alias aware)", AUO_OPTION_SCM_3, 3 },
+    { L"3: Auto (anti-alias aware)", AUO_OPTION_SCM_3, 3 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const CX_DESC_AUO list_enc_mode[] = {
