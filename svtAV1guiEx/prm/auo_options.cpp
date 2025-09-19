@@ -183,8 +183,13 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("preset"), preset);
     OPT_NUM(_T("input-depth"), bit_depth);
     if (cx->rc == get_cx_value(list_rc, L"CRF")) {
-        const double rounded = (int)((double)cx->qp / 0.25 + 0.5) * 0.25;
-        cmd << " --crf " << std::setprecision(2) << rounded;
+        const int crfx4 = (int)((double)cx->qp / 0.25 + 0.5);
+        if (crfx4 % 4 == 0) {
+            cmd << " --crf " << (crfx4 / 4);
+        } else {
+            const double rounded = crfx4 * 0.25;
+            cmd << " --crf " << std::fixed << std::setprecision(2) << rounded;
+        }
         if (save_disabled_prm) {
             OPT_NUM(_T("tbr"), bitrate);
         }
