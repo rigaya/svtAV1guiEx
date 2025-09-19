@@ -506,6 +506,7 @@ enum AuoMes {
         AUO_OPTION_SCM_0,
         AUO_OPTION_SCM_1,
         AUO_OPTION_SCM_2,
+        AUO_OPTION_SCM_3,
         AUO_OPTION_ENC_MODE_00,
         AUO_OPTION_ENC_MODE_01,
         AUO_OPTION_ENC_MODE_02,
