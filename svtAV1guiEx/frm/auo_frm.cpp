@@ -112,19 +112,68 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
     char buffer[1024] = { 0 };
     const char *ptr = buffer;
     last_update = current;
-    if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
-        || sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
-        const bool isfpm = strstr(mes, " fpm");
+    // ANSIエスケープと\r等を除去したクリーンな文字列を作成
+    char clean[1024] = { 0 };
+    {
+        size_t si = 0, di = 0;
+        while (mes[si] != '\0' && di + 1 < _countof(clean)) {
+            if (mes[si] == '\x1b') { // ESCシーケンスをスキップ
+                si++;
+                if (mes[si] == '[') si++;
+                while (mes[si] != '\0' && mes[si] != 'm') si++;
+                if (mes[si] == 'm') si++;
+                continue;
+            }
+            if (mes[si] == '\r' || mes[si] == '\n') { si++; continue; }
+            clean[di++] = mes[si++];
+        }
+        clean[di] = '\0';
+    }
+    int parsed_current_frames = 0, parsed_total_frames = 0;
+    if (sscanf_s(clean, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
+        || sscanf_s(clean, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
+        const bool isfpm = strstr(clean, " fpm");
         sprintf_s(buffer, _countof(buffer),
             (isfpm) ? "[%3.1lf%%] %d/%d frames, %.3lf fps, %.2lf kb/s"
                     : "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
-            current_frames * 100.0 / (double)total_frames,
+            (total_frames > 0) ? (current_frames * 100.0 / (double)total_frames) : 0.0,
             current_frames,
             total_frames,
             isfpm ? fps * (1.0 / 60.0) : fps,
             bitrate);
-    } else {
-        ptr = mes;
+    } else if (sscanf_s(clean, "Encoding: %d/%d Frames @ %lf fps | %lf kb/s", &parsed_current_frames, &parsed_total_frames, &fps, &bitrate) == 4
+            || sscanf_s(clean, "Encoding: %d/%d Frames @ %lf fpm | %lf kb/s", &parsed_current_frames, &parsed_total_frames, &fps, &bitrate) == 4) {
+        const bool isfpm = strstr(clean, " fpm");
+        const double fps_calc = isfpm ? (fps * (1.0 / 60.0)) : fps;
+        const int disp_current = parsed_current_frames > 0 ? parsed_current_frames : current_frames;
+        const int disp_total   = parsed_total_frames   > 0 ? parsed_total_frames   : total_frames;
+        const double percent = (disp_total > 0) ? (disp_current * 100.0 / (double)disp_total) : 0.0;
+        sprintf_s(buffer, _countof(buffer),
+            "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
+            percent,
+            disp_current,
+            disp_total,
+            fps_calc,
+            bitrate);
+    } else if (sscanf_s(clean, "Encoding: %d Frames @ %lf fps | %lf kb/s", &parsed_current_frames, &fps, &bitrate) == 3
+            || sscanf_s(clean, "Encoding: %d Frames @ %lf fpm | %lf kb/s", &parsed_current_frames, &fps, &bitrate) == 3) {
+        const bool isfpm = strstr(clean, " fpm");
+        const double fps_calc = isfpm ? (fps * (1.0 / 60.0)) : fps;
+        if (total_frames > 0) {
+            sprintf_s(buffer, _countof(buffer),
+                "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
+                current_frames * 100.0 / (double)total_frames,
+                current_frames,
+                total_frames,
+                fps_calc,
+                bitrate);
+        } else {
+            sprintf_s(buffer, _countof(buffer),
+                "%d frames, %.2lf fps, %.2lf kb/s",
+                parsed_current_frames > 0 ? parsed_current_frames : current_frames,
+                fps_calc,
+                bitrate);
+        }
     }
     set_window_title_enc_mes(char_to_wstring(ptr).c_str(), total_drop, current_frames);
 }
@@ -167,7 +216,11 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         if ((b = strrchr(mes, '\r', (int)(a - mes) - 2)) != NULL)
             mes = b + 1;
         *a = '\0';
-        write_log_enc_mes_line(mes, cache_line);
+        if (ENCODER_SVTAV1 && strstr(mes, "Encoding frame") || strstr(mes, "Encoding:")) {
+            ; // スキップ
+        } else {
+            write_log_enc_mes_line(mes, cache_line);
+        }
         mes = a + 1;
     }
     if ((a = strrchr(mes, '\r', (int)(fin - mes) - 1)) != NULL) {
@@ -178,7 +231,7 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         if ((b = strrchr(mes, '\r', (int)(b - mes) - 2)) != NULL)
             mes = b + 1;
 #if ENCODER_SVTAV1
-        if (strstr(mes, "Encoding frame")) {
+    if (strstr(mes, "Encoding frame") || strstr(mes, "Encoding:")) {
 #else
         if ((ENCODER_X264 || ENCODER_X265 || ENCODER_FFMPEG) && NULL == strstr(mes, "frames")) {
 #endif
