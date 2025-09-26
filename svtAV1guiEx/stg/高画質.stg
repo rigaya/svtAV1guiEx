@@ -30,7 +30,7 @@
   },
   "conf_name": "svtAV1guiEx ConfigFile v2",
   "enc": {
-    "cmd": " --preset 4 --input-depth 10 --crf 31 --enable-overlays 1 --enable-tf 2 --luminance-qp-bias 10 --matrix-coefficients 0 --scd 1 --tf-strength 1 --tune 0 --enable-variance-boost 1 --variance-boost-strength 3",
+    "cmd": " --preset 4 --input-depth 10 --crf 32 --enable-overlays 1 --enable-tf 2 --luminance-qp-bias 20 --matrix-coefficients 0 --max-tx-size 32 --sharpness 2 --scd 1 --tf-strength 1 --tune 0 --enable-variance-boost 1 --variance-boost-strength 3",
     "sar_x": 0,
     "sar_y": 0
   },
