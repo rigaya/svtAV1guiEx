@@ -1037,9 +1037,11 @@ System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, Sys
     if (rc_mode == -1) { // CRFモード
         fcgNUQP->DecimalPlaces = 2;
         fcgNUQP->Increment = (Decimal)0.25;
+        fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 70, 0, 0, 0 });
     } else {
         fcgNUQP->DecimalPlaces = 0;
         fcgNUQP->Increment = 1;
+        fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 63, 0, 0, 0 });
     }
 }
 

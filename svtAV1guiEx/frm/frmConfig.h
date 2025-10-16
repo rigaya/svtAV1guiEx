@@ -2285,7 +2285,7 @@ private: System::Windows::Forms::NumericUpDown^  fcgNUEnableTF;
             // fcgNUQP
             // 
             this->fcgNUQP->Location = System::Drawing::Point(257, 8);
-            this->fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 120, 0, 0, 0 });
+            this->fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 63, 0, 0, 0 });
             this->fcgNUQP->Name = L"fcgNUQP";
             this->fcgNUQP->Size = System::Drawing::Size(64, 21);
             this->fcgNUQP->TabIndex = 65;
