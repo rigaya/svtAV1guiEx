@@ -234,6 +234,7 @@ typedef struct {
     float   qp;                  //q
     int     bitrate;             //tbr (bitrate)
     int     rc;                  //rc
+    float   ac_bias;
     int     aq;
     int     color_primaries; //--color-primaries
     int     color_range; //--color_range

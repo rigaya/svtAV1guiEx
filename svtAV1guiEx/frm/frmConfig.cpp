@@ -1137,6 +1137,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLB2pasAuto);
     LOAD_CLI_TEXT(fcgLBProfileAV1);
     LOAD_CLI_TEXT(fcgLBColorFormat);
+    LOAD_CLI_TEXT(fcgLBACBias);
     LOAD_CLI_TEXT(fcgLBAQ);
     LOAD_CLI_TEXT(fcgLBIntraRefreshType);
     LOAD_CLI_TEXT(fcgLBHierarchicalLevels);
@@ -1286,6 +1287,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUBitrate, enc.bitrate);
     fcgCB2PassAuto->Checked = enc.pass > 0;
 
+    SetNUValue(fcgNUACBias, enc.ac_bias);
     SetCXIndex(fcgCXAQ, get_cx_index(list_aq, enc.aq));        //aq
     SetCXIndex(fcgCXColorFormat, get_cx_index(list_color_format, enc.output_csp));
     SetCXIndex(fcgCXColorPrim, get_cx_index(list_colorprim, enc.color_primaries));
@@ -1396,6 +1398,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.qp                   = (float)fcgNUQP->Value;
     enc.pass                 = (int)fcgCB2PassAuto->Checked ? 2 : 0;
 
+    enc.ac_bias = (float)fcgNUACBias->Value;
     enc.aq = list_aq[fcgCXAQ->SelectedIndex].value;
     enc.output_csp = list_color_format[fcgCXColorFormat->SelectedIndex].value;
     enc.color_primaries = list_colorprim[fcgCXColorPrim->SelectedIndex].value;

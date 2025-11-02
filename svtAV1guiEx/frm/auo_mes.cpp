@@ -540,6 +540,7 @@ static const char * AUO_MES_ID_NAME_STR[] = {
 "AuofcgLBMinQP",
 "AuofcgLBMfmv",
 "AuofcgLBMaxTXSize",
+"AuofcgLBACBias",
 "AuofcgLBAQ",
 "AuofcgLBHierarchicalLevels",
 "AuofcgLBTile2",

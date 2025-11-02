@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <Math.h>
+#include <cmath>
 #include <limits.h>
 #include <vector>
 #include <string>
@@ -90,6 +90,7 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     }
     OPT_NUM(_T("rc"), rc);
     OPT_FLOAT(_T("q"), qp);
+    OPT_FLOAT(_T("ac-bias"), ac_bias);
     OPT_NUM(_T("color-format"), output_csp);
     OPT_NUM(_T("profile"), profile);
     OPT_NUM(_T("pass"), pass);
@@ -136,6 +137,7 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     OPT_NUM(_T("variance-octile"), variance_octile);
     return 1;
 #undef OPT_NUM
+#undef OPT_FLOAT
 #undef IS_OPTION
 }
 
@@ -178,7 +180,8 @@ int parse_cmd(CONF_ENC *cx, const TCHAR *cmd, const bool ignore_parse_err) {
 tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     std::basic_stringstream<TCHAR> cmd;
     CONF_ENC encPrmDefault = get_default_prm();
-#define OPT_NUM(str, opt) if ((cx->opt) != (encPrmDefault.opt)) cmd << " --" << (str) << " " << (int)(cx->opt);
+#define OPT_NUM(str, opt) { if ((cx->opt) != (encPrmDefault.opt)) cmd << " --" << (str) << " " << (int)(cx->opt); }
+#define OPT_FLOAT(str, opt, prec) { if (std::abs((cx->opt) - (encPrmDefault.opt)) > 1e-6) { cmd << " --" << (str) << " " << std::fixed << std::setprecision(prec) << (cx->opt); } };
 
     OPT_NUM(_T("preset"), preset);
     OPT_NUM(_T("input-depth"), bit_depth);
@@ -207,6 +210,7 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("pass"), pass);
     OPT_NUM(_T("lp"), lp);
 
+    OPT_FLOAT(_T("ac-bias"), ac_bias, 1);
     if (cx->rc == get_cx_value(list_rc, L"CQP")) {
         cmd << " --aq-mode " << 0;
     } else if (cx->rc == get_cx_value(list_rc, L"CRF")) {

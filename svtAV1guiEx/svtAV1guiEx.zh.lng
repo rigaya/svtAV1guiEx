@@ -478,6 +478,7 @@ AuofcgLBMaxQP=-
 AuofcgLBMinQP=Min-Max量化
 AuofcgLBMfmv=运动场矢量
 AuofcgLBMaxTXSize=MaxTXSize
+AuofcgLBACBias=ACBias
 AuofcgLBAQ=自适应量化
 AuofcgLBHierarchicalLevels=分层级别
 AuofcgLBTile2=x

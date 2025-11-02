@@ -624,6 +624,7 @@ enum AuoMes {
         AuofcgLBMinQP,
         AuofcgLBMfmv,
         AuofcgLBMaxTXSize,
+        AuofcgLBACBias,
         AuofcgLBAQ,
         AuofcgLBHierarchicalLevels,
         AuofcgLBTile2,
