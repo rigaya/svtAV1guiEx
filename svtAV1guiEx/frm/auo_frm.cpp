@@ -31,8 +31,113 @@
 #include "auo_frm.h"
 #include "auo_util.h"
 
+#if AVIUTL_TARGET_VER == 2
+#include "logger2.h"
+#endif
+
 const int NEW_LINE_THRESHOLD = 125;
 const int MAKE_NEW_LINE_THRESHOLD = 140;
+
+#if AVIUTL_TARGET_VER == 2
+static LOG_HANDLE *g_aviutl2_logger = nullptr;
+
+void set_aviutl2_logger(LOG_HANDLE *logger) {
+    g_aviutl2_logger = logger;
+}
+
+static bool call_logger(LOG_HANDLE *logger, void (*fn)(LOG_HANDLE *, LPCWSTR), const wchar_t *message) {
+    if (logger && fn && message) {
+        fn(logger, message);
+        return true;
+    }
+    return false;
+}
+
+static void aviutl2_logger_output(int log_type_index, const wchar_t *message) {
+    LOG_HANDLE *logger = g_aviutl2_logger;
+    if (logger && message) {
+        switch (log_type_index) {
+        case LOG_ERROR:
+            if (call_logger(logger, logger->error, message)) return;
+            break;
+        case LOG_WARNING:
+            if (call_logger(logger, logger->warn, message)) return;
+            break;
+        case LOG_INFO:
+            if (call_logger(logger, logger->info, message)) return;
+            break;
+        default:
+            if (call_logger(logger, logger->verbose, message)) return;
+            break;
+        }
+        if (call_logger(logger, logger->log, message)) return;
+        if (call_logger(logger, logger->info, message)) return;
+    }
+    if (message && message[0] != L'\0') {
+        OutputDebugStringW(message);
+        OutputDebugStringW(L"\r\n");
+    }
+}
+
+void show_log_window(const TCHAR * /*aviutl_dir*/, BOOL /*disable_visual_styles*/) {
+    // AviUtl2では標準のログウィンドウを利用するため何もしない
+}
+
+void set_window_title(const wchar_t * /*chr*/) {
+}
+
+void set_window_title(const wchar_t * /*chr*/, int /*progress_mode*/) {
+}
+
+void set_window_title_enc_mes(const wchar_t * /*chr*/, int /*total_drop*/, int /*frame_n*/) {
+}
+
+void set_task_name(const wchar_t * /*chr*/) {
+}
+
+void set_log_progress(double /*progress*/) {
+}
+
+void write_log_auo_line(int log_type_index, const wchar_t *chr) {
+    aviutl2_logger_output(log_type_index, chr);
+}
+
+void write_log_line(int log_type_index, const wchar_t *chr) {
+    aviutl2_logger_output(log_type_index, chr);
+}
+
+void flush_audio_log() {
+}
+
+void enable_enc_control(DWORD * /*priority*/, bool * /*enc_pause*/, BOOL /*afs*/, BOOL /*add_progress*/, DWORD /*start_time*/, int /*_total_frame*/) {
+}
+
+void disable_enc_control() {
+}
+
+void set_prevent_log_close(BOOL /*prevent*/) {
+}
+
+void auto_save_log_file(const TCHAR * /*log_filepath*/) {
+}
+
+void log_process_events() {
+}
+
+int  get_current_log_len(bool /*first_pass*/) {
+    return 0;
+}
+
+void log_reload_settings() {
+}
+
+void close_log_window() {
+}
+
+bool is_log_window_closed() {
+    return true;
+}
+#endif // AVIUTL_TARGET_VER == 2
 
 static inline int check_log_type(char *mes) {
     if (strstr(mes, "warning")) return LOG_WARNING;
@@ -112,68 +217,19 @@ void set_reconstructed_title_mes(const char *mes, int total_drop, int current_fr
     char buffer[1024] = { 0 };
     const char *ptr = buffer;
     last_update = current;
-    // ANSIエスケープと\r等を除去したクリーンな文字列を作成
-    char clean[1024] = { 0 };
-    {
-        size_t si = 0, di = 0;
-        while (mes[si] != '\0' && di + 1 < _countof(clean)) {
-            if (mes[si] == '\x1b') { // ESCシーケンスをスキップ
-                si++;
-                if (mes[si] == '[') si++;
-                while (mes[si] != '\0' && mes[si] != 'm') si++;
-                if (mes[si] == 'm') si++;
-                continue;
-            }
-            if (mes[si] == '\r' || mes[si] == '\n') { si++; continue; }
-            clean[di++] = mes[si++];
-        }
-        clean[di] = '\0';
-    }
-    int parsed_current_frames = 0, parsed_total_frames = 0;
-    if (sscanf_s(clean, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
-        || sscanf_s(clean, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
-        const bool isfpm = strstr(clean, " fpm");
+    if (sscanf_s(mes, "Encoding frame %d %lf kbps %lf fps", &i_frame, &bitrate, &fps) == 3
+        || sscanf_s(mes, "Encoding frame %d %lf kbps %lf fpm", &i_frame, &bitrate, &fps) == 3) {
+        const bool isfpm = strstr(mes, " fpm");
         sprintf_s(buffer, _countof(buffer),
             (isfpm) ? "[%3.1lf%%] %d/%d frames, %.3lf fps, %.2lf kb/s"
                     : "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
-            (total_frames > 0) ? (current_frames * 100.0 / (double)total_frames) : 0.0,
+            current_frames * 100.0 / (double)total_frames,
             current_frames,
             total_frames,
             isfpm ? fps * (1.0 / 60.0) : fps,
             bitrate);
-    } else if (sscanf_s(clean, "Encoding: %d/%d Frames @ %lf fps | %lf kb/s", &parsed_current_frames, &parsed_total_frames, &fps, &bitrate) == 4
-            || sscanf_s(clean, "Encoding: %d/%d Frames @ %lf fpm | %lf kb/s", &parsed_current_frames, &parsed_total_frames, &fps, &bitrate) == 4) {
-        const bool isfpm = strstr(clean, " fpm");
-        const double fps_calc = isfpm ? (fps * (1.0 / 60.0)) : fps;
-        const int disp_current = parsed_current_frames > 0 ? parsed_current_frames : current_frames;
-        const int disp_total   = parsed_total_frames   > 0 ? parsed_total_frames   : total_frames;
-        const double percent = (disp_total > 0) ? (disp_current * 100.0 / (double)disp_total) : 0.0;
-        sprintf_s(buffer, _countof(buffer),
-            "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
-            percent,
-            disp_current,
-            disp_total,
-            fps_calc,
-            bitrate);
-    } else if (sscanf_s(clean, "Encoding: %d Frames @ %lf fps | %lf kb/s", &parsed_current_frames, &fps, &bitrate) == 3
-            || sscanf_s(clean, "Encoding: %d Frames @ %lf fpm | %lf kb/s", &parsed_current_frames, &fps, &bitrate) == 3) {
-        const bool isfpm = strstr(clean, " fpm");
-        const double fps_calc = isfpm ? (fps * (1.0 / 60.0)) : fps;
-        if (total_frames > 0) {
-            sprintf_s(buffer, _countof(buffer),
-                "[%3.1lf%%] %d/%d frames, %.2lf fps, %.2lf kb/s",
-                current_frames * 100.0 / (double)total_frames,
-                current_frames,
-                total_frames,
-                fps_calc,
-                bitrate);
-        } else {
-            sprintf_s(buffer, _countof(buffer),
-                "%d frames, %.2lf fps, %.2lf kb/s",
-                parsed_current_frames > 0 ? parsed_current_frames : current_frames,
-                fps_calc,
-                bitrate);
-        }
+    } else {
+        ptr = mes;
     }
     set_window_title_enc_mes(char_to_wstring(ptr).c_str(), total_drop, current_frames);
 }
@@ -216,11 +272,7 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         if ((b = strrchr(mes, '\r', (int)(a - mes) - 2)) != NULL)
             mes = b + 1;
         *a = '\0';
-        if (ENCODER_SVTAV1 && strstr(mes, "Encoding frame") || strstr(mes, "Encoding:")) {
-            ; // スキップ
-        } else {
-            write_log_enc_mes_line(mes, cache_line);
-        }
+        write_log_enc_mes_line(mes, cache_line);
         mes = a + 1;
     }
     if ((a = strrchr(mes, '\r', (int)(fin - mes) - 1)) != NULL) {
@@ -231,7 +283,7 @@ void write_log_enc_mes(char *const msg, DWORD *log_len, int total_drop, int curr
         if ((b = strrchr(mes, '\r', (int)(b - mes) - 2)) != NULL)
             mes = b + 1;
 #if ENCODER_SVTAV1
-    if (strstr(mes, "Encoding frame") || strstr(mes, "Encoding:")) {
+        if (strstr(mes, "Encoding frame")) {
 #else
         if ((ENCODER_X264 || ENCODER_X265 || ENCODER_FFMPEG) && NULL == strstr(mes, "frames")) {
 #endif

@@ -12,7 +12,9 @@ SVT-AV1を使用してエンコードを行うAviutlの出力プラグインで�
 
 【動作環境】
 Windows 10/11 (x64)
-Aviutl 1.00 以降 推奨
+AviUtl 1.00/1.10
+AviUtl 2.00 beta19 以降
+
 
 x86(32bit)環境では動作しません。
 
