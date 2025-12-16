@@ -981,6 +981,7 @@ enum AuoMes {
         AuofosCBLogDisableTransparency,
         AuofosLBDisableVisualStyles,
         AuofosCBLogStartMinimized,
+        AuofosCBAutoSaveLog,
         AuofosLBStgDir,
         AuofosBTStgDir,
         AuofostabPageAMP,
