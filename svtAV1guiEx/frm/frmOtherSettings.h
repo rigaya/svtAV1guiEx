@@ -216,6 +216,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosCXDefaultOutExt = (gcnew System::Windows::Forms::ComboBox());
             this->fosLBDefaultOutExt = (gcnew System::Windows::Forms::Label());
             this->fostabPageGUI = (gcnew System::Windows::Forms::TabPage());
+            this->fosTXAutoSaveLog = (gcnew System::Windows::Forms::TextBox());
+            this->fosCBAutoSaveLog = (gcnew System::Windows::Forms::CheckBox());
+            this->fosCXAutoSaveLog = (gcnew System::Windows::Forms::ComboBox());
             this->fosCBOutputMoreLog = (gcnew System::Windows::Forms::CheckBox());
             this->fosCBGetRelativePath = (gcnew System::Windows::Forms::CheckBox());
             this->fosBTSetFont = (gcnew System::Windows::Forms::Button());
@@ -249,9 +252,6 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosTBAMPLimitMarginMulti = (gcnew System::Windows::Forms::TrackBar());
             this->fosCBAmpKeepOldFile = (gcnew System::Windows::Forms::CheckBox());
             this->fosPNHideTabPage = (gcnew System::Windows::Forms::Panel());
-            this->fosTXAutoSaveLog = (gcnew System::Windows::Forms::TextBox());
-            this->fosCBAutoSaveLog = (gcnew System::Windows::Forms::CheckBox());
-            this->fosCXAutoSaveLog = (gcnew System::Windows::Forms::ComboBox());
             this->fosTabControl->SuspendLayout();
             this->fostabPageGeneral->SuspendLayout();
             this->fostabPageGUI->SuspendLayout();
@@ -267,10 +267,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosCBCancel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
             this->fosCBCancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-            this->fosCBCancel->Location = System::Drawing::Point(256, 614);
-            this->fosCBCancel->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBCancel->Location = System::Drawing::Point(171, 409);
             this->fosCBCancel->Name = L"fosCBCancel";
-            this->fosCBCancel->Size = System::Drawing::Size(126, 44);
+            this->fosCBCancel->Size = System::Drawing::Size(84, 29);
             this->fosCBCancel->TabIndex = 1;
             this->fosCBCancel->Text = L"キャンセル";
             this->fosCBCancel->UseVisualStyleBackColor = true;
@@ -279,10 +278,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBOK
             // 
             this->fosCBOK->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-            this->fosCBOK->Location = System::Drawing::Point(424, 614);
-            this->fosCBOK->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBOK->Location = System::Drawing::Point(283, 409);
             this->fosCBOK->Name = L"fosCBOK";
-            this->fosCBOK->Size = System::Drawing::Size(126, 44);
+            this->fosCBOK->Size = System::Drawing::Size(84, 29);
             this->fosCBOK->TabIndex = 2;
             this->fosCBOK->Text = L"OK";
             this->fosCBOK->UseVisualStyleBackColor = true;
@@ -290,10 +288,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             // fosCBAutoAFSDisable
             // 
-            this->fosCBAutoAFSDisable->Location = System::Drawing::Point(26, 296);
-            this->fosCBAutoAFSDisable->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBAutoAFSDisable->Location = System::Drawing::Point(17, 197);
             this->fosCBAutoAFSDisable->Name = L"fosCBAutoAFSDisable";
-            this->fosCBAutoAFSDisable->Size = System::Drawing::Size(462, 80);
+            this->fosCBAutoAFSDisable->Size = System::Drawing::Size(308, 53);
             this->fosCBAutoAFSDisable->TabIndex = 6;
             this->fosCBAutoAFSDisable->Text = L"自動フィールドシフト(afs)オンで初期化に失敗した場合、afsをオフにしてエンコード続行を試みる";
             this->fosCBAutoAFSDisable->UseVisualStyleBackColor = true;
@@ -301,10 +298,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBAutoDelChap
             // 
             this->fosCBAutoDelChap->AutoSize = true;
-            this->fosCBAutoDelChap->Location = System::Drawing::Point(26, 384);
-            this->fosCBAutoDelChap->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBAutoDelChap->Location = System::Drawing::Point(17, 256);
             this->fosCBAutoDelChap->Name = L"fosCBAutoDelChap";
-            this->fosCBAutoDelChap->Size = System::Drawing::Size(441, 27);
+            this->fosCBAutoDelChap->Size = System::Drawing::Size(295, 19);
             this->fosCBAutoDelChap->TabIndex = 13;
             this->fosCBAutoDelChap->Text = L"mux正常終了後、チャプターファイルを自動的に削除する";
             this->fosCBAutoDelChap->UseVisualStyleBackColor = true;
@@ -324,11 +320,10 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosTabControl->Controls->Add(this->fostabPageGeneral);
             this->fosTabControl->Controls->Add(this->fostabPageGUI);
             this->fosTabControl->Controls->Add(this->fostabPageAMP);
-            this->fosTabControl->Location = System::Drawing::Point(3, 3);
-            this->fosTabControl->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosTabControl->Location = System::Drawing::Point(2, 2);
             this->fosTabControl->Name = L"fosTabControl";
             this->fosTabControl->SelectedIndex = 0;
-            this->fosTabControl->Size = System::Drawing::Size(582, 600);
+            this->fosTabControl->Size = System::Drawing::Size(388, 400);
             this->fosTabControl->TabIndex = 17;
             // 
             // fostabPageGeneral
@@ -346,11 +341,10 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fostabPageGeneral->Controls->Add(this->fosLBDefaultOutExt);
             this->fostabPageGeneral->Controls->Add(this->fosCBAutoAFSDisable);
             this->fostabPageGeneral->Controls->Add(this->fosCBAutoDelChap);
-            this->fostabPageGeneral->Location = System::Drawing::Point(4, 32);
-            this->fostabPageGeneral->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fostabPageGeneral->Location = System::Drawing::Point(4, 24);
             this->fostabPageGeneral->Name = L"fostabPageGeneral";
-            this->fostabPageGeneral->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
-            this->fostabPageGeneral->Size = System::Drawing::Size(574, 564);
+            this->fostabPageGeneral->Padding = System::Windows::Forms::Padding(3, 3, 3, 3);
+            this->fostabPageGeneral->Size = System::Drawing::Size(380, 372);
             this->fostabPageGeneral->TabIndex = 0;
             this->fostabPageGeneral->Text = L"エンコード";
             this->fostabPageGeneral->UseVisualStyleBackColor = true;
@@ -359,19 +353,17 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosCXPowerThrottling->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fosCXPowerThrottling->FormattingEnabled = true;
-            this->fosCXPowerThrottling->Location = System::Drawing::Point(62, 243);
-            this->fosCXPowerThrottling->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCXPowerThrottling->Location = System::Drawing::Point(41, 162);
             this->fosCXPowerThrottling->Name = L"fosCXPowerThrottling";
-            this->fosCXPowerThrottling->Size = System::Drawing::Size(283, 31);
+            this->fosCXPowerThrottling->Size = System::Drawing::Size(190, 23);
             this->fosCXPowerThrottling->TabIndex = 27;
             // 
             // fosLBPowerThrottling
             // 
             this->fosLBPowerThrottling->AutoSize = true;
-            this->fosLBPowerThrottling->Location = System::Drawing::Point(21, 208);
-            this->fosLBPowerThrottling->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBPowerThrottling->Location = System::Drawing::Point(14, 139);
             this->fosLBPowerThrottling->Name = L"fosLBPowerThrottling";
-            this->fosLBPowerThrottling->Size = System::Drawing::Size(134, 23);
+            this->fosLBPowerThrottling->Size = System::Drawing::Size(89, 15);
             this->fosLBPowerThrottling->TabIndex = 26;
             this->fosLBPowerThrottling->Text = L"電力スロットリング";
             // 
@@ -379,29 +371,26 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosCXDefaultAudioEncoder->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fosCXDefaultAudioEncoder->FormattingEnabled = true;
-            this->fosCXDefaultAudioEncoder->Location = System::Drawing::Point(62, 156);
-            this->fosCXDefaultAudioEncoder->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCXDefaultAudioEncoder->Location = System::Drawing::Point(41, 104);
             this->fosCXDefaultAudioEncoder->Name = L"fosCXDefaultAudioEncoder";
-            this->fosCXDefaultAudioEncoder->Size = System::Drawing::Size(283, 31);
+            this->fosCXDefaultAudioEncoder->Size = System::Drawing::Size(190, 23);
             this->fosCXDefaultAudioEncoder->TabIndex = 25;
             // 
             // fosLBDefaultAudioEncoder
             // 
             this->fosLBDefaultAudioEncoder->AutoSize = true;
-            this->fosLBDefaultAudioEncoder->Location = System::Drawing::Point(21, 122);
-            this->fosLBDefaultAudioEncoder->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBDefaultAudioEncoder->Location = System::Drawing::Point(14, 81);
             this->fosLBDefaultAudioEncoder->Name = L"fosLBDefaultAudioEncoder";
-            this->fosLBDefaultAudioEncoder->Size = System::Drawing::Size(195, 23);
+            this->fosLBDefaultAudioEncoder->Size = System::Drawing::Size(130, 15);
             this->fosLBDefaultAudioEncoder->TabIndex = 24;
             this->fosLBDefaultAudioEncoder->Text = L"デフォルトの音声エンコーダ";
             // 
             // fosCBAutoRefLimitByLevel
             // 
             this->fosCBAutoRefLimitByLevel->AutoSize = true;
-            this->fosCBAutoRefLimitByLevel->Location = System::Drawing::Point(26, 508);
-            this->fosCBAutoRefLimitByLevel->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBAutoRefLimitByLevel->Location = System::Drawing::Point(17, 339);
             this->fosCBAutoRefLimitByLevel->Name = L"fosCBAutoRefLimitByLevel";
-            this->fosCBAutoRefLimitByLevel->Size = System::Drawing::Size(358, 27);
+            this->fosCBAutoRefLimitByLevel->Size = System::Drawing::Size(239, 19);
             this->fosCBAutoRefLimitByLevel->TabIndex = 23;
             this->fosCBAutoRefLimitByLevel->Text = L"参照距離をレベルに応じて自動的に制限する";
             this->fosCBAutoRefLimitByLevel->UseVisualStyleBackColor = true;
@@ -409,10 +398,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBChapConvertToUTF8
             // 
             this->fosCBChapConvertToUTF8->AutoSize = true;
-            this->fosCBChapConvertToUTF8->Location = System::Drawing::Point(26, 468);
-            this->fosCBChapConvertToUTF8->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBChapConvertToUTF8->Location = System::Drawing::Point(17, 312);
             this->fosCBChapConvertToUTF8->Name = L"fosCBChapConvertToUTF8";
-            this->fosCBChapConvertToUTF8->Size = System::Drawing::Size(303, 27);
+            this->fosCBChapConvertToUTF8->Size = System::Drawing::Size(204, 19);
             this->fosCBChapConvertToUTF8->TabIndex = 22;
             this->fosCBChapConvertToUTF8->Text = L"チャプターmux時、UTF-8に変換する";
             this->fosCBChapConvertToUTF8->UseVisualStyleBackColor = true;
@@ -420,10 +408,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBKeepQPFile
             // 
             this->fosCBKeepQPFile->AutoSize = true;
-            this->fosCBKeepQPFile->Location = System::Drawing::Point(26, 428);
-            this->fosCBKeepQPFile->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBKeepQPFile->Location = System::Drawing::Point(17, 285);
             this->fosCBKeepQPFile->Name = L"fosCBKeepQPFile";
-            this->fosCBKeepQPFile->Size = System::Drawing::Size(391, 27);
+            this->fosCBKeepQPFile->Size = System::Drawing::Size(260, 19);
             this->fosCBKeepQPFile->TabIndex = 21;
             this->fosCBKeepQPFile->Text = L"キーフレーム検出時、キーフレームリストを保存する";
             this->fosCBKeepQPFile->UseVisualStyleBackColor = true;
@@ -431,10 +418,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBRunBatMinimized
             // 
             this->fosCBRunBatMinimized->AutoSize = true;
-            this->fosCBRunBatMinimized->Location = System::Drawing::Point(26, 675);
-            this->fosCBRunBatMinimized->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBRunBatMinimized->Location = System::Drawing::Point(17, 450);
             this->fosCBRunBatMinimized->Name = L"fosCBRunBatMinimized";
-            this->fosCBRunBatMinimized->Size = System::Drawing::Size(305, 27);
+            this->fosCBRunBatMinimized->Size = System::Drawing::Size(205, 19);
             this->fosCBRunBatMinimized->TabIndex = 20;
             this->fosCBRunBatMinimized->Text = L"エンコ前後バッチ処理を最小化で実行";
             this->fosCBRunBatMinimized->UseVisualStyleBackColor = true;
@@ -445,10 +431,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosLBDefaultOutExt2->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fosLBDefaultOutExt2->ForeColor = System::Drawing::Color::OrangeRed;
-            this->fosLBDefaultOutExt2->Location = System::Drawing::Point(309, 22);
-            this->fosLBDefaultOutExt2->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBDefaultOutExt2->Location = System::Drawing::Point(206, 15);
             this->fosLBDefaultOutExt2->Name = L"fosLBDefaultOutExt2";
-            this->fosLBDefaultOutExt2->Size = System::Drawing::Size(249, 22);
+            this->fosLBDefaultOutExt2->Size = System::Drawing::Size(161, 14);
             this->fosLBDefaultOutExt2->TabIndex = 19;
             this->fosLBDefaultOutExt2->Text = L"※反映にはAviutlの再起動が必要";
             // 
@@ -456,19 +441,17 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosCXDefaultOutExt->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
             this->fosCXDefaultOutExt->FormattingEnabled = true;
-            this->fosCXDefaultOutExt->Location = System::Drawing::Point(62, 54);
-            this->fosCXDefaultOutExt->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCXDefaultOutExt->Location = System::Drawing::Point(41, 36);
             this->fosCXDefaultOutExt->Name = L"fosCXDefaultOutExt";
-            this->fosCXDefaultOutExt->Size = System::Drawing::Size(283, 31);
+            this->fosCXDefaultOutExt->Size = System::Drawing::Size(190, 23);
             this->fosCXDefaultOutExt->TabIndex = 18;
             // 
             // fosLBDefaultOutExt
             // 
             this->fosLBDefaultOutExt->AutoSize = true;
-            this->fosLBDefaultOutExt->Location = System::Drawing::Point(21, 20);
-            this->fosLBDefaultOutExt->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBDefaultOutExt->Location = System::Drawing::Point(14, 13);
             this->fosLBDefaultOutExt->Name = L"fosLBDefaultOutExt";
-            this->fosLBDefaultOutExt->Size = System::Drawing::Size(259, 23);
+            this->fosLBDefaultOutExt->Size = System::Drawing::Size(172, 15);
             this->fosLBDefaultOutExt->TabIndex = 17;
             this->fosLBDefaultOutExt->Text = L"出力するファイルの種類のデフォルト";
             // 
@@ -489,21 +472,45 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fostabPageGUI->Controls->Add(this->fosLBStgDir);
             this->fostabPageGUI->Controls->Add(this->fosBTStgDir);
             this->fostabPageGUI->Controls->Add(this->fosTXStgDir);
-            this->fostabPageGUI->Location = System::Drawing::Point(4, 32);
-            this->fostabPageGUI->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fostabPageGUI->Location = System::Drawing::Point(4, 24);
             this->fostabPageGUI->Name = L"fostabPageGUI";
-            this->fostabPageGUI->Size = System::Drawing::Size(574, 564);
+            this->fostabPageGUI->Size = System::Drawing::Size(380, 372);
             this->fostabPageGUI->TabIndex = 2;
             this->fostabPageGUI->Text = L"ログ・設定画面";
             this->fostabPageGUI->UseVisualStyleBackColor = true;
             // 
+            // fosTXAutoSaveLog
+            // 
+            this->fosTXAutoSaveLog->Location = System::Drawing::Point(43, 335);
+            this->fosTXAutoSaveLog->Name = L"fosTXAutoSaveLog";
+            this->fosTXAutoSaveLog->Size = System::Drawing::Size(290, 23);
+            this->fosTXAutoSaveLog->TabIndex = 34;
+            // 
+            // fosCBAutoSaveLog
+            // 
+            this->fosCBAutoSaveLog->AutoSize = true;
+            this->fosCBAutoSaveLog->Location = System::Drawing::Point(20, 313);
+            this->fosCBAutoSaveLog->Name = L"fosCBAutoSaveLog";
+            this->fosCBAutoSaveLog->Size = System::Drawing::Size(92, 19);
+            this->fosCBAutoSaveLog->TabIndex = 33;
+            this->fosCBAutoSaveLog->Text = L"ログ自動保存";
+            this->fosCBAutoSaveLog->UseVisualStyleBackColor = true;
+            // 
+            // fosCXAutoSaveLog
+            // 
+            this->fosCXAutoSaveLog->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+            this->fosCXAutoSaveLog->FormattingEnabled = true;
+            this->fosCXAutoSaveLog->Location = System::Drawing::Point(119, 309);
+            this->fosCXAutoSaveLog->Name = L"fosCXAutoSaveLog";
+            this->fosCXAutoSaveLog->Size = System::Drawing::Size(140, 23);
+            this->fosCXAutoSaveLog->TabIndex = 32;
+            // 
             // fosCBOutputMoreLog
             // 
             this->fosCBOutputMoreLog->AutoSize = true;
-            this->fosCBOutputMoreLog->Location = System::Drawing::Point(30, 434);
-            this->fosCBOutputMoreLog->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBOutputMoreLog->Location = System::Drawing::Point(20, 289);
             this->fosCBOutputMoreLog->Name = L"fosCBOutputMoreLog";
-            this->fosCBOutputMoreLog->Size = System::Drawing::Size(211, 27);
+            this->fosCBOutputMoreLog->Size = System::Drawing::Size(143, 19);
             this->fosCBOutputMoreLog->TabIndex = 26;
             this->fosCBOutputMoreLog->Text = L"音声・muxのログも表示";
             this->fosCBOutputMoreLog->UseVisualStyleBackColor = true;
@@ -511,20 +518,18 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBGetRelativePath
             // 
             this->fosCBGetRelativePath->AutoSize = true;
-            this->fosCBGetRelativePath->Location = System::Drawing::Point(30, 348);
-            this->fosCBGetRelativePath->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBGetRelativePath->Location = System::Drawing::Point(20, 232);
             this->fosCBGetRelativePath->Name = L"fosCBGetRelativePath";
-            this->fosCBGetRelativePath->Size = System::Drawing::Size(275, 27);
+            this->fosCBGetRelativePath->Size = System::Drawing::Size(185, 19);
             this->fosCBGetRelativePath->TabIndex = 24;
             this->fosCBGetRelativePath->Text = L"ダイアログから相対パスで取得する";
             this->fosCBGetRelativePath->UseVisualStyleBackColor = true;
             // 
             // fosBTSetFont
             // 
-            this->fosBTSetFont->Location = System::Drawing::Point(362, 296);
-            this->fosBTSetFont->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosBTSetFont->Location = System::Drawing::Point(241, 197);
             this->fosBTSetFont->Name = L"fosBTSetFont";
-            this->fosBTSetFont->Size = System::Drawing::Size(186, 40);
+            this->fosBTSetFont->Size = System::Drawing::Size(124, 27);
             this->fosBTSetFont->TabIndex = 23;
             this->fosBTSetFont->Text = L"フォントの変更...";
             this->fosBTSetFont->UseVisualStyleBackColor = true;
@@ -533,10 +538,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBStgEscKey
             // 
             this->fosCBStgEscKey->AutoSize = true;
-            this->fosCBStgEscKey->Location = System::Drawing::Point(30, 303);
-            this->fosCBStgEscKey->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBStgEscKey->Location = System::Drawing::Point(20, 202);
             this->fosCBStgEscKey->Name = L"fosCBStgEscKey";
-            this->fosCBStgEscKey->Size = System::Drawing::Size(250, 27);
+            this->fosCBStgEscKey->Size = System::Drawing::Size(168, 19);
             this->fosCBStgEscKey->TabIndex = 22;
             this->fosCBStgEscKey->Text = L"設定画面でEscキーを有効化";
             this->fosCBStgEscKey->UseVisualStyleBackColor = true;
@@ -544,10 +548,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBDisableToolTip
             // 
             this->fosCBDisableToolTip->AutoSize = true;
-            this->fosCBDisableToolTip->Location = System::Drawing::Point(30, 99);
-            this->fosCBDisableToolTip->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBDisableToolTip->Location = System::Drawing::Point(20, 66);
             this->fosCBDisableToolTip->Name = L"fosCBDisableToolTip";
-            this->fosCBDisableToolTip->Size = System::Drawing::Size(236, 27);
+            this->fosCBDisableToolTip->Size = System::Drawing::Size(158, 19);
             this->fosCBDisableToolTip->TabIndex = 17;
             this->fosCBDisableToolTip->Text = L"ポップアップヘルプを抑制する";
             this->fosCBDisableToolTip->UseVisualStyleBackColor = true;
@@ -555,10 +558,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBDisableVisualStyles
             // 
             this->fosCBDisableVisualStyles->AutoSize = true;
-            this->fosCBDisableVisualStyles->Location = System::Drawing::Point(30, 144);
-            this->fosCBDisableVisualStyles->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBDisableVisualStyles->Location = System::Drawing::Point(20, 96);
             this->fosCBDisableVisualStyles->Name = L"fosCBDisableVisualStyles";
-            this->fosCBDisableVisualStyles->Size = System::Drawing::Size(191, 27);
+            this->fosCBDisableVisualStyles->Size = System::Drawing::Size(128, 19);
             this->fosCBDisableVisualStyles->TabIndex = 18;
             this->fosCBDisableVisualStyles->Text = L"視覚効果をオフにする";
             this->fosCBDisableVisualStyles->UseVisualStyleBackColor = true;
@@ -566,10 +568,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBLogDisableTransparency
             // 
             this->fosCBLogDisableTransparency->AutoSize = true;
-            this->fosCBLogDisableTransparency->Location = System::Drawing::Point(30, 258);
-            this->fosCBLogDisableTransparency->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBLogDisableTransparency->Location = System::Drawing::Point(20, 172);
             this->fosCBLogDisableTransparency->Name = L"fosCBLogDisableTransparency";
-            this->fosCBLogDisableTransparency->Size = System::Drawing::Size(259, 27);
+            this->fosCBLogDisableTransparency->Size = System::Drawing::Size(174, 19);
             this->fosCBLogDisableTransparency->TabIndex = 21;
             this->fosCBLogDisableTransparency->Text = L"ログウィンドウの透過をオフにする";
             this->fosCBLogDisableTransparency->UseVisualStyleBackColor = true;
@@ -580,20 +581,18 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosLBDisableVisualStyles->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fosLBDisableVisualStyles->ForeColor = System::Drawing::Color::OrangeRed;
-            this->fosLBDisableVisualStyles->Location = System::Drawing::Point(62, 172);
-            this->fosLBDisableVisualStyles->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBDisableVisualStyles->Location = System::Drawing::Point(41, 115);
             this->fosLBDisableVisualStyles->Name = L"fosLBDisableVisualStyles";
-            this->fosLBDisableVisualStyles->Size = System::Drawing::Size(249, 22);
+            this->fosLBDisableVisualStyles->Size = System::Drawing::Size(161, 14);
             this->fosLBDisableVisualStyles->TabIndex = 19;
             this->fosLBDisableVisualStyles->Text = L"※反映にはAviutlの再起動が必要";
             // 
             // fosCBLogStartMinimized
             // 
             this->fosCBLogStartMinimized->AutoSize = true;
-            this->fosCBLogStartMinimized->Location = System::Drawing::Point(30, 213);
-            this->fosCBLogStartMinimized->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBLogStartMinimized->Location = System::Drawing::Point(20, 142);
             this->fosCBLogStartMinimized->Name = L"fosCBLogStartMinimized";
-            this->fosCBLogStartMinimized->Size = System::Drawing::Size(273, 27);
+            this->fosCBLogStartMinimized->Size = System::Drawing::Size(184, 19);
             this->fosCBLogStartMinimized->TabIndex = 20;
             this->fosCBLogStartMinimized->Text = L"ログウィンドウを最小化で開始する";
             this->fosCBLogStartMinimized->UseVisualStyleBackColor = true;
@@ -601,19 +600,17 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosLBStgDir
             // 
             this->fosLBStgDir->AutoSize = true;
-            this->fosLBStgDir->Location = System::Drawing::Point(10, 10);
-            this->fosLBStgDir->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBStgDir->Location = System::Drawing::Point(7, 7);
             this->fosLBStgDir->Name = L"fosLBStgDir";
-            this->fosLBStgDir->Size = System::Drawing::Size(184, 23);
+            this->fosLBStgDir->Size = System::Drawing::Size(123, 15);
             this->fosLBStgDir->TabIndex = 7;
             this->fosLBStgDir->Text = L"設定ファイルの保存場所";
             // 
             // fosBTStgDir
             // 
-            this->fosBTStgDir->Location = System::Drawing::Point(501, 40);
-            this->fosBTStgDir->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosBTStgDir->Location = System::Drawing::Point(334, 27);
             this->fosBTStgDir->Name = L"fosBTStgDir";
-            this->fosBTStgDir->Size = System::Drawing::Size(52, 34);
+            this->fosBTStgDir->Size = System::Drawing::Size(35, 23);
             this->fosBTStgDir->TabIndex = 8;
             this->fosBTStgDir->Text = L"...";
             this->fosBTStgDir->UseVisualStyleBackColor = true;
@@ -621,10 +618,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             // fosTXStgDir
             // 
-            this->fosTXStgDir->Location = System::Drawing::Point(51, 40);
-            this->fosTXStgDir->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosTXStgDir->Location = System::Drawing::Point(34, 27);
             this->fosTXStgDir->Name = L"fosTXStgDir";
-            this->fosTXStgDir->Size = System::Drawing::Size(439, 30);
+            this->fosTXStgDir->Size = System::Drawing::Size(294, 23);
             this->fosTXStgDir->TabIndex = 6;
             // 
             // fostabPageAMP
@@ -632,11 +628,10 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fostabPageAMP->Controls->Add(this->fosCBAutoDelStats);
             this->fostabPageAMP->Controls->Add(this->fosGroupBoxAMPLimit);
             this->fostabPageAMP->Controls->Add(this->fosCBAmpKeepOldFile);
-            this->fostabPageAMP->Location = System::Drawing::Point(4, 32);
-            this->fostabPageAMP->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fostabPageAMP->Location = System::Drawing::Point(4, 24);
             this->fostabPageAMP->Name = L"fostabPageAMP";
-            this->fostabPageAMP->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
-            this->fostabPageAMP->Size = System::Drawing::Size(574, 564);
+            this->fostabPageAMP->Padding = System::Windows::Forms::Padding(3, 3, 3, 3);
+            this->fostabPageAMP->Size = System::Drawing::Size(380, 372);
             this->fostabPageAMP->TabIndex = 1;
             this->fostabPageAMP->Text = L"自動マルチパス";
             this->fostabPageAMP->UseVisualStyleBackColor = true;
@@ -644,10 +639,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosCBAutoDelStats
             // 
             this->fosCBAutoDelStats->AutoSize = true;
-            this->fosCBAutoDelStats->Location = System::Drawing::Point(28, 88);
-            this->fosCBAutoDelStats->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBAutoDelStats->Location = System::Drawing::Point(19, 59);
             this->fosCBAutoDelStats->Name = L"fosCBAutoDelStats";
-            this->fosCBAutoDelStats->Size = System::Drawing::Size(441, 27);
+            this->fosCBAutoDelStats->Size = System::Drawing::Size(293, 19);
             this->fosCBAutoDelStats->TabIndex = 19;
             this->fosCBAutoDelStats->Text = L"自動マルチパス時、ステータスファイルも自動的に削除する";
             this->fosCBAutoDelStats->UseVisualStyleBackColor = true;
@@ -662,11 +656,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosGroupBoxAMPLimit->Controls->Add(this->fosLBAMPLimitMarginMax);
             this->fosGroupBoxAMPLimit->Controls->Add(this->fosLBAMPLimitMarginMin);
             this->fosGroupBoxAMPLimit->Controls->Add(this->fosTBAMPLimitMarginMulti);
-            this->fosGroupBoxAMPLimit->Location = System::Drawing::Point(10, 138);
-            this->fosGroupBoxAMPLimit->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosGroupBoxAMPLimit->Location = System::Drawing::Point(7, 92);
             this->fosGroupBoxAMPLimit->Name = L"fosGroupBoxAMPLimit";
-            this->fosGroupBoxAMPLimit->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
-            this->fosGroupBoxAMPLimit->Size = System::Drawing::Size(552, 408);
+            this->fosGroupBoxAMPLimit->Size = System::Drawing::Size(368, 272);
             this->fosGroupBoxAMPLimit->TabIndex = 18;
             this->fosGroupBoxAMPLimit->TabStop = false;
             this->fosGroupBoxAMPLimit->Text = L"上限映像レートに対する余裕";
@@ -677,19 +669,17 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosLBAMPLimitMarginWarning->Font = (gcnew System::Drawing::Font(L"Meiryo UI", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(128)));
             this->fosLBAMPLimitMarginWarning->ForeColor = System::Drawing::Color::Red;
-            this->fosLBAMPLimitMarginWarning->Location = System::Drawing::Point(225, 140);
-            this->fosLBAMPLimitMarginWarning->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLimitMarginWarning->Location = System::Drawing::Point(150, 93);
             this->fosLBAMPLimitMarginWarning->Name = L"fosLBAMPLimitMarginWarning";
-            this->fosLBAMPLimitMarginWarning->Size = System::Drawing::Size(292, 22);
+            this->fosLBAMPLimitMarginWarning->Size = System::Drawing::Size(188, 14);
             this->fosLBAMPLimitMarginWarning->TabIndex = 8;
             this->fosLBAMPLimitMarginWarning->Text = L"※再エンコードが多発する恐れがあります。";
             // 
             // fosBTAMPMarginMulti
             // 
-            this->fosBTAMPMarginMulti->Location = System::Drawing::Point(32, 104);
-            this->fosBTAMPMarginMulti->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosBTAMPMarginMulti->Location = System::Drawing::Point(21, 69);
             this->fosBTAMPMarginMulti->Name = L"fosBTAMPMarginMulti";
-            this->fosBTAMPMarginMulti->Size = System::Drawing::Size(138, 44);
+            this->fosBTAMPMarginMulti->Size = System::Drawing::Size(92, 29);
             this->fosBTAMPMarginMulti->TabIndex = 7;
             this->fosBTAMPMarginMulti->Text = L"デフォルトに戻す";
             this->fosBTAMPMarginMulti->UseVisualStyleBackColor = true;
@@ -705,11 +695,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             this->fosGroupBoxAMPLimitMarginExample->Controls->Add(this->fosLBAMPLMMExampleB11);
             this->fosGroupBoxAMPLimitMarginExample->Controls->Add(this->fosLBAMPLMMExampleA12);
             this->fosGroupBoxAMPLimitMarginExample->Controls->Add(this->fosLBAMPLMMExampleA11);
-            this->fosGroupBoxAMPLimitMarginExample->Location = System::Drawing::Point(32, 189);
-            this->fosGroupBoxAMPLimitMarginExample->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosGroupBoxAMPLimitMarginExample->Location = System::Drawing::Point(21, 126);
             this->fosGroupBoxAMPLimitMarginExample->Name = L"fosGroupBoxAMPLimitMarginExample";
-            this->fosGroupBoxAMPLimitMarginExample->Padding = System::Windows::Forms::Padding(4, 4, 4, 4);
-            this->fosGroupBoxAMPLimitMarginExample->Size = System::Drawing::Size(494, 210);
+            this->fosGroupBoxAMPLimitMarginExample->Size = System::Drawing::Size(329, 140);
             this->fosGroupBoxAMPLimitMarginExample->TabIndex = 6;
             this->fosGroupBoxAMPLimitMarginExample->TabStop = false;
             this->fosGroupBoxAMPLimitMarginExample->Text = L"現在の設定で計算される余裕";
@@ -718,10 +706,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosLBAMPLMMExampleB32->AutoSize = true;
             this->fosLBAMPLMMExampleB32->ForeColor = System::Drawing::Color::DarkBlue;
-            this->fosLBAMPLMMExampleB32->Location = System::Drawing::Point(278, 165);
-            this->fosLBAMPLMMExampleB32->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB32->Location = System::Drawing::Point(185, 110);
             this->fosLBAMPLMMExampleB32->Name = L"fosLBAMPLMMExampleB32";
-            this->fosLBAMPLMMExampleB32->Size = System::Drawing::Size(62, 23);
+            this->fosLBAMPLMMExampleB32->Size = System::Drawing::Size(41, 15);
             this->fosLBAMPLMMExampleB32->TabIndex = 7;
             this->fosLBAMPLMMExampleB32->Text = L"label1";
             // 
@@ -729,30 +716,27 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosLBAMPLMMExampleB22->AutoSize = true;
             this->fosLBAMPLMMExampleB22->ForeColor = System::Drawing::Color::DarkBlue;
-            this->fosLBAMPLMMExampleB22->Location = System::Drawing::Point(278, 120);
-            this->fosLBAMPLMMExampleB22->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB22->Location = System::Drawing::Point(185, 80);
             this->fosLBAMPLMMExampleB22->Name = L"fosLBAMPLMMExampleB22";
-            this->fosLBAMPLMMExampleB22->Size = System::Drawing::Size(62, 23);
+            this->fosLBAMPLMMExampleB22->Size = System::Drawing::Size(41, 15);
             this->fosLBAMPLMMExampleB22->TabIndex = 6;
             this->fosLBAMPLMMExampleB22->Text = L"label1";
             // 
             // fosLBAMPLMMExampleB31
             // 
             this->fosLBAMPLMMExampleB31->AutoSize = true;
-            this->fosLBAMPLMMExampleB31->Location = System::Drawing::Point(106, 165);
-            this->fosLBAMPLMMExampleB31->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB31->Location = System::Drawing::Point(71, 110);
             this->fosLBAMPLMMExampleB31->Name = L"fosLBAMPLMMExampleB31";
-            this->fosLBAMPLMMExampleB31->Size = System::Drawing::Size(101, 23);
+            this->fosLBAMPLMMExampleB31->Size = System::Drawing::Size(66, 15);
             this->fosLBAMPLMMExampleB31->TabIndex = 5;
             this->fosLBAMPLMMExampleB31->Text = L"1600 kbps";
             // 
             // fosLBAMPLMMExampleB21
             // 
             this->fosLBAMPLMMExampleB21->AutoSize = true;
-            this->fosLBAMPLMMExampleB21->Location = System::Drawing::Point(106, 120);
-            this->fosLBAMPLMMExampleB21->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB21->Location = System::Drawing::Point(71, 80);
             this->fosLBAMPLMMExampleB21->Name = L"fosLBAMPLMMExampleB21";
-            this->fosLBAMPLMMExampleB21->Size = System::Drawing::Size(90, 23);
+            this->fosLBAMPLMMExampleB21->Size = System::Drawing::Size(59, 15);
             this->fosLBAMPLMMExampleB21->TabIndex = 4;
             this->fosLBAMPLMMExampleB21->Text = L"400 kbps";
             // 
@@ -760,61 +744,55 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosLBAMPLMMExampleB12->AutoSize = true;
             this->fosLBAMPLMMExampleB12->ForeColor = System::Drawing::Color::DarkBlue;
-            this->fosLBAMPLMMExampleB12->Location = System::Drawing::Point(278, 75);
-            this->fosLBAMPLMMExampleB12->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB12->Location = System::Drawing::Point(185, 50);
             this->fosLBAMPLMMExampleB12->Name = L"fosLBAMPLMMExampleB12";
-            this->fosLBAMPLMMExampleB12->Size = System::Drawing::Size(62, 23);
+            this->fosLBAMPLMMExampleB12->Size = System::Drawing::Size(41, 15);
             this->fosLBAMPLMMExampleB12->TabIndex = 3;
             this->fosLBAMPLMMExampleB12->Text = L"label1";
             // 
             // fosLBAMPLMMExampleB11
             // 
             this->fosLBAMPLMMExampleB11->AutoSize = true;
-            this->fosLBAMPLMMExampleB11->Location = System::Drawing::Point(106, 75);
-            this->fosLBAMPLMMExampleB11->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleB11->Location = System::Drawing::Point(71, 50);
             this->fosLBAMPLMMExampleB11->Name = L"fosLBAMPLMMExampleB11";
-            this->fosLBAMPLMMExampleB11->Size = System::Drawing::Size(90, 23);
+            this->fosLBAMPLMMExampleB11->Size = System::Drawing::Size(59, 15);
             this->fosLBAMPLMMExampleB11->TabIndex = 2;
             this->fosLBAMPLMMExampleB11->Text = L"100 kbps";
             // 
             // fosLBAMPLMMExampleA12
             // 
             this->fosLBAMPLMMExampleA12->AutoSize = true;
-            this->fosLBAMPLMMExampleA12->Location = System::Drawing::Point(266, 34);
-            this->fosLBAMPLMMExampleA12->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleA12->Location = System::Drawing::Point(177, 23);
             this->fosLBAMPLMMExampleA12->Name = L"fosLBAMPLMMExampleA12";
-            this->fosLBAMPLMMExampleA12->Size = System::Drawing::Size(105, 23);
+            this->fosLBAMPLMMExampleA12->Size = System::Drawing::Size(70, 15);
             this->fosLBAMPLMMExampleA12->TabIndex = 1;
             this->fosLBAMPLMMExampleA12->Text = L"余裕の大きさ";
             // 
             // fosLBAMPLMMExampleA11
             // 
             this->fosLBAMPLMMExampleA11->AutoSize = true;
-            this->fosLBAMPLMMExampleA11->Location = System::Drawing::Point(64, 34);
-            this->fosLBAMPLMMExampleA11->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLMMExampleA11->Location = System::Drawing::Point(43, 23);
             this->fosLBAMPLMMExampleA11->Name = L"fosLBAMPLMMExampleA11";
-            this->fosLBAMPLMMExampleA11->Size = System::Drawing::Size(181, 23);
+            this->fosLBAMPLMMExampleA11->Size = System::Drawing::Size(119, 15);
             this->fosLBAMPLMMExampleA11->TabIndex = 0;
             this->fosLBAMPLMMExampleA11->Text = L"映像上限レート(kbps)";
             // 
             // fosLBAMPLimitMarginInfo
             // 
             this->fosLBAMPLimitMarginInfo->AutoSize = true;
-            this->fosLBAMPLimitMarginInfo->Location = System::Drawing::Point(402, 98);
-            this->fosLBAMPLimitMarginInfo->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLimitMarginInfo->Location = System::Drawing::Point(268, 65);
             this->fosLBAMPLimitMarginInfo->Name = L"fosLBAMPLimitMarginInfo";
-            this->fosLBAMPLimitMarginInfo->Size = System::Drawing::Size(46, 23);
+            this->fosLBAMPLimitMarginInfo->Size = System::Drawing::Size(31, 15);
             this->fosLBAMPLimitMarginInfo->TabIndex = 5;
             this->fosLBAMPLimitMarginInfo->Text = L"普通";
             // 
             // fosNUAMPLimitMargin
             // 
-            this->fosNUAMPLimitMargin->Location = System::Drawing::Point(266, 94);
-            this->fosNUAMPLimitMargin->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosNUAMPLimitMargin->Location = System::Drawing::Point(177, 63);
             this->fosNUAMPLimitMargin->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 20, 0, 0, 0 });
             this->fosNUAMPLimitMargin->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
             this->fosNUAMPLimitMargin->Name = L"fosNUAMPLimitMargin";
-            this->fosNUAMPLimitMargin->Size = System::Drawing::Size(110, 30);
+            this->fosNUAMPLimitMargin->Size = System::Drawing::Size(73, 23);
             this->fosNUAMPLimitMargin->TabIndex = 3;
             this->fosNUAMPLimitMargin->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
             this->fosNUAMPLimitMargin->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 10, 0, 0, 0 });
@@ -823,20 +801,18 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosLBAMPLimitMarginMax
             // 
             this->fosLBAMPLimitMarginMax->AutoSize = true;
-            this->fosLBAMPLimitMarginMax->Location = System::Drawing::Point(468, 48);
-            this->fosLBAMPLimitMarginMax->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLimitMarginMax->Location = System::Drawing::Point(312, 32);
             this->fosLBAMPLimitMarginMax->Name = L"fosLBAMPLimitMarginMax";
-            this->fosLBAMPLimitMarginMax->Size = System::Drawing::Size(28, 23);
+            this->fosLBAMPLimitMarginMax->Size = System::Drawing::Size(19, 15);
             this->fosLBAMPLimitMarginMax->TabIndex = 2;
             this->fosLBAMPLimitMarginMax->Text = L"大";
             // 
             // fosLBAMPLimitMarginMin
             // 
             this->fosLBAMPLimitMarginMin->AutoSize = true;
-            this->fosLBAMPLimitMarginMin->Location = System::Drawing::Point(46, 48);
-            this->fosLBAMPLimitMarginMin->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
+            this->fosLBAMPLimitMarginMin->Location = System::Drawing::Point(31, 32);
             this->fosLBAMPLimitMarginMin->Name = L"fosLBAMPLimitMarginMin";
-            this->fosLBAMPLimitMarginMin->Size = System::Drawing::Size(28, 23);
+            this->fosLBAMPLimitMarginMin->Size = System::Drawing::Size(19, 15);
             this->fosLBAMPLimitMarginMin->TabIndex = 1;
             this->fosLBAMPLimitMarginMin->Text = L"小";
             // 
@@ -844,12 +820,11 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             this->fosTBAMPLimitMarginMulti->AutoSize = false;
             this->fosTBAMPLimitMarginMulti->BackColor = System::Drawing::SystemColors::Window;
-            this->fosTBAMPLimitMarginMulti->Location = System::Drawing::Point(99, 48);
-            this->fosTBAMPLimitMarginMulti->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosTBAMPLimitMarginMulti->Location = System::Drawing::Point(66, 32);
             this->fosTBAMPLimitMarginMulti->Maximum = 20;
             this->fosTBAMPLimitMarginMulti->Minimum = 1;
             this->fosTBAMPLimitMarginMulti->Name = L"fosTBAMPLimitMarginMulti";
-            this->fosTBAMPLimitMarginMulti->Size = System::Drawing::Size(360, 46);
+            this->fosTBAMPLimitMarginMulti->Size = System::Drawing::Size(240, 31);
             this->fosTBAMPLimitMarginMulti->TabIndex = 0;
             this->fosTBAMPLimitMarginMulti->TickStyle = System::Windows::Forms::TickStyle::None;
             this->fosTBAMPLimitMarginMulti->Value = 10;
@@ -857,10 +832,9 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // 
             // fosCBAmpKeepOldFile
             // 
-            this->fosCBAmpKeepOldFile->Location = System::Drawing::Point(28, 22);
-            this->fosCBAmpKeepOldFile->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosCBAmpKeepOldFile->Location = System::Drawing::Point(19, 15);
             this->fosCBAmpKeepOldFile->Name = L"fosCBAmpKeepOldFile";
-            this->fosCBAmpKeepOldFile->Size = System::Drawing::Size(514, 57);
+            this->fosCBAmpKeepOldFile->Size = System::Drawing::Size(343, 38);
             this->fosCBAmpKeepOldFile->TabIndex = 17;
             this->fosCBAmpKeepOldFile->Text = L"自動マルチパスで、上限をオーバーしてしまい再エンコードする際に、上限オーバーの動画を削除しない";
             this->fosCBAmpKeepOldFile->UseVisualStyleBackColor = true;
@@ -868,48 +842,18 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
             // fosPNHideTabPage
             // 
             this->fosPNHideTabPage->Controls->Add(this->fosTabControl);
-            this->fosPNHideTabPage->Location = System::Drawing::Point(-2, -2);
-            this->fosPNHideTabPage->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
+            this->fosPNHideTabPage->Location = System::Drawing::Point(-1, -1);
             this->fosPNHideTabPage->Name = L"fosPNHideTabPage";
-            this->fosPNHideTabPage->Size = System::Drawing::Size(588, 606);
+            this->fosPNHideTabPage->Size = System::Drawing::Size(392, 404);
             this->fosPNHideTabPage->TabIndex = 18;
-            // 
-            // fosTXAutoSaveLog
-            // 
-            this->fosTXAutoSaveLog->Location = System::Drawing::Point(65, 503);
-            this->fosTXAutoSaveLog->Margin = System::Windows::Forms::Padding(4);
-            this->fosTXAutoSaveLog->Name = L"fosTXAutoSaveLog";
-            this->fosTXAutoSaveLog->Size = System::Drawing::Size(433, 30);
-            this->fosTXAutoSaveLog->TabIndex = 34;
-            // 
-            // fosCBAutoSaveLog
-            // 
-            this->fosCBAutoSaveLog->AutoSize = true;
-            this->fosCBAutoSaveLog->Location = System::Drawing::Point(30, 469);
-            this->fosCBAutoSaveLog->Margin = System::Windows::Forms::Padding(4);
-            this->fosCBAutoSaveLog->Name = L"fosCBAutoSaveLog";
-            this->fosCBAutoSaveLog->Size = System::Drawing::Size(135, 27);
-            this->fosCBAutoSaveLog->TabIndex = 33;
-            this->fosCBAutoSaveLog->Text = L"ログ自動保存";
-            this->fosCBAutoSaveLog->UseVisualStyleBackColor = true;
-            // 
-            // fosCXAutoSaveLog
-            // 
-            this->fosCXAutoSaveLog->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-            this->fosCXAutoSaveLog->FormattingEnabled = true;
-            this->fosCXAutoSaveLog->Location = System::Drawing::Point(178, 467);
-            this->fosCXAutoSaveLog->Margin = System::Windows::Forms::Padding(4);
-            this->fosCXAutoSaveLog->Name = L"fosCXAutoSaveLog";
-            this->fosCXAutoSaveLog->Size = System::Drawing::Size(208, 31);
-            this->fosCXAutoSaveLog->TabIndex = 32;
             // 
             // frmOtherSettings
             // 
             this->AcceptButton = this->fosCBOK;
-            this->AutoScaleDimensions = System::Drawing::SizeF(144, 144);
+            this->AutoScaleDimensions = System::Drawing::SizeF(96, 96);
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Dpi;
             this->CancelButton = this->fosCBCancel;
-            this->ClientSize = System::Drawing::Size(588, 672);
+            this->ClientSize = System::Drawing::Size(392, 448);
             this->Controls->Add(this->fosPNHideTabPage);
             this->Controls->Add(this->fosCBOK);
             this->Controls->Add(this->fosCBCancel);
@@ -917,7 +861,6 @@ private: System::Windows::Forms::ComboBox^  fosCXAutoSaveLog;
                 static_cast<System::Byte>(0)));
             this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
             this->KeyPreview = true;
-            this->Margin = System::Windows::Forms::Padding(4, 4, 4, 4);
             this->MaximizeBox = false;
             this->Name = L"frmOtherSettings";
             this->ShowIcon = false;
