@@ -510,6 +510,7 @@ AuofcgLBX264Priority=優先度
 AuofcggroupBoxExSettings=拡張設定
 AuofcgCBAfs24fpsMode=24fps化
 AuofcgCBAuoTcfileout=タイムコード出力
+AuofcgCBBenchmarkMode=ベンチマークモード
 AuofcgCBAFSBitrateCorrection=設定したビットレートになるよう補正する(自動マルチパス時)
 AuofcgCBAFS=自動フィールドシフト(afs)を使用する
 AuofcgTSExeFileshelp=helpを表示

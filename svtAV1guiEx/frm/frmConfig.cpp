@@ -1173,6 +1173,7 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBX264Priority);
     LOAD_CLI_TEXT(fcggroupBoxExSettings);
     LOAD_CLI_TEXT(fcgCBAuoTcfileout);
+    LOAD_CLI_TEXT(fcgCBBenchmarkMode);
     LOAD_CLI_TEXT(fcgCBAFSBitrateCorrection);
     LOAD_CLI_TEXT(fcgCBAFS);
     LOAD_CLI_TEXT(fcgTSExeFileshelp);

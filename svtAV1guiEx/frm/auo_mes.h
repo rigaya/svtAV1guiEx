@@ -656,6 +656,7 @@ enum AuoMes {
         AuofcggroupBoxExSettings,
         AuofcgCBAfs24fpsMode,
         AuofcgCBAuoTcfileout,
+        AuofcgCBBenchmarkMode,
         AuofcgCBAFSBitrateCorrection,
         AuofcgCBAFS,
         AuofcgTSExeFileshelp,
