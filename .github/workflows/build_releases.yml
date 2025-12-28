@@ -111,6 +111,7 @@ jobs:
           copy /y .\svtAV1guiEx\svtAV1guiEx.ini svtAV1guiEx_release\plugins\
           copy /y .\svtAV1guiEx\svtAV1guiEx.en.ini svtAV1guiEx_release\plugins\
           copy /y .\svtAV1guiEx\svtAV1guiEx.zh.ini svtAV1guiEx_release\plugins\
+          copy /y .\svtAV1guiEx\svtAV1guiEx_uninstall.bat svtAV1guiEx_release\plugins\
           echo D | xcopy /y /e .\svtAV1guiEx\stg svtAV1guiEx_release\plugins\svtAV1guiEx_stg
           copy /y .\svtAV1guiEx\auo_setup.ini svtAV1guiEx_release\exe_files\
           copy /y .\svtAV1guiEx\svtAV1guiEx_readme.txt svtAV1guiEx_release\
@@ -135,6 +136,7 @@ jobs:
           copy /y svtAV1guiEx\svtAV1guiEx.ini Aviutl_svtAV1guiEx_release\Plugin\
           copy /y svtAV1guiEx\svtAV1guiEx.en.ini Aviutl_svtAV1guiEx_release\Plugin\
           copy /y svtAV1guiEx\svtAV1guiEx.zh.ini Aviutl_svtAV1guiEx_release\Plugin\
+          copy /y svtAV1guiEx\svtAV1guiEx_uninstall.bat Aviutl_svtAV1guiEx_release\Plugin\
           copy /y svtAV1guiEx\auo_setup.ini Aviutl_svtAV1guiEx_release\Plugin\exe_files\
           copy /y svtAV1guiEx\svtAV1guiEx_readme.txt Aviutl_svtAV1guiEx_release\
           echo D | xcopy /y /e svtAV1guiEx\stg Aviutl_svtAV1guiEx_release\Plugin\svtAV1guiEx_stg
