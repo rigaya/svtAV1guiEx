@@ -182,15 +182,11 @@ svtAV1guiEx.iniを書き換えることにより、音声エンコーダやmuxer
 
 ## svtAV1guiEx の Aviutl からの削除
 
-svtAV1guiEx の Aviutl から削除するには、"plugins" フォルダ内の下記ファイルとフォルダを削除してください。
+svtAV1guiEx を Aviutl/AviUtl2 から削除するには、プラグインフォルダの ```svtAV1guiEx_uninstall.bat``` をダブルクリックして実行します。
 
-- [フォルダ] svtAV1guiEx_stg
-- [ファイル] svtAV1guiEx.auo
-- [ファイル] svtAV1guiEx.conf (存在する場合のみ)
-- [ファイル] svtAV1guiEx(.ini)
-- [ファイル] auo_setup.auf
+![削除](./data/svtAV1guiEx_2_09_uninstall_20251228.webp)
 
-![削除](./data/svtAV1guiEx_1_00_uninstall_01.png)
+上記画面が表示されたら、```y``` と入力し、削除を実行してください。
 
 
 ## ソースコードについて
