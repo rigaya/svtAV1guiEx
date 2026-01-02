@@ -85,9 +85,45 @@ static const char *const CONF_NAME_OLD_1 = "ffmpegOut ConfigFile";
 static const char *const CONF_NAME_OLD_2 = "ffmpegOut ConfigFile v2";
 static const char *const CONF_NAME_JSON  = "ffmpegOut ConfigFile v2 json";
 static const char *const CONF_NAME       = CONF_NAME_OLD_2;
+#elif ENCODER_QSV
+#include "qsv_util.h"
+#include "qsv_prm.h"
+
+static const char *const CONF_NAME_OLD_1 = "QSVEnc ConfigFile";
+static const char *const CONF_NAME_OLD_2 = "QSVEnc ConfigFile v2";
+static const char *const CONF_NAME_OLD_3 = "QSVEnc ConfigFile v3";
+static const char *const CONF_NAME_OLD_4 = "QSVEnc ConfigFile v4";
+static const char *const CONF_NAME_OLD_5 = "QSVEnc ConfigFile v5";
+static const char *const CONF_NAME_OLD_6 = "QSVEnc ConfigFile v6";
+static const char *const CONF_NAME_OLD_7 = "QSVEnc ConfigFile v7";
+static const char *const CONF_NAME_JSON  = "QSVEnc ConfigFile v7 json";
+static const char *const CONF_NAME       = CONF_NAME_OLD_7;
+#elif ENCODER_NVENC
+#include "NVEncParam.h"
+
+static const char *const CONF_NAME_OLD_1 = "NVEnc ConfigFile";
+static const char *const CONF_NAME_OLD_2 = "NVEnc ConfigFile v2";
+static const char *const CONF_NAME_OLD_3 = "NVEnc ConfigFile v3";
+static const char *const CONF_NAME_OLD_4 = "NVEnc ConfigFile v4";
+static const char *const CONF_NAME_OLD_5 = "NVEnc ConfigFile v5";
+static const char *const CONF_NAME_JSON  = "NVEnc ConfigFile v5 json";
+static const char *const CONF_NAME       = CONF_NAME_OLD_5;
+#elif ENCODER_VCEENC
+#include "vce_param.h"
+
+static const char *const CONF_NAME_OLD_1 = "VCEEnc ConfigFile v3";
+static const char *const CONF_NAME_OLD_2 = "VCEEnc ConfigFile v4";
+static const char *const CONF_NAME_JSON  = "VCEEnc ConfigFile v4 json";
+static const char *const CONF_NAME       = CONF_NAME_OLD_2;
+#elif ENCODER_VVENC
+static const char* const CONF_NAME_OLD_1 = "VVenCguiEx ConfigFile v1";
+static const char* const CONF_NAME_OLD_2 = "VVenCguiEx ConfigFile v2";
+static const char* const CONF_NAME_JSON  = "VVenCguiEx ConfigFile v2 json";
+static const char* const CONF_NAME       = CONF_NAME_OLD_2;
 #else
 static_assert(false);
 #endif
+
 const int CONF_NAME_BLOCK_LEN            = 32;
 const int CONF_BLOCK_MAX                 = 32;
 const int CONF_BLOCK_COUNT               = 5; //最大 CONF_BLOCK_MAXまで
@@ -151,7 +187,7 @@ static const ENC_OPTION_STR AUDIO_DELAY_CUT_MODE[] = {
     { NULL, AUO_MES_UNKNOWN,                NULL          },
 };
 
-#if ENCODER_SVTAV1
+#if ENCODER_SVTAV1 || ENCODER_VVENC
 typedef struct CONF_ENC_PRM {
     TCHAR cmd[MAX_CMD_LEN];
     int sar_x;
@@ -320,7 +356,7 @@ typedef struct CONF_VIDEO_OLD {
 #endif
     double amp_limit_bitrate_lower;
 #endif
-#if ENCODER_SVTAV1
+#if ENCODER_SVTAV1 || ENCODER_VVENC
     int sar_x;
     int sar_y;
 #endif
@@ -348,7 +384,7 @@ typedef struct CONF_GUIEX_OLD {
     CONF_MUX    mux;                             //muxについての設定
     CONF_OTHER_OLD  oth;                             //その他の設定
 } CONF_GUIEX_OLD;
-#elif ENCODER_SVTAV1
+#elif ENCODER_SVTAV1 || ENCODER_VVENC
 typedef struct CONF_ENC_PRM_OLD {
     char cmd[3072];
 } CONF_ENC_PRM_OLD;
@@ -366,7 +402,7 @@ typedef struct CONF_GUIEX_OLD {
 
 typedef struct CONF_GUIEX {
     CONF_GUIEX_HEADER header;
-#if ENCODER_SVTAV1
+#if ENCODER_SVTAV1 || ENCODER_VVENC
     CONF_ENC_PRM enc;                             //エンコーダについての設定
 #else
     CONF_ENC    enc;                             //エンコーダについての設定

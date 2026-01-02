@@ -549,7 +549,7 @@ System::Void frmConfig::fcgCXAudioEncMode_SelectedIndexChanged(System::Object^  
 }
 
 System::Int32 frmConfig::GetCurrentAudioDefaultBitrate() {
-#if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1
+#if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1 || ENCODER_VVENC
     AUDIO_SETTINGS *astg = &sys_dat->exstg->s_aud_ext[fcgCXAudioEncoder->SelectedIndex];
     const int encMode = fcgCXAudioEncMode->SelectedIndex;
 #else
@@ -1669,7 +1669,7 @@ System::Void frmConfig::SetAllCheckChangedEvents(Control ^top) {
     }
 }
 
-System::Void frmConfig::SetHelpToolTipsColorMatrix(Control^ control, const char *type) {
+System::Void frmConfig::SetHelpToolTipsColorMatrix(Control^ control, const TCHAR *type) {
     fcgTTX264->SetToolTip(control, L"--" + String(type).ToString() + L"\n"
         + LOAD_CLI_STRING(AuofrmTTColorMatrix1) + L"\n"
         + LOAD_CLI_STRING(AuofrmTTColorMatrix2) + L"\n"
@@ -1690,9 +1690,9 @@ System::Void frmConfig::SetHelpToolTips() {
     SET_TOOL_TIP_SVTAV1(fcgBTX264PathSub, fcgBTX264Path);
 
     //色空間
-    SetHelpToolTipsColorMatrix(fcgCXColorMatrix, "colormatrix");
-    SetHelpToolTipsColorMatrix(fcgCXColorPrim,   "colorprim");
-    SetHelpToolTipsColorMatrix(fcgCXTransfer,    "transfer");
+    SetHelpToolTipsColorMatrix(fcgCXColorMatrix, _T("colormatrix"));
+    SetHelpToolTipsColorMatrix(fcgCXColorPrim,   _T("colorprim"));
+    SetHelpToolTipsColorMatrix(fcgCXTransfer,    _T("transfer"));
     //fcgTTX264->SetToolTip(fcgCXInputRange,      L"--input-range\n"
     //    + L"\n"
     //    + L"\"" + String(list_input_range[0].desc).ToString() + L"\"  [デフォルト]\n"

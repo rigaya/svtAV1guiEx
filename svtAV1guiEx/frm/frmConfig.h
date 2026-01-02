@@ -4325,7 +4325,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBBenchmarkMode;
         System::Void fcgTSLanguage_DropDownItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e);
 
         System::Void SetHelpToolTips();
-        System::Void SetHelpToolTipsColorMatrix(Control^ control, const char *type);
+        System::Void SetHelpToolTipsColorMatrix(Control^ control, const TCHAR *type);
         System::Void SetX264VersionToolTip(String^ x264Path);
         System::Void ShowExehelp(String^ ExePath, String^ args);
         System::Void fcgTSBOtherSettings_Click(System::Object^  sender, System::EventArgs^  e);
@@ -4357,7 +4357,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBBenchmarkMode;
         System::Void InformfbcClosed();
     private:
         System::Boolean useAudioExt() {
-            #if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1
+            #if ENCODER_X264 || ENCODER_X265 || ENCODER_SVTAV1 || ENCODER_VVENC
                 return true;
             #else
                 return fcgCBAudioUseExt->Checked;
@@ -4806,7 +4806,7 @@ private: System::Windows::Forms::CheckBox^  fcgCBBenchmarkMode;
             init_CONF_GUIEX(conf, fcgCBUsehighbit->Checked);
             FrmToConf(conf);
             SaveLocalStg();
-            ZeroMemory(conf->oth.notes, _countof(conf->oth.notes));
+            ZeroMemory(conf->oth.notes, sizeof(conf->oth.notes));
             this->Close();
         }
     private:

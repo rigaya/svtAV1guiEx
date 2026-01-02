@@ -96,7 +96,7 @@ int get_encoder_send_bitdepth(const CONF_ENC *cnf) {
     return cnf->use_highbit_depth ? 16 : 8;
 #elif ENCODER_X265
     return cnf->bit_depth > 8 ? 16 : 8;
-#elif ENCODER_SVTAV1
+#elif ENCODER_SVTAV1 || ENCODER_VVENC
     return cnf->bit_depth;
 #endif
 }
@@ -447,11 +447,11 @@ static void append_cmdex(TCHAR *cmd, size_t nSize, const TCHAR *cmdex, BOOL disb
     //CLIモードなら常にチェックをスキップ
     BOOL skip_check_if_imported = disble_guicmd;
     //--presetなどの特殊なオプションがあったらチェックをスキップ
-    const TCHAR * const IRREGULAR_OPTIONS[] = { "--preset", "--tune", "--profile", NULL };
+    const TCHAR * const IRREGULAR_OPTIONS[] = { _T("--preset"), _T("--tune"), _T("--profile"), NULL };
     for (int i = 0; IRREGULAR_OPTIONS[i] && !skip_check_if_imported; i++)
-        skip_check_if_imported = (NULL != strstr(cmdex, IRREGULAR_OPTIONS[i]));
+        skip_check_if_imported = (NULL != _tcsstr(cmdex, IRREGULAR_OPTIONS[i]));
 
-    _stprintf_s(cmd + cmd_len, nSize - cmd_len, " %s", cmdex);
+    _stprintf_s(cmd + cmd_len, nSize - cmd_len, _T(" %s"), cmdex);
 
     if (skip_check_if_imported) {
         //改行のチェックのみ行う
@@ -773,7 +773,7 @@ static int video_output_create_thread(video_output_thread_t *thread_data, CONVER
         || NULL == (thread_data->thread       = (HANDLE)_beginthreadex(NULL, 0, video_output_thread_func, thread_data, 0, NULL))) {
         ret = AUO_RESULT_ERROR;
     }
-    if (ENCODER_SVTAV1) {
+    if (ENCODER_SVTAV1 || ENCODER_VVENC) {
         SetEvent(thread_data->he_out_fin);
     }
     return ret;
@@ -955,8 +955,12 @@ static AUO_RESULT enc_out(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *pe,
             if (!(i & 7)) {
                 //Aviutlの進捗表示を更新
                 oip->func_rest_time_disp(i + frames_to_enc * (pe->current_pass - 1), frames_to_enc * pe->total_pass);
+                if (ENCODER_VVENC) {
+                    DWORD log_len = 0;
+                    set_window_title_enc_mes(ENCODER_NAME_W, pe->drop_count, i);
+                }
 
-                //svt-av1優先度
+                //エンコーダ優先度
                 check_enc_priority(pe->h_p_aviutl, pi_enc.hProcess, set_priority);
 
                 if (!(i & 255)) {
@@ -1255,7 +1259,7 @@ static AUO_RESULT check_amp(CONF_GUIEX *conf, const OUTPUT_INFO *oip, PRM_ENC *p
     const int bitrate_vid_old = conf->enc.bitrate;
     //まず上限のほうをチェック、下限設定よりも優先させる
     //計算されたビットレートが目標ビットレートを上回っていたら、目標ビットレートを変更する
-    //conf->svt-av1.bitrate = -1は自動であるが、
+    //conf->x264.bitrate = -1は自動であるが、
     //これをDWORDとして扱うことでUINT_MAX扱いとし、自動的に反映する
     if (required_vid_bitrate_upper < (double)((DWORD)conf->enc.bitrate)) {
         //下限のほうもぎりぎり超えないよう確認
@@ -1298,7 +1302,7 @@ static AUO_RESULT video_output_inside(CONF_GUIEX *conf, const OUTPUT_INFO *oip, 
 
 #if 0
         //キーフレーム検出 (cmdexのほうに--qpfileの指定があればそれを優先する)
-        if (!ret && conf->vid.check_keyframe && strstr(conf->vid.cmdex, "--qpfile") == NULL)
+        if (!ret && conf->vid.check_keyframe && _tcsstr(conf->vid.cmdex, _T("--qpfile")) == NULL)
             set_keyframe(conf, oip, pe, sys_dat);
 #endif
     }
