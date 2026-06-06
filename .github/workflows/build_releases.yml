@@ -86,7 +86,7 @@ jobs:
       - name: Download svtav1
         id: download_svtav1
         run: |
-          curl -o svtav1.zip -L https://github.com/rigaya/AutoBuildForAviUtlPlugins/releases/download/auto-build-20251220-074409/SvtAv1EncApp_3.1.0-291_x64_clang.zip
+          curl -o svtav1.zip -L https://github.com/rigaya/AutoBuildForAviUtlPlugins/releases/download/auto-build-20260606-080217/SvtAv1EncApp_4.1.0-160_x64_clang.zip
 
       - name: Download muxer and audio encoder
         id: download_muxer_and_audio_encoder
