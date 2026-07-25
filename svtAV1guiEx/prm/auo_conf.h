@@ -445,7 +445,10 @@ public:
     static int  save_guiEx_conf(const CONF_GUIEX *conf, const TCHAR *stg_file); //設定をJSONファイルとして保存
     static int  load_guiEx_conf_legacy(CONF_GUIEX *conf, const TCHAR *stg_file); //旧形式のstgファイルから読み込み
 
-    static std::string conf_to_json(const CONF_GUIEX *conf, int indent);                 //設定をJSON文字列に変換
+    // 設定をJSON文字列に変換
+    // indent >= 0: 整形出力 (字下げ幅)
+    // indent <  0: 改行なし・空白最小 (1行、.aup2 等の ini 埋め込み向け)
+    static std::string conf_to_json(const CONF_GUIEX *conf, int indent);
     static bool json_to_conf(CONF_GUIEX *conf, const std::string &json_str);             //JSON文字列から設定を復元
 };
 

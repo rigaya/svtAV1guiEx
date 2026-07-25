@@ -470,8 +470,9 @@ std::string guiEx_config::conf_to_json(const CONF_GUIEX *conf, int indent) {
     audio_to_json(j, conf->aud);
     mux_to_json(j, conf->mux);
     other_to_json(j, conf->oth);
-    
-    return j.dump(indent);
+
+    // indent < 0: 改行なし・空白最小 / indent >= 0: 整形 (0でも改行が入る点に注意)
+    return (indent < 0) ? j.dump(-1) : j.dump(indent);
 }
 
 // JSON文字列から設定を復元

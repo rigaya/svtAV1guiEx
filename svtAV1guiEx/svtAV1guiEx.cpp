@@ -168,7 +168,8 @@ bool func_save_project_config(PROJECT_FILE *project) {
         return false;
     }
     init_SYSTEM_DATA(&g_sys_dat);
-    const std::string json_str = guiEx_config::conf_to_json(&g_conf, 0);
+    // .aup2 は ini 形式のため、改行を含まない1行JSONで保存する
+    const std::string json_str = guiEx_config::conf_to_json(&g_conf, -1);
     project->set_param_string(PROJECT_CONFIG_KEY, json_str.c_str());
     return true;
 }
