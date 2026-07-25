@@ -899,6 +899,9 @@ System::Void frmConfig::InitComboBox() {
     setComboBox(fcgCXAQ,             list_aq);
     setComboBox(fcgCXColorFormat,    list_color_format);
     setComboBox(fcgCXEnableMfmv, list_on_off_default);
+    setComboBox(fcgCXEnableDLF,      list_enable_dlf);
+    setComboBox(fcgCXFastDecode,     list_fast_decode);
+    setComboBox(fcgCXHbdMds,         list_hbd_mds);
 
     setComboBox(fcgCXHierarchicalLevels, list_hierarchical_levels);
     setComboBox(fcgCXMaxTXSize, list_max_tx_size);
@@ -1034,7 +1037,8 @@ System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, Sys
     fcgLBKbps->Visible = videoBitrateMode;
     fcgNUQP->Visible = !videoBitrateMode;
 
-    if (rc_mode == -1) { // CRFモード
+    // CRF / CQP は 0.25 刻み・上限70、VBR時の表示用は整数
+    if (rc_mode == get_cx_value(list_rc, L"CRF") || rc_mode == get_cx_value(list_rc, L"CQP")) {
         fcgNUQP->DecimalPlaces = 2;
         fcgNUQP->Increment = (Decimal)0.25;
         fcgNUQP->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) { 70, 0, 0, 0 });
@@ -1047,7 +1051,7 @@ System::Void frmConfig::fcgCXRC_SelectedIndexChanged(System::Object ^sender, Sys
 
 System::Void frmConfig::fcgNUQP_ValueChanged(System::Object^ sender, System::EventArgs^ e) {
     int rc_mode = list_rc[fcgCXRC->SelectedIndex].value;
-    if (rc_mode == -1) { // CRFモード
+    if (rc_mode == get_cx_value(list_rc, L"CRF") || rc_mode == get_cx_value(list_rc, L"CQP")) {
         // 0.25単位に丸める
         Decimal value = fcgNUQP->Value;
         Decimal rounded = Math::Round(value / (Decimal)0.25) * (Decimal)0.25;
@@ -1121,9 +1125,16 @@ System::Void frmConfig::LoadLangText() {
     LOAD_CLI_TEXT(fcgLBEnableTF);
     LOAD_CLI_TEXT(fcgLBEnableOverlay);
     LOAD_CLI_TEXT(fcgLBEnableDLF);
+    LOAD_CLI_TEXT(fcgLBEnableKfTF);
     LOAD_CLI_TEXT(fcgLBEnableVarianceBoost);
     LOAD_CLI_TEXT(fcgLBEnableRestortionFiltering);
     LOAD_CLI_TEXT(fcgLBFilmGrain);
+    LOAD_CLI_TEXT(fcgLBAdaptiveFilmGrain);
+    LOAD_CLI_TEXT(fcgLBFilmGrainDenoise);
+    LOAD_CLI_TEXT(fcgLBHbdMds);
+    LOAD_CLI_TEXT(fcgLBEnableIntraBC);
+    LOAD_CLI_TEXT(fcgLBQpScaleCompress);
+    LOAD_CLI_TEXT(fcgLBVarianceBoostCurve);
     LOAD_CLI_TEXT(fcggroupBoxColorMatrix);
     LOAD_CLI_TEXT(fcgLBInputRange);
     LOAD_CLI_TEXT(fcgLBTransfer);
@@ -1294,14 +1305,19 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXColorPrim, get_cx_index(list_colorprim, enc.color_primaries));
     SetCXIndex(fcgCXColorRange, get_cx_index(list_color_range, enc.color_range));
     fcgCBEnableCDEF->Checked = enc.enable_cdef != 0;
-    fcgCBEnableDLF->Checked = enc.enable_dlf != 0;
+    SetCXIndex(fcgCXEnableDLF, get_cx_index(list_enable_dlf, enc.enable_dlf));
     SetCXIndex(fcgCXEnableMfmv, get_cx_index(list_on_off_default, enc.enable_mfmv));
     fcgCBEnableOverlay->Checked = enc.enable_overlays != 0;
     fcgCBEnableRestorationFilter->Checked = enc.enable_restoration != 0;
     fcgCBEnableStatReport->Checked = enc.enable_stat_report != 0;
     SetNUValue(fcgNUEnableTF, enc.enable_tf);
-    fcgCBFastDecode->Checked = enc.fast_decode != 0;
+    fcgCBEnableKfTF->Checked = enc.enable_kf_tf != 0;
+    SetCXIndex(fcgCXFastDecode, get_cx_index(list_fast_decode, enc.fast_decode));
     SetNUValue(fcgNUFilmGrain, enc.film_grain);
+    fcgCBFilmGrainDenoise->Checked = enc.film_grain_denoise != 0;
+    fcgCBAdaptiveFilmGrain->Checked = enc.adaptive_film_grain != 0;
+    SetCXIndex(fcgCXHbdMds, get_cx_index(list_hbd_mds, enc.hbd_mds));
+    fcgCBEnableIntraBC->Checked = enc.enable_intrabc != 0;
     SetCXIndex(fcgCXHierarchicalLevels, get_cx_index(list_hierarchical_levels, enc.hierarchical_levels)); //hierarchical-levels
     SetNUValue(fcgNUIntraRefreshType, enc.intra_refresh_type);
     SetNUValue(fcgNUKeyint, enc.keyint);        //intra-period
@@ -1315,6 +1331,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetNUValue(fcgNUMinQP, enc.min_qp);
     SetNUValue(fcgNUMinSectionPct, enc.minsection_pct);
     SetNUValue(fcgNUOverShootPct, enc.overshoot_pct);
+    SetNUValue(fcgNUQpScaleCompress, enc.qp_scale_compress_strength);
     SetCXIndex(fcgCXProfileAV1, get_cx_index(list_profile_av1, 0 /*enc.profile*/));
     SetNUValue(fcgNUSharpness, enc.sharpness);
     fcgCBSceneChangeDetection->Checked = enc.scd != 0;  //scd
@@ -1326,6 +1343,7 @@ System::Void frmConfig::ConfToFrm(CONF_GUIEX *cnf, bool all) {
     SetCXIndex(fcgCXTransfer, get_cx_index(list_transfer, enc.transfer_characteristics));
     SetNUValue(fcgNUUnderShootPct, enc.undershoot_pct);
     SetNUValue(fcgNUVarianceBoostStrength, enc.enable_variance_boost ? enc.variance_boost_strength : 0);
+    SetNUValue(fcgNUVarianceBoostCurve, enc.variance_boost_curve);
     SetNUValue(fcgNUVarianceOctile, enc.variance_octile);
 
     if (cnf->enc.sar_x * cnf->enc.sar_y < 0)
@@ -1394,7 +1412,6 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     //x264部
     enc.bit_depth            = fcgCBUsehighbit->Checked ? 10 : 8;
     enc.rc                   = list_rc[fcgCXRC->SelectedIndex].value;
-    enc.enable_tpl_la        = (enc.rc == get_cx_value(list_rc, L"CQP")) ? 0 : 1;
     enc.preset               = list_enc_mode[fcgCXEncMode->SelectedIndex].value;
     enc.bitrate              = (int)fcgNUBitrate->Value;
     enc.qp                   = (float)fcgNUQP->Value;
@@ -1407,7 +1424,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.color_range = list_color_range[fcgCXColorRange->SelectedIndex].value;
 
     enc.enable_cdef = fcgCBEnableCDEF->Checked;
-    enc.enable_dlf = fcgCBEnableDLF->Checked;
+    enc.enable_dlf = list_enable_dlf[fcgCXEnableDLF->SelectedIndex].value;
 
     enc.enable_mfmv = list_on_off_default[fcgCXEnableMfmv->SelectedIndex].value;
     enc.enable_overlays = fcgCBEnableOverlay->Checked;
@@ -1415,10 +1432,15 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
 
     enc.enable_stat_report = fcgCBEnableStatReport->Checked;
     enc.enable_tf = (int)fcgNUEnableTF->Value;
+    enc.enable_kf_tf = fcgCBEnableKfTF->Checked;
     enc.enable_variance_boost = ((int)fcgNUVarianceBoostStrength->Value) != 0 ? 1 : 0;
+    enc.enable_intrabc = fcgCBEnableIntraBC->Checked;
 
-    enc.fast_decode = fcgCBFastDecode->Checked;
+    enc.fast_decode = list_fast_decode[fcgCXFastDecode->SelectedIndex].value;
     enc.film_grain = (int)fcgNUFilmGrain->Value;
+    enc.film_grain_denoise = fcgCBFilmGrainDenoise->Checked;
+    enc.adaptive_film_grain = fcgCBAdaptiveFilmGrain->Checked;
+    enc.hbd_mds = list_hbd_mds[fcgCXHbdMds->SelectedIndex].value;
     enc.hierarchical_levels = (int)list_hierarchical_levels[fcgCXHierarchicalLevels->SelectedIndex].value;
     enc.intra_refresh_type = (int)fcgNUIntraRefreshType->Value;
     enc.keyint = (int)fcgNUKeyint->Value;
@@ -1433,6 +1455,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.minsection_pct = (int)fcgNUMinSectionPct->Value;
 
     enc.overshoot_pct = (int)fcgNUOverShootPct->Value;
+    enc.qp_scale_compress_strength = (int)fcgNUQpScaleCompress->Value;
     enc.profile = list_profile_av1[fcgCXProfileAV1->SelectedIndex].value;
     enc.sharpness = (int)fcgNUSharpness->Value;
     enc.scd = fcgCBSceneChangeDetection->Checked;
@@ -1445,6 +1468,7 @@ String ^frmConfig::FrmToConf(CONF_GUIEX *cnf) {
     enc.tune = list_tune[fcgCXTune->SelectedIndex].value;
     enc.undershoot_pct = (int)fcgNUUnderShootPct->Value;
     enc.variance_boost_strength = (int)fcgNUVarianceBoostStrength->Value;
+    enc.variance_boost_curve = (int)fcgNUVarianceBoostCurve->Value;
     enc.variance_octile = (int)fcgNUVarianceOctile->Value;
 
     cnf->enc.sar_x = (int)fcgNUAspectRatioX->Value * ((fcgCXAspectRatio->SelectedIndex != 1) ? 1 : -1);

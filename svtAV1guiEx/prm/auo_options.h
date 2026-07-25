@@ -246,10 +246,14 @@ typedef struct {
     int     enable_restoration; //--enable-restoration
     int     enable_stat_report;
     int     enable_tf;
-    int     enable_tpl_la;
+    int     enable_kf_tf; //--enable-kf-tf
     int     enable_variance_boost;
+    int     enable_intrabc; //--enable-intrabc
     int     fast_decode;
     int     film_grain; //--film-grain
+    int     film_grain_denoise; //--film-grain-denoise
+    int     adaptive_film_grain; //--adaptive-film-grain
+    int     hbd_mds; //--hbd-mds
     int     hierarchical_levels; //hierarchical-levels
     int     intra_refresh_type;  //irefresh-type
     int     keyint;        //keyint
@@ -263,6 +267,7 @@ typedef struct {
     int     min_qp;
     int     minsection_pct; //--minsection-pct
     int     overshoot_pct; //--overshoot-pct
+    int     qp_scale_compress_strength; //--qp-scale-compress-strength
     int     sharpness; // sharpness
     int     scd;        //scd (scene change detection)
     int     scm;        //scm (list_scm)
@@ -273,6 +278,7 @@ typedef struct {
     int     tune; //tune
     int     undershoot_pct; //--undershoot-pct
     int     variance_boost_strength; //--variance-boost-strength
+    int     variance_boost_curve; //--variance-boost-curve
     int     variance_octile; // --variance-octile
 } CONF_ENC;
 #pragma pack(pop)
@@ -367,6 +373,25 @@ const CX_DESC_AUO list_hbd_md[] = {
     { L"0: off",     AUO_OPTION_HBD_MD_0, 0 },
     { L"1: partial", AUO_OPTION_HBD_MD_1, 1 },
     { L"2: full",    AUO_OPTION_HBD_MD_2, 2 },
+    { nullptr, AUO_MES_UNKNOWN, 0 }
+};
+const CX_DESC_AUO list_hbd_mds[] = {
+    { L"-1: default",     AUO_MES_UNKNOWN, -1 },
+    { L"0: full 8b MD",   AUO_MES_UNKNOWN,  0 },
+    { L"1: full 10b MD",  AUO_MES_UNKNOWN,  1 },
+    { L"2: hybrid 8/10b", AUO_MES_UNKNOWN,  2 },
+    { nullptr, AUO_MES_UNKNOWN, 0 }
+};
+const CX_DESC_AUO list_enable_dlf[] = {
+    { L"0: off",     AUO_MES_UNKNOWN, 0 },
+    { L"1: on",      AUO_MES_UNKNOWN, 1 },
+    { L"2: accurate", AUO_MES_UNKNOWN, 2 },
+    { nullptr, AUO_MES_UNKNOWN, 0 }
+};
+const CX_DESC_AUO list_fast_decode[] = {
+    { L"0: off", AUO_MES_UNKNOWN, 0 },
+    { L"1",      AUO_MES_UNKNOWN, 1 },
+    { L"2",      AUO_MES_UNKNOWN, 2 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const CX_DESC_AUO list_intra_bcmode[] = {
@@ -470,10 +495,12 @@ const CX_DESC_AUO list_aq[] = {
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 const CX_DESC_AUO list_tune[] = {
-    { L"0: VQ",    AUO_MES_UNKNOWN, 0 },
-    { L"1: PSNR",  AUO_MES_UNKNOWN, 1 },
-    { L"2: SSIM",  AUO_MES_UNKNOWN, 2 },
-    { L"3: Image Quality",  AUO_MES_UNKNOWN, 3 },
+    { L"0: VQ",            AUO_MES_UNKNOWN, 0 },
+    { L"1: PSNR",          AUO_MES_UNKNOWN, 1 },
+    { L"2: SSIM",          AUO_MES_UNKNOWN, 2 },
+    { L"3: Image Quality", AUO_MES_UNKNOWN, 3 },
+    { L"4: MS-SSIM",       AUO_MES_UNKNOWN, 4 },
+    { L"5: VMAF",          AUO_MES_UNKNOWN, 5 },
     { nullptr, AUO_MES_UNKNOWN, 0 }
 };
 

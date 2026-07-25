@@ -51,6 +51,16 @@ void set_ex_stg_ptr(guiEx_settings *_ex_stg) {
     ex_stg = _ex_stg;
 }
 
+static void append_qp_arg(std::basic_stringstream<TCHAR>& cmd, const TCHAR *opt_name, float qp) {
+    const int qpx4 = (int)((double)qp / 0.25 + 0.5);
+    if (qpx4 % 4 == 0) {
+        cmd << " --" << opt_name << " " << (qpx4 / 4);
+    } else {
+        const double rounded = qpx4 * 0.25;
+        cmd << " --" << opt_name << " " << std::fixed << std::setprecision(2) << rounded;
+    }
+}
+
 int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<tstring>& argv, int &i, [[maybe_unused]] int nArgNum) {
 #define IS_OPTION(x) (tstring(x) == option_name)
     auto to_int = [](int *value, const tstring& argv) {
@@ -88,8 +98,20 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
         cx->rc = get_cx_value(list_rc, L"CRF");
         return ret;
     }
+    if (IS_OPTION(_T("cqp"))) {
+        i++;
+        int ret = to_float(&cx->qp, argv[i]);
+        cx->rc = get_cx_value(list_rc, L"CQP");
+        return ret;
+    }
+    // 上流で廃止済み。旧設定互換のため読み飛ばす
+    if (IS_OPTION(_T("enable-tpl-la"))) {
+        i++;
+        return 0;
+    }
     OPT_NUM(_T("rc"), rc);
     OPT_FLOAT(_T("q"), qp);
+    OPT_FLOAT(_T("qp"), qp);
     OPT_FLOAT(_T("ac-bias"), ac_bias);
     OPT_NUM(_T("color-format"), output_csp);
     OPT_NUM(_T("profile"), profile);
@@ -108,10 +130,14 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     OPT_NUM(_T("enable-restoration"), enable_restoration);
     OPT_NUM(_T("enable-stat-report"), enable_stat_report);
     OPT_NUM(_T("enable-tf"), enable_tf);
-    OPT_NUM(_T("enable-tpl-la"), enable_tpl_la);
+    OPT_NUM(_T("enable-kf-tf"), enable_kf_tf);
     OPT_NUM(_T("enable-variance-boost"), enable_variance_boost);
+    OPT_NUM(_T("enable-intrabc"), enable_intrabc);
     OPT_NUM(_T("fast-decode"), fast_decode);
     OPT_NUM(_T("film-grain"), film_grain);
+    OPT_NUM(_T("film-grain-denoise"), film_grain_denoise);
+    OPT_NUM(_T("adaptive-film-grain"), adaptive_film_grain);
+    OPT_NUM(_T("hbd-mds"), hbd_mds);
     OPT_NUM(_T("hierarchical-levels"), hierarchical_levels);
     OPT_NUM(_T("irefresh-type"), intra_refresh_type);
     OPT_NUM(_T("keyint"), keyint);
@@ -124,6 +150,7 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     OPT_NUM(_T("min-qp"), min_qp);
     OPT_NUM(_T("minsection-pct"), minsection_pct);
     OPT_NUM(_T("overshoot-pct"), overshoot_pct);
+    OPT_NUM(_T("qp-scale-compress-strength"), qp_scale_compress_strength);
     OPT_NUM(_T("sharpness"), sharpness);
     OPT_NUM(_T("scd"), scd);
     OPT_NUM(_T("scm"), scm);
@@ -134,6 +161,7 @@ int parse_one_option(CONF_ENC *cx, const TCHAR *option_name, const std::vector<t
     OPT_NUM(_T("tune"), tune);
     OPT_NUM(_T("undershoot-pct"), undershoot_pct);
     OPT_NUM(_T("variance-boost-strength"), variance_boost_strength);
+    OPT_NUM(_T("variance-boost-curve"), variance_boost_curve);
     OPT_NUM(_T("variance-octile"), variance_octile);
     return 1;
 #undef OPT_NUM
@@ -168,6 +196,11 @@ int set_cmd(CONF_ENC *cx, const TCHAR *cmd, const bool ignore_parse_err) {
 CONF_ENC get_default_prm() {
     CONF_ENC prm;
     memset(&prm, 0, sizeof(prm));
+    // SVT-AV1側のデフォルト（cmd_default未記載時のフォールバック）
+    prm.enable_kf_tf = 1;
+    prm.adaptive_film_grain = 1;
+    prm.enable_intrabc = 1;
+    prm.hbd_mds = -1;
     set_cmd(&prm, ex_stg->s_enc.default_cmd, true);
     return prm;
 }
@@ -186,23 +219,22 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("preset"), preset);
     OPT_NUM(_T("input-depth"), bit_depth);
     if (cx->rc == get_cx_value(list_rc, L"CRF")) {
-        const int crfx4 = (int)((double)cx->qp / 0.25 + 0.5);
-        if (crfx4 % 4 == 0) {
-            cmd << " --crf " << (crfx4 / 4);
-        } else {
-            const double rounded = crfx4 * 0.25;
-            cmd << " --crf " << std::fixed << std::setprecision(2) << rounded;
+        append_qp_arg(cmd, _T("crf"), cx->qp);
+        if (save_disabled_prm) {
+            OPT_NUM(_T("tbr"), bitrate);
         }
+    } else if (cx->rc == get_cx_value(list_rc, L"CQP")) {
+        append_qp_arg(cmd, _T("cqp"), cx->qp);
         if (save_disabled_prm) {
             OPT_NUM(_T("tbr"), bitrate);
         }
     } else {
         OPT_NUM(_T("rc"), rc);
-        if (cx->rc == get_cx_value(list_rc, L"CQP") || save_disabled_prm) {
-            cmd << " -q " << (int)(cx->qp + 0.5);
+        if (save_disabled_prm) {
+            append_qp_arg(cmd, _T("cqp"), cx->qp);
         }
         if (cx->rc == get_cx_value(list_rc, L"VBR") || save_disabled_prm) {
-            OPT_NUM("tbr", bitrate);
+            OPT_NUM(_T("tbr"), bitrate);
         }
     }
     OPT_NUM(_T("color-format"), output_csp);
@@ -228,9 +260,13 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("enable-restoration"), enable_restoration);
     OPT_NUM(_T("enable-stat-report"), enable_stat_report);
     OPT_NUM(_T("enable-tf"), enable_tf);
-    OPT_NUM(_T("enable-tpl-la"), enable_tpl_la);
+    OPT_NUM(_T("enable-kf-tf"), enable_kf_tf);
     OPT_NUM(_T("fast-decode"), fast_decode);
     OPT_NUM(_T("film-grain"), film_grain);
+    OPT_NUM(_T("film-grain-denoise"), film_grain_denoise);
+    OPT_NUM(_T("adaptive-film-grain"), adaptive_film_grain);
+    OPT_NUM(_T("hbd-mds"), hbd_mds);
+    OPT_NUM(_T("enable-intrabc"), enable_intrabc);
     OPT_NUM(_T("hierarchical-levels"), hierarchical_levels);
     OPT_NUM(_T("irefresh-type"), intra_refresh_type);
     OPT_NUM(_T("keyint"), keyint);
@@ -243,6 +279,7 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     OPT_NUM(_T("min-qp"), min_qp);
     OPT_NUM(_T("minsection-pct"), minsection_pct);
     OPT_NUM(_T("overshoot-pct"), overshoot_pct);
+    OPT_NUM(_T("qp-scale-compress-strength"), qp_scale_compress_strength);
     OPT_NUM(_T("sharpness"), sharpness);
     OPT_NUM(_T("scd"), scd);
     OPT_NUM(_T("scm"), scm);
@@ -256,6 +293,7 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
     if (cx->enable_variance_boost) {
         OPT_NUM(_T("variance-boost-strength"), variance_boost_strength);
     }
+    OPT_NUM(_T("variance-boost-curve"), variance_boost_curve);
     OPT_NUM(_T("variance-octile"), variance_octile);
 
     return cmd.str();
