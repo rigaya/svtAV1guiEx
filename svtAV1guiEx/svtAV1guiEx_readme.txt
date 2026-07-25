@@ -68,6 +68,23 @@ Aviutlを起動します。
 VC++ 2022 Community
 
 【どうでもいいメモ】
+2026.07.25 (2.11)
+- svt-av1 4.2.0に合わせ、設定欄を追加。
+  - --tune 4: MS-SSIM / 5: VMAF を追加
+  - --enable-dlf 2=accurate を追加
+  - --fast-decode 2を追加
+  - CQPを0.25刻み・上限70に。
+  - 下記を新規追加
+    - --enable-kf-tf
+    - --qp-scale-compress-strength
+    - --variance-boost-curve
+    - --hbd-mds
+    - --enable-intrabc
+    - --adaptive-film-grain
+    - --film-grain-denoise
+- AviUtl2でプロジェクト単位の出力設定の保存・復元に対応。
+- 同梱の実行ファイルを更新。(4.2.0-28_x64)
+
 2026.06.06 (2.10)
 - AviUtl2では不要になったiniファイルへのファイルフィルタへの書き出しを削除。
 - ffmpeg(opus)のエンコードエラーを修正。
