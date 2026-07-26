@@ -208,14 +208,8 @@ typedef struct CONF_ENC {
 } CONF_ENC;
 #elif ENCODER_QSV || ENCODER_NVENC || ENCODER_VCEENC
 typedef struct CONF_ENC {
+    TCHAR cmd[MAX_CMD_LEN];
     RGY_CODEC codec_rgy;
-    int reserved[128];
-#if ENCODER_QSV
-    char reserved3[1024];
-#endif
-    char cmd[3072];
-    char cmdex[512];
-    char reserved2[512];
     BOOL resize_enable;
     int resize_width;
     int resize_height;
@@ -425,6 +419,19 @@ private:
 #elif ENCODER_X265
     static void convert_x265stgv2_to_x265stgv4(CONF_GUIEX_OLD *conf);
     static void convert_x265stgv3_to_x265stgv4(CONF_GUIEX_OLD *conf);
+#endif
+#if ENCODER_QSV
+    static void *convert_qsvstgv1_to_stgv3(void *_conf, int size);
+    static void *convert_qsvstgv2_to_stgv3(void *_conf);
+    static void *convert_qsvstgv3_to_stgv4(void *_conf);
+    static void *convert_qsvstgv4_to_stgv5(void *_conf);
+    static void *convert_qsvstgv5_to_stgv6(void *_conf);
+#elif ENCODER_NVENC
+    static int  stgv3_block_size();
+    static void convert_nvencstg_to_nvencstgv4(CONF_GUIEX_OLD *conf, const void *dat);
+    static void convert_nvencstgv2_to_nvencstgv3(void *dat);
+    static void convert_nvencstgv2_to_nvencstgv4(CONF_GUIEX_OLD *conf, const void *dat);
+    static void convert_nvencstgv3_to_nvencstgv4(CONF_GUIEX_OLD *conf, const void *dat);
 #endif
     // ブロック別JSON変換関数
     static void video_to_json(nlohmann::json& j, const CONF_VIDEO& vid);                 //ビデオ設定をJSONに変換
