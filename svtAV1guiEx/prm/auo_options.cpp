@@ -229,10 +229,11 @@ tstring gen_cmd(const CONF_ENC *cx, bool save_disabled_prm) {
             OPT_NUM(_T("tbr"), bitrate);
         }
     } else {
-        OPT_NUM(_T("rc"), rc);
+        // --cqp/--crf のパースは rc を上書きするため、無効パラメータの --cqp は --rc より先に出す
         if (save_disabled_prm) {
             append_qp_arg(cmd, _T("cqp"), cx->qp);
         }
+        OPT_NUM(_T("rc"), rc);
         if (cx->rc == get_cx_value(list_rc, L"VBR") || save_disabled_prm) {
             OPT_NUM(_T("tbr"), bitrate);
         }
