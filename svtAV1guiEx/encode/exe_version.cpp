@@ -34,7 +34,7 @@
 #include "rgy_filesystem.h"
 #include "auo_version.h"
 #include "exe_version.h"
-#if ENCODER_X265
+#if ENCODER_X265 || ENCODER_SVTAV1
 #include <regex>
 #endif
 
@@ -148,40 +148,32 @@ int get_svtav1_version_from_filename(const TCHAR *exe_path, int version[4]) {
 
     int value[4] = { 0 };
     memset(version, 0, sizeof(value));
-    
-    int value4 = 0;
-    if (   _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d-%d_x64.exe"), &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d-%d_x86.exe"), &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d+%d_x64.exe"), &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d+%d_x86.exe"), &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d-%d_x64.exe"),  &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d-%d_x86.exe"),  &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d+%d_x64.exe"),  &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d+%d_x86.exe"),  &value[0], &value[1], &value[2], &value[3], &value4) == 5
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d_x64.exe"),    &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-rc%d_x86.exe"),    &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d_x64.exe"),     &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-rc%d_x86.exe"),     &value[0], &value[1], &value[2], &value[3]) == 4) {
-        value[3] *= RC_VER_MUL;
-        value[3] += RC_VER_ADD;
-        value[3] += value4;
-        memcpy(version, value, sizeof(value));
-        return 0;
-    }
-    if (   _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-%d_x64.exe"), &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d-%d_x86.exe"), &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d+%d_x64.exe"), &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d+%d_x86.exe"), &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-%d_x64.exe"),  &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d-%d_x86.exe"),  &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d+%d_x64.exe"),  &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d+%d_x86.exe"),  &value[0], &value[1], &value[2], &value[3]) == 4
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d_x64.exe"),    &value[0], &value[1], &value[2]) == 3
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_v%d.%d.%d_x86.exe"),    &value[0], &value[1], &value[2]) == 3
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d_x64.exe"),     &value[0], &value[1], &value[2]) == 3
-        || _stscanf_s(filename.c_str(), _T("SvtAv1EncApp_%d.%d.%d_x86.exe"),     &value[0], &value[1], &value[2]) == 3) {
-        memcpy(version, value, sizeof(value));
-        return 0;
+
+    // バイナリのビルド方法により、x64/x86やclangなどの接尾辞は変化するため、
+    // バージョン部分だけを厳密に取り出し、残りの接尾辞は許容する。
+    static const std::basic_regex<TCHAR> re(
+        _T("^SvtAv1EncApp_(v)?([0-9]+)\\.([0-9]+)\\.([0-9]+)")
+        _T("(-rc([0-9]+)([-+])?([0-9]+)?|([-+])([0-9]+))?")
+        _T("([_-][^.]+)*\\.exe$"));
+    std::match_results<tstring::const_iterator> match;
+    if (std::regex_match(filename.cbegin(), filename.cend(), match, re)) {
+        try {
+            value[0] = std::stoi(match[2].str());
+            value[1] = std::stoi(match[3].str());
+            value[2] = std::stoi(match[4].str());
+            if (match[6].matched) {
+                value[3] = std::stoi(match[6].str()) * RC_VER_MUL + RC_VER_ADD;
+                if (match[8].matched) {
+                    value[3] += std::stoi(match[8].str());
+                }
+            } else if (match[10].matched) {
+                value[3] = std::stoi(match[10].str());
+            }
+            memcpy(version, value, sizeof(value));
+            return 0;
+        } catch (...) {
+            // バージョンがintに収まらない場合は取得失敗とする。
+        }
     }
     return -1;
 }
@@ -435,6 +427,7 @@ int get_svtav1_rev(const TCHAR *svtav1fullpath, int version[4]) {
         return ret;
 
     int value[4] = { 0 };
+    // ファイル名からの取得を優先し、Versionリソースと--versionをフォールバックとする。
     if (   ((ret = get_svtav1_version_from_filename(svtav1fullpath, value))          != -1 && memcmp(version, value, sizeof(value)) != 0)
         || ((ret = get_exe_version_info(svtav1fullpath, value))                      != -1 && memcmp(version, value, sizeof(value)) != 0)
         || ((ret = get_exe_version_from_cmd(svtav1fullpath, _T("--version"), value)) != -1 && memcmp(version, value, sizeof(value)) != 0)) {

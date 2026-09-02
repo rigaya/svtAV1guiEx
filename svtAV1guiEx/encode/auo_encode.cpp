@@ -136,6 +136,9 @@ static std::vector<std::filesystem::path> select_exe_file(const std::vector<std:
     if (pathList.size() <= 1) {
         return pathList;
     }
+#if ENCODER_SVTAV1
+    return pathList;
+#else
     std::vector<std::filesystem::path> exe32bit;
     std::vector<std::filesystem::path> exe64bit;
     std::vector<std::filesystem::path> exeUnknown;
@@ -143,7 +146,8 @@ static std::vector<std::filesystem::path> select_exe_file(const std::vector<std:
         if (ends_with(tolowercase(path.filename().wstring()), L"_x64.exe")) {
             exe64bit.push_back(path);
             continue;
-        } else if (ends_with(tolowercase(path.filename().wstring()), L"_x86.exe")) {
+        }
+        else if (ends_with(tolowercase(path.filename().wstring()), L"_x86.exe")) {
             exe32bit.push_back(path);
             continue;
         }
@@ -158,25 +162,30 @@ static std::vector<std::filesystem::path> select_exe_file(const std::vector<std:
                 exe64bit.push_back(path);
                 checked = true;
                 break;
-            } else if (p.filename().wstring() == L"x86") {
+            }
+            else if (p.filename().wstring() == L"x86") {
                 exe32bit.push_back(path);
                 checked = true;
                 break;
             }
+            p = parent;
         }
         if (!checked) {
             if (ends_with(tolowercase(path.filename().wstring()), L"64.exe")) {
                 exe64bit.push_back(path);
-            } else {
+            }
+            else {
                 exeUnknown.push_back(path);
             }
         }
     }
     if (rgy_is_64bit_os()) {
         return (exe64bit.size() > 0) ? exe64bit : exeUnknown;
-    } else {
+    }
+    else {
         return (exe32bit.size() > 0) ? exe32bit : exeUnknown;
     }
+#endif
 }
 
 static std::vector<std::filesystem::path> avoid_aud_enc(const std::vector<std::filesystem::path>& pathList) {
@@ -222,7 +231,7 @@ std::filesystem::path find_latest_videnc(const std::vector<std::filesystem::path
             }
         }
 #elif ENCODER_SVTAV1
-        if (get_svtav1_rev(path.wstring().c_str(), value) == 0) {
+        if (get_svtav1_version_from_filename(path.wstring().c_str(), value) == 0) {
             if (version_a_larger_than_b(value, version) > 0) {
                 memcpy(version, value, sizeof(version));
                 ret = path;
@@ -263,7 +272,7 @@ tstring find_latest_videnc_for_frm() {
     PathCombineLong(defaultExeDir2, _countof(defaultExeDir2), pluginsDir, DEFAULT_EXE_DIR);
 
     const auto exeFiles = find_exe_files(defaultExeDir, defaultExeDir2);
-    const auto targetExes = find_target_exe_files(ENCODER_NAME_W, exeFiles);
+    const auto targetExes = find_target_exe_files(ENCODER_APP_NAME_W, exeFiles);
     if (targetExes.size() > 0) {
         const auto latestVidEnc = find_latest_videnc(targetExes);
         return wstring_to_tstring(latestVidEnc.wstring());
